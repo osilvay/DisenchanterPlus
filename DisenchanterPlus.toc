@@ -1,0 +1,57 @@
+## Interface: 110002
+## Title: |cffffffffLog|r|cff57b6ffBook|r |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v0.0.1|r
+## Version: 0.0.1
+## Notes: DisenchanterPlus Plus for wow retail
+## Author: osilvay
+## SavedVariables: DisenchanterPlusDB
+## OptionalDeps: Ace3, CallbackHandler-1.0, LibStub
+## DefaultState: enabled
+## LoadOnDemand: 0
+
+embeds.xml
+Locale\Locales.xml
+
+# ModuleLoader
+Modules\ModuleLoader.lua
+
+# Modules
+Modules\EventHandler.lua
+Modules\Init.lua
+Modules\MinimapIcon.lua
+Modules\SlashCommands.lua
+Modules\VersionCheck.lua
+Modules\Database.lua
+
+Modules\Events\DisenchanterPlusEvents.lua
+
+Modules\Settings\Settings.lua
+Modules\Settings\SettingsDefaults.lua
+Modules\Settings\ConfigGroups.lua
+Modules\Settings\GeneralTab\GeneralTab.lua
+Modules\Settings\GeneralTab\Groups\GeneralGroup.lua
+Modules\Settings\GeneralTab\Groups\TooltipGroup.lua
+Modules\Settings\GeneralTab\Groups\DisenchantGroup.lua
+Modules\Settings\AdvancedTab\AdvancedTab.lua
+Modules\Settings\AdvancedTab\Groups\AdvancedGroup.lua
+Modules\Settings\MaintenanceTab\MaintenanceTab.lua
+Modules\Settings\MaintenanceTab\Groups\DatabaseGroup.lua
+
+Modules\Window\DisenchantWindow.lua
+Modules\Window\WelcomeWindow.lua
+Modules\Window\Tables\WelcomeHeader.lua
+Modules\Window\Tables\WelcomeBody.lua
+
+Modules\Custom\CustomFrames.lua
+Modules\Custom\CustomFunctions.lua
+Modules\Custom\CustomColors.lua
+Modules\Custom\CustomSounds.lua
+Modules\Custom\CustomPopup.lua
+Modules\Custom\CustomConfig.lua
+Modules\Custom\CustomMedias.lua
+
+Modules\Disenchant\DisenchantProcess.lua
+
+Modules\Tooltip\EnchantingTooltip.lua
+
+# Main
+DisenchanterPlus.lua
