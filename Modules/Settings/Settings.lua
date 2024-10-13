@@ -10,6 +10,9 @@ local DP_SettingsDefaults = DP_ModuleLoader:ImportModule("DP_SettingsDefaults");
 ---@type DP_CustomPopup
 local DP_CustomPopup = DP_ModuleLoader:ImportModule("DP_CustomPopup");
 
+---@type DP_CustomSounds
+local DP_CustomSounds = DP_ModuleLoader:ImportModule("DP_CustomSounds");
+
 ---@type DP_DisenchantProcess
 local DP_DisenchantProcess = DP_ModuleLoader:ImportModule("DP_DisenchantProcess");
 
@@ -40,20 +43,20 @@ end
 function DP_Settings:DrawSettingsFrame()
   --DisenchanterPlus:Debug(DisenchanterPlus:DP_i18n("Creating settings frame"))
   ---@type AceGUIFrame, AceGUIFrame
-  local playerCensusPlusSettingsFrame = AceGUI:Create("Frame");
+  local disenchanterPlusSettingsFrame = AceGUI:Create("Frame");
   AceConfigDialog:SetDefaultSize("DisenchanterPlus", 600, 480)
-  AceConfigDialog:Open("DisenchanterPlus", playerCensusPlusSettingsFrame) -- load the options into configFrame
-  playerCensusPlusSettingsFrame:SetTitle(string.format("%s", DisenchanterPlus:GetAddonColoredName()))
-  playerCensusPlusSettingsFrame:SetLayout("Fill")
-  playerCensusPlusSettingsFrame:EnableResize(false)
-  playerCensusPlusSettingsFrame:SetStatusText(string.format("%s %s", DisenchanterPlus:GetAddonColoredName(), DisenchanterPlus:GetAddonColoredVersion()))
-  --playerCensusPlusSettingsFrame:Hide()
-  playerCensusPlusSettingsFrame:SetCallback("OnShow", function(widget)
+  AceConfigDialog:Open("DisenchanterPlus", disenchanterPlusSettingsFrame) -- load the options into configFrame
+  disenchanterPlusSettingsFrame:SetTitle(string.format("%s", DisenchanterPlus:GetAddonColoredName()))
+  disenchanterPlusSettingsFrame:SetLayout("Fill")
+  disenchanterPlusSettingsFrame:EnableResize(false)
+  disenchanterPlusSettingsFrame:SetStatusText(string.format("%s %s", DisenchanterPlus:GetAddonColoredName(), DisenchanterPlus:GetAddonColoredVersion()))
+  --disenchanterPlusSettingsFrame:Hide()
+  disenchanterPlusSettingsFrame:SetCallback("OnShow", function(widget)
     --DisenchanterPlus:Debug("Showing settings...")
-    DP_DisenchantGroup:CreateSessionIgnoreListItems(DP_DisenchantProcess:GetSessionIgnoredItems())
+    DP_DisenchantGroup:CreateSessionIgnoreListItems(DP_DisenchantGroup:GetSessionIgnoreList())
   end)
-  playerCensusPlusSettingsFrame:SetCallback("OnClose", function(widget)
-    PlaySound(840)
+  disenchanterPlusSettingsFrame:SetCallback("OnClose", function(widget)
+    --DP_CustomSounds:PlayCustomSound("WindowClose")
     if DP_CustomPopup:IsOpened() then
       DP_CustomPopup:CancelPopup()
     end
@@ -61,7 +64,7 @@ function DP_Settings:DrawSettingsFrame()
       DP_DisenchantProcess:StartAutoDisenchant(true)
     end)
   end)
-  DisenchanterPlusSettingsFrame = playerCensusPlusSettingsFrame;
+  DisenchanterPlusSettingsFrame = disenchanterPlusSettingsFrame;
 
   _G["DisenchanterPlusSettingsFrame"] = DisenchanterPlusSettingsFrame.frame
   table.insert(UISpecialFrames, "DisenchanterPlusSettingsFrame");
@@ -101,7 +104,7 @@ function DP_Settings:OpenSettingsFrame()
   end
 
   if not DisenchanterPlusSettingsFrame:IsShown() then
-    PlaySound(882)
+    --DP_CustomSounds:PlayCustomSound("WindowOpen")
     --GearScorePlus:Debug("Show settings frame")
     AceConfigDialog:SelectGroup("DisenchanterPlus", "general_tab")
     AceConfigRegistry:NotifyChange("DisenchanterPlus")

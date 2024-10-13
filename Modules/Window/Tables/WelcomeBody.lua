@@ -3,29 +3,29 @@ local DP_WelcomeBody = DP_ModuleLoader:CreateModule("DP_WelcomeBody")
 
 local LibStub = LibStub
 local AceGUI = LibStub("AceGUI-3.0")
-local playerCensusPlusBodyContainer
+local disenchanterPlusBodyContainer
 
 ---Redraw body container
 ---@param containerTable table
 ---@param parentFrame AceGUIFrame
 function DP_WelcomeBody:RedrawWelcomeWindowBody(containerTable, parentFrame)
-  playerCensusPlusBodyContainer:ReleaseChildren()
+  disenchanterPlusBodyContainer:ReleaseChildren()
   DP_WelcomeBody:ContainerBodyFrame(containerTable, parentFrame)
 end
 
 ---Create welcome container body frame
 function DP_WelcomeBody:ContainerBodyFrame(containerTable, parentFrame)
   -- table
-  if not playerCensusPlusBodyContainer then
+  if not disenchanterPlusBodyContainer then
     -- container
     ---@type AceGUIInlineGroup
-    playerCensusPlusBodyContainer = AceGUI:Create("InlineGroup")
-    playerCensusPlusBodyContainer:SetWidth(495)
-    playerCensusPlusBodyContainer:SetHeight(220)
-    playerCensusPlusBodyContainer:SetTitle(DisenchanterPlus:DP_i18n("Main plugins"))
-    playerCensusPlusBodyContainer:SetLayout("Flow")
-    playerCensusPlusBodyContainer:SetPoint("TOPLEFT", parentFrame.frame, "TOPLEFT", 10, -40)
-    parentFrame:AddChild(playerCensusPlusBodyContainer)
+    disenchanterPlusBodyContainer = AceGUI:Create("InlineGroup")
+    disenchanterPlusBodyContainer:SetWidth(495)
+    disenchanterPlusBodyContainer:SetHeight(220)
+    disenchanterPlusBodyContainer:SetTitle(DisenchanterPlus:DP_i18n("Main plugins"))
+    disenchanterPlusBodyContainer:SetLayout("Flow")
+    disenchanterPlusBodyContainer:SetPoint("TOPLEFT", parentFrame.frame, "TOPLEFT", 10, -40)
+    parentFrame:AddChild(disenchanterPlusBodyContainer)
   end
 end
 

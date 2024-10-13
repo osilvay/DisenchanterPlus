@@ -10,6 +10,9 @@ local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
 ---@type DP_CustomFrames
 local DP_CustomFrames = DP_ModuleLoader:ImportModule("DP_CustomFrames")
 
+---@type DP_CustomSounds
+local DP_CustomSounds = DP_ModuleLoader:ImportModule("DP_CustomSounds")
+
 ---@type DP_WelcomeBody
 local DP_WelcomeBody = DP_ModuleLoader:ImportModule("DP_WelcomeBody")
 
@@ -30,27 +33,27 @@ function DP_WelcomeWindow:Initialize()
     DP_WelcomeWindow:CreateWelcomeWindowTable()
 
     ---@type AceGUIFrame, AceGUIFrame
-    local playerCensusPlusWindowFrame = AceGUI:Create("Frame");
-    playerCensusPlusWindowFrame:SetWidth(515)
-    playerCensusPlusWindowFrame:SetHeight(535)
-    playerCensusPlusWindowFrame:SetPoint("CENTER", 0, 0)
-    playerCensusPlusWindowFrame:SetLayout("Fill")
-    playerCensusPlusWindowFrame:SetTitle("DisenchanterPlus")
-    playerCensusPlusWindowFrame:SetStatusText(string.format("%s %s", DisenchanterPlus:GetAddonColoredName(), DisenchanterPlus:GetAddonColoredVersion()))
-    playerCensusPlusWindowFrame:EnableResize(false)
-    --playerCensusPlusWindowFrame:Hide()
-    playerCensusPlusWindowFrame:SetCallback("OnClose", function(widget)
-      PlaySound(840)
+    local disenchanterPlusWindowFrame = AceGUI:Create("Frame");
+    disenchanterPlusWindowFrame:SetWidth(515)
+    disenchanterPlusWindowFrame:SetHeight(535)
+    disenchanterPlusWindowFrame:SetPoint("CENTER", 0, 0)
+    disenchanterPlusWindowFrame:SetLayout("Fill")
+    disenchanterPlusWindowFrame:SetTitle("DisenchanterPlus")
+    disenchanterPlusWindowFrame:SetStatusText(string.format("%s %s", DisenchanterPlus:GetAddonColoredName(), DisenchanterPlus:GetAddonColoredVersion()))
+    disenchanterPlusWindowFrame:EnableResize(false)
+    --disenchanterPlusWindowFrame:Hide()
+    disenchanterPlusWindowFrame:SetCallback("OnClose", function(widget)
+      --DP_CustomSounds:PlayCustomSound("WindowClose")
     end)
 
     -- header
-    DP_WelcomeHeader:ContainerHeaderFrame(tableData, playerCensusPlusWindowFrame)
+    DP_WelcomeHeader:ContainerHeaderFrame(tableData, disenchanterPlusWindowFrame)
 
     -- table
-    DP_WelcomeBody:ContainerBodyFrame(tableData, playerCensusPlusWindowFrame)
+    DP_WelcomeBody:ContainerBodyFrame(tableData, disenchanterPlusWindowFrame)
 
-    playerCensusPlusWindowFrame:Hide()
-    DisenchanterPlusWindowFrame = playerCensusPlusWindowFrame;
+    disenchanterPlusWindowFrame:Hide()
+    DisenchanterPlusWindowFrame = disenchanterPlusWindowFrame;
 
     _G["DisenchanterPlusWindowFrame"] = DisenchanterPlusWindowFrame.frame
     table.insert(UISpecialFrames, "DisenchanterPlusWindowFrame")
@@ -80,7 +83,7 @@ end
 function DP_WelcomeWindow:OpenDisenchanterPlusWindowFrame()
   if not DisenchanterPlusWindowFrame then return end
   if not DisenchanterPlusWindowFrame:IsShown() then
-    PlaySound(882)
+    --DP_CustomSounds:PlayCustomSound("WindowOpen")
     --DisenchanterPlus:Debug("Show WelcomeWindow frame")
     DisenchanterPlusWindowFrame:Show()
     DP_WelcomeWindow:RedrawDisenchanterPlusWindowFrame()

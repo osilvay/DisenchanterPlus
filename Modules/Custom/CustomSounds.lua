@@ -1,33 +1,13 @@
 ---@class DP_CustomSounds
 local DP_CustomSounds = DP_ModuleLoader:CreateModule("DP_CustomSounds")
 
-local playerCensusPlusSoundTable
+local disenchanterPlusSoundTable
 
 ---Play critical hit sound
-function DP_CustomSounds:PlayCriticalHit()
-  C_Timer.After(0.5, function()
-    PlaySoundFile(DP_CustomSounds:GetSoundFile("HitCritDefault"), "Master")
-  end)
-end
-
----Play normal hit sound
-function DP_CustomSounds:PlayNormalHit()
-  C_Timer.After(0.5, function()
-    PlaySoundFile(DP_CustomSounds:GetSoundFile("HitDefault"), "Master")
-  end)
-end
-
----Play critical heal sound
-function DP_CustomSounds:PlayCriticalHeal()
-  C_Timer.After(0.5, function()
-    PlaySoundFile(DP_CustomSounds:GetSoundFile("HitCritDefault"), "Master")
-  end)
-end
-
----Play normal heal sound
-function DP_CustomSounds:PlayNormalHeal()
-  C_Timer.After(0.5, function()
-    PlaySoundFile(DP_CustomSounds:GetSoundFile("HitDefault"), "Master")
+---@param name string
+function DP_CustomSounds:PlayCustomSound(name)
+  C_Timer.After(0.1, function()
+    PlaySoundFile(DP_CustomSounds:GetSoundFile(name), "Master")
   end)
 end
 
@@ -35,13 +15,12 @@ end
 ---@param typeSelected string
 ---@return string file
 function DP_CustomSounds:GetSoundFile(typeSelected)
-  return playerCensusPlusSoundTable[typeSelected]
+  return disenchanterPlusSoundTable[typeSelected]
 end
 
 --https://wowpedia.fandom.com/wiki/PlaySoundFile_macros
-playerCensusPlusSoundTable = {
-  ["HitCritDefault"] = "Sound/Interface/LevelUp.ogg",
-  ["HitDefault"]     = "Sound/Interface/AuctionWindowOpen.ogg",
-  ["Window Close"]   = "Sound/Interface/AuctionWindowClose.ogg",
-  ["Window Open"]    = "Sound/Interface/AuctionWindowOpen.ogg",
+disenchanterPlusSoundTable = {
+  ["MoneyDialogClose"] = "Interface/Addons/DisenchanterPlus/Sounds/MoneyDialogClose.ogg",
+  ["WindowClose"]      = "Interface/Addons/DisenchanterPlus/Sounds/CharacterSheetClose.ogg",
+  ["WindowOpen"]       = "Interface/Addons/DisenchanterPlus/Sounds/CharacterSheetOpen.ogg",
 }

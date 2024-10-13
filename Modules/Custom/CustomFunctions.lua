@@ -406,6 +406,7 @@ end
 ---@return number count
 function DP_CustomFunctions:TableLength(T, checkIsEmpty)
   local count = 0
+  if T == nil then T = {} end
   if checkIsEmpty == nil then checkIsEmpty = false end
   for _ in pairs(T) do
     count = count + 1

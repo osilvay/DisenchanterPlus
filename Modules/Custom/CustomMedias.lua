@@ -1,10 +1,10 @@
 ---@class DP_CustomMedias
 local DP_CustomMedias = DP_ModuleLoader:CreateModule("DP_CustomMedias")
 
-local playerCensusPlusIcons
-local playerCensusPlusMedias
+local disenchanterPlusIcons
+local disenchanterPlusMedias
 
-playerCensusPlusIcons = {
+disenchanterPlusIcons = {
   ["accept"]        = "Interface/AddOns/DisenchanterPlus/Images/Icons/accept",
   ["accept_a"]      = "Interface/AddOns/DisenchanterPlus/Images/Icons/accept_a",
   ["back"]          = "Interface/AddOns/DisenchanterPlus/Images/Icons/back",
@@ -52,7 +52,7 @@ playerCensusPlusIcons = {
 
 }
 
-playerCensusPlusMedias = {
+disenchanterPlusMedias = {
   ["disenchanterplus"] = "Interface/AddOns/DisenchanterPlus/Images/Menus/disenchanterplus",
   ["disenchanterplus_a"] = "Interface/AddOns/DisenchanterPlus/Images/Menus/disenchanterplus",
   ["Alliance_icon"] = "Interface/AddOns/DisenchanterPlus/Images/Factions/icon_alliance",
@@ -65,16 +65,16 @@ playerCensusPlusMedias = {
 ---@param typeSelected string
 ---@return string file
 function DP_CustomMedias:GetIconFile(typeSelected)
-  if typeSelected == nil or playerCensusPlusIcons[typeSelected] == nil then return "" end
-  return playerCensusPlusIcons[typeSelected]
+  if typeSelected == nil or disenchanterPlusIcons[typeSelected] == nil then return "" end
+  return disenchanterPlusIcons[typeSelected]
 end
 
 ---Get media
 ---@param typeSelected any
 ---@return string
 function DP_CustomMedias:GetMediaFile(typeSelected)
-  if typeSelected == nil or playerCensusPlusMedias[typeSelected] == nil then return "" end
-  return playerCensusPlusMedias[typeSelected]
+  if typeSelected == nil or disenchanterPlusMedias[typeSelected] == nil then return "" end
+  return disenchanterPlusMedias[typeSelected]
 end
 
 ---Return icon as link
@@ -83,8 +83,8 @@ end
 ---@param sizeY any
 ---@return string
 function DP_CustomMedias:GetIconFileAsLink(typeSelected, sizeX, sizeY)
-  if typeSelected == nil or playerCensusPlusIcons[typeSelected] == nil then return "" end
-  return string.format("|T%s:%s:%s|t", playerCensusPlusIcons[typeSelected], tostring(sizeX), tostring(sizeY))
+  if typeSelected == nil or disenchanterPlusIcons[typeSelected] == nil then return "" end
+  return string.format("|T%s:%s:%s|t", disenchanterPlusIcons[typeSelected], tostring(sizeX), tostring(sizeY))
 end
 
 ---Return media as link
@@ -93,6 +93,6 @@ end
 ---@param sizeY any
 ---@return string
 function DP_CustomMedias:GetMediaFileAsLink(typeSelected, sizeX, sizeY)
-  if typeSelected == nil or playerCensusPlusMedias[typeSelected] == nil then return "" end
-  return string.format("|T%s:%s:%s|t", playerCensusPlusMedias[typeSelected], tostring(sizeX), tostring(sizeY))
+  if typeSelected == nil or disenchanterPlusMedias[typeSelected] == nil then return "" end
+  return string.format("|T%s:%s:%s|t", disenchanterPlusMedias[typeSelected], tostring(sizeX), tostring(sizeY))
 end

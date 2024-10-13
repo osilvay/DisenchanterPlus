@@ -20,12 +20,11 @@ local autoDisenchantDbTimeoutTicker = nil
 local disenchantSpellID = 13262
 local disenchanting = false
 local itemToDisenchant = false
-local sessionIgnoredItems = {}
-local permanentIgnoredItems = {}
 local totalItemsInBagsToDisenchant = 0
 
 function DP_DisenchantProcess:Initialize()
   C_Timer.After(3, function()
+    DP_DisenchantGroup:SaveSessionIgnoreList({})
     DP_DisenchantProcess:StartAutoDisenchant()
     DP_DisenchantGroup:CreatePermanentIgnoreListItems()
   end)
@@ -35,9 +34,10 @@ end
 ---@param itemID number
 function DP_DisenchantProcess:AddSessionIgnoredItem(itemID)
   --DisenchanterPlus:Dump(sessionIgnoredItems)
-  if not DP_CustomFunctions:TableHasValue(sessionIgnoredItems, itemID) then
-    table.insert(sessionIgnoredItems, itemID)
-    DP_DisenchantGroup:CreateSessionIgnoreListItems(sessionIgnoredItems)
+  local sessionIgnoredList = DP_DisenchantGroup:GetSessionIgnoreList() or {}
+  if not DP_CustomFunctions:TableHasKey(sessionIgnoredList, tostring(itemID)) then
+    sessionIgnoredList[itemID] = ""
+    DP_DisenchantGroup:CreateSessionIgnoreListItems(sessionIgnoredList)
     DP_DisenchantWindow:CloseWindow()
     itemToDisenchant = false
     disenchanting = false
@@ -49,7 +49,7 @@ end
 
 ---Checks if there are items in the session ignore list
 function DP_DisenchantProcess:EmptySessionIgnoredItemsList()
-  sessionIgnoredItems = {}
+  local sessionIgnoredItems = {}
   DP_DisenchantGroup:CreateSessionIgnoreListItems(sessionIgnoredItems)
 end
 
@@ -57,24 +57,18 @@ end
 ---@param itemID number
 function DP_DisenchantProcess:AddPermanentIgnoredItem(itemID)
   --DisenchanterPlus:Debug("AddPermanentIgnoredItem : " .. tostring(itemID))
-  if not DP_CustomFunctions:TableHasValue(sessionIgnoredItems, itemID) then
-    table.insert(permanentIgnoredItems, itemID)
-    DisenchanterPlus.db.char.general.permanentIgnoredItems = permanentIgnoredItems
-    DP_DisenchantWindow:CloseWindow()
+  local permanentIgnoreList = DP_DisenchantGroup:GetPermanentIgnoreList() or {}
+  if not DP_CustomFunctions:TableHasKey(permanentIgnoreList, tostring(itemID)) then
+    permanentIgnoreList[itemID] = ""
+    DP_DisenchantGroup:SavePermanentIgnoreList(permanentIgnoreList)
     DP_DisenchantGroup:CreatePermanentIgnoreListItems()
+    DP_DisenchantWindow:CloseWindow()
     itemToDisenchant = false
     disenchanting = false
+    C_Timer.After(0.5, function()
+      DP_DisenchantProcess:ScanForItems()
+    end)
   end
-end
-
----Update session ignore list
----@param newSessionIgnoreList table
-function DP_DisenchantProcess:UpdateSessionIgnoredItems(newSessionIgnoreList)
-  sessionIgnoredItems = newSessionIgnoreList
-end
-
-function DP_DisenchantProcess:GetSessionIgnoredItems()
-  return sessionIgnoredItems
 end
 
 ---Process spell cast sent
@@ -117,7 +111,7 @@ function DP_DisenchantProcess:StartAutoDisenchant(silent)
       --DisenchanterPlus:Debug("Starting Ticker " .. tostring(autoDisenchantDbTimeout))
       DP_DisenchantProcess:ScanForItems()
     end)
-    DP_DisenchantProcess:ScanForItems()
+    DP_DisenchantProcess:ScanForItems() -- primera ejecución
   end
 end
 
@@ -190,7 +184,8 @@ end
 ---Checks if there are items in the session ignore list
 ---@return boolean
 function DP_DisenchantProcess:SessionIgnoredItemsHasElements()
-  if not DP_CustomFunctions:TableIsEmpty(sessionIgnoredItems) then
+  local sessionIgnoreList = DP_DisenchantGroup:GetSessionIgnoreList() or {}
+  if not DP_CustomFunctions:TableIsEmpty(sessionIgnoreList) then
     return true
   end
   return false
@@ -230,9 +225,12 @@ end
 function DP_DisenchantProcess:GetItemFromBag(itemLink)
   local result
   local itemsInBagsToDisenchant = 0
+  local sessionIgnoredList = DP_DisenchantGroup:GetSessionIgnoreList() or {}
+  local permanentIgnoredList = DP_DisenchantGroup:GetPermanentIgnoreList() or {}
+
   for bagIndex = 0, 4 do
     --DisenchanterPlus:Debug("Bag : " .. tostring(bagIndex))
-    local itemInBag, numItemsInBag = DP_DisenchantProcess:ItemInBag(bagIndex, itemLink)
+    local itemInBag, numItemsInBag = DP_DisenchantProcess:ItemInBag(bagIndex, itemLink, sessionIgnoredList, permanentIgnoredList)
     if itemInBag ~= nil then
       --DisenchanterPlus:Debug(itemInBag.ItemName)
       if result == nil then result = itemInBag end
@@ -246,15 +244,16 @@ end
 ---Items in bag index
 ---@param bagIndex number
 ---@param itemLinkToSearch? string
+---@param sessionIgnoredList table
+---@param permanentIgnoredList table
 ---@return table|nil
 ---@return number
-function DP_DisenchantProcess:ItemInBag(bagIndex, itemLinkToSearch)
+function DP_DisenchantProcess:ItemInBag(bagIndex, itemLinkToSearch, sessionIgnoredList, permanentIgnoredList)
   local numSlots = C_Container.GetContainerNumSlots(bagIndex)
   local numItemsInBag = 0
   local result
 
   --DisenchanterPlus:Debug(string.format("Slot %d = %d slots", bagIndex or "nil", numSlots or "nil"))
-  permanentIgnoredItems = DisenchanterPlus.db.char.general.permanentIgnoredItems or {}
   local itemQualities = DisenchanterPlus.db.char.general.itemQuality or {}
   local itemQualityList = {}
 
@@ -271,9 +270,10 @@ function DP_DisenchantProcess:ItemInBag(bagIndex, itemLinkToSearch)
       local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, _, _, _, itemTexture, _, _, _, _, _, _, _ = C_Item.GetItemInfo(containerInfo.itemID)
       local isBound = containerInfo.isBound
 
+
       if (itemType == DisenchanterPlus:DP_i18n("Armor") or itemType == DisenchanterPlus:DP_i18n("Weapon")) and
-          not DP_CustomFunctions:TableHasValue(sessionIgnoredItems, containerInfo.itemID) and
-          not DP_CustomFunctions:TableHasValue(permanentIgnoredItems, containerInfo.itemID) and
+          not DP_CustomFunctions:TableHasKey(sessionIgnoredList, tostring(containerInfo.itemID)) and
+          not DP_CustomFunctions:TableHasKey(permanentIgnoredList, tostring(containerInfo.itemID)) and
           DP_CustomFunctions:TableHasValue(itemQualityList, tostring(itemQuality)) and
           ((DisenchanterPlus.db.char.general.onlySoulbound and isBound) or not DisenchanterPlus.db.char.general.onlySoulbound) then
         --DisenchanterPlus:Dump(sessionIgnoredItems)
@@ -283,7 +283,7 @@ function DP_DisenchantProcess:ItemInBag(bagIndex, itemLinkToSearch)
         numItemsInBag = numItemsInBag + 1
         if result == nil then
           result = {
-            ItemID = containerInfo.itemID,
+            ItemID = tostring(containerInfo.itemID),
             ItemName = itemName,
             ItemIcon = itemTexture,
             ItemLink = containerInfo.hyperlink,

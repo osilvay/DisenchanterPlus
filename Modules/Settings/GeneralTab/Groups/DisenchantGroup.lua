@@ -17,8 +17,6 @@ local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
 local DP_DisenchantProcess = DP_ModuleLoader:ImportModule("DP_DisenchantProcess")
 
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
-local currentPermanentIgnoreList = {}
-local currentSessionIgnoreList = {}
 
 ---Header
 ---@param order? number
@@ -110,53 +108,37 @@ function DP_DisenchantGroup:Config(order)
       },
       sessionIgnoredItems = {
         type = "select",
-        order = 4.1,
+        order = 5,
         width = "full",
         name = DisenchanterPlus:DP_i18n("Remove from session ignore list"),
         values = function()
-          --DisenchanterPlus:Dump(DP_DisenchantProcess:GetSessionIgnoredItems())
-          DP_DisenchantGroup:CreateSessionIgnoreListItems(DP_DisenchantProcess:GetSessionIgnoredItems())
-          return currentSessionIgnoreList or {}
+          local sessionIgnoreList = DP_DisenchantGroup:GetSessionIgnoreList() or {}
+          if DP_CustomFunctions:TableIsEmpty(sessionIgnoreList) then
+            sessionIgnoreList["0"] = string.format("|cffff3300%s|r", DisenchanterPlus:DP_i18n("Nothing hidden"))
+          end
+          return sessionIgnoreList
         end,
         confirm = function(info, value)
-          if value == "0" then return end
-          return DisenchanterPlus:DP_i18n("Are you sure you want to remove this ignored item?") .. "\n\n" .. currentSessionIgnoreList[value] ..
+          local sessionIgnoreList = DP_DisenchantGroup:GetSessionIgnoreList()
+          if sessionIgnoreList[value] == nil or value == "0" then return end
+          return DisenchanterPlus:DP_i18n("Are you sure you want to remove this ignored item?") .. "\n\n" .. sessionIgnoreList[value] ..
               "\n\n|cffff3300" .. DisenchanterPlus:DP_i18n("This operation can not be undone...") .. "|r"
         end,
         disabled = function() return (not DisenchanterPlus.db.char.general.autoDisenchantEnabled); end,
         get = function()
-          DP_DisenchantGroup:CreateSessionIgnoreListItems(DP_DisenchantProcess:GetSessionIgnoredItems())
+          DP_DisenchantGroup:CreateSessionIgnoreListItems(DP_DisenchantGroup:GetSessionIgnoreList())
           return DisenchanterPlus.db.char.general.sessionIgnoredItems
         end,
         set = function(info, value)
-          if currentSessionIgnoreList[value] == nil or value == "0" then return end
+          local sessionIgnoreList = DP_DisenchantGroup:GetSessionIgnoreList()
+          if sessionIgnoreList[value] == nil or value == "0" then return end
           DP_DisenchantGroup:RemoveSessionIgnoreListItem(value)
-        end,
-      },
-      permanentIgnoredItems = {
-        type = "select",
-        order = 4.2,
-        width = "full",
-        name = "|cffff9900" .. DisenchanterPlus:DP_i18n("Remove from permanent ignore list") .. "|r",
-        values = function()
-          return DP_DisenchantGroup:CreatePermanentIgnoreListItems() or {}
-        end,
-        confirm = function(info, value)
-          if value == "0" then return end
-          return DisenchanterPlus:DP_i18n("Are you sure you want to remove this ignored item?") .. "\n\n" .. currentPermanentIgnoreList[value] ..
-              "\n\n|cffff3300" .. DisenchanterPlus:DP_i18n("This operation can not be undone...") .. "|r"
-        end,
-        disabled = function() return (not DisenchanterPlus.db.char.general.autoDisenchantEnabled); end,
-        get = function() return DisenchanterPlus.db.char.general.permanentIgnoredItems end,
-        set = function(info, value)
-          if currentPermanentIgnoreList[value] == nil or value == "0" then return end
-          DP_DisenchantGroup:RemovePermanentIgnoreListItem(value)
         end,
       },
       clearSessionIgnoredItems = {
         type = "execute",
-        order = 5.1,
-        name = DP_CustomMedias:GetIconFileAsLink("clean_list1_a", 16, 16) .. " " .. DisenchanterPlus:DP_i18n("Clear"),
+        order = 6,
+        name = DP_CustomMedias:GetIconFileAsLink("clean_list1_a", 16, 16) .. " " .. DisenchanterPlus:DP_i18n("Clean session"),
         desc = DisenchanterPlus:DP_i18n("Clear the ignore list of this session."),
         width = 1,
         disabled = function() return (not DisenchanterPlus.db.char.general.autoDisenchantEnabled); end,
@@ -164,6 +146,35 @@ function DP_DisenchantGroup:Config(order)
           DP_DisenchantProcess:EmptySessionIgnoredItemsList()
         end,
       },
+      permanentIgnoredItems = {
+        type = "select",
+        order = 7,
+        width = "full",
+        name = DisenchanterPlus:DP_i18n("Remove from permanent ignore list"),
+        values = function()
+          local permanentIgnoreList = DP_DisenchantGroup:GetPermanentIgnoreList() or {}
+          if DP_CustomFunctions:TableIsEmpty(permanentIgnoreList) then
+            permanentIgnoreList["0"] = string.format("|cffff3300%s|r", DisenchanterPlus:DP_i18n("Nothing hidden"))
+          end
+          return permanentIgnoreList
+        end,
+        confirm = function(info, value)
+          local permanentIgnoreList = DP_DisenchantGroup:GetPermanentIgnoreList()
+          if permanentIgnoreList[value] == nil or value == "0" then return end
+          return DisenchanterPlus:DP_i18n("Are you sure you want to remove this ignored item?") .. "\n\n" .. permanentIgnoreList[value] ..
+              "\n\n|cffff3300" .. DisenchanterPlus:DP_i18n("This operation can not be undone...") .. "|r"
+        end,
+        disabled = function() return (not DisenchanterPlus.db.char.general.autoDisenchantEnabled); end,
+        get = function()
+          DP_DisenchantGroup:CreatePermanentIgnoreListItems()
+          return DP_DisenchantGroup:GetPermanentIgnoreList()
+        end,
+        set = function(info, value)
+          local permanentIgnoreList = DP_DisenchantGroup:GetPermanentIgnoreList()
+          if permanentIgnoreList[value] == nil or value == "0" then return end
+          DP_DisenchantGroup:RemovePermanentIgnoreListItem(value)
+        end,
+      }
     }
   }
 end
@@ -178,71 +189,83 @@ function DP_DisenchantGroup:ItemQualityDropdownConfig()
 end
 
 ---Create session ignore list
-function DP_DisenchantGroup:CreateSessionIgnoreListItems(ignoreList)
-  currentSessionIgnoreList = {}
+function DP_DisenchantGroup:CreateSessionIgnoreListItems(sessionIgnoreList)
+  local newSessionIgnoreList = {}
   --DisenchanterPlus:Dump(ignoreList)
-  if DP_CustomFunctions:TableIsEmpty(ignoreList) then
-    currentSessionIgnoreList["0"] = string.format("|cffff3300%s|r", DisenchanterPlus:DP_i18n("Nothing hidden"))
+  if DP_CustomFunctions:TableIsEmpty(sessionIgnoreList) then
+    --sessionIgnoreList["0"] = string.format("|cffff3300%s|r", DisenchanterPlus:DP_i18n("Nothing hidden"))
   else
-    for _, itemID in pairs(ignoreList) do
+    for itemID, _ in pairs(sessionIgnoreList) do
       --DisenchanterPlus:Debug("ItemID = " .. itemID)
       local itemName, itemLink, _, _, _, _, _, _, _, itemIcon, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
-      currentSessionIgnoreList[itemID] = string.format("|T%d:0|t %s", itemIcon or 134400, itemLink or itemName or UNKNOWN)
+      newSessionIgnoreList[tostring(itemID)] = string.format("|T%d:0|t %s", itemIcon or 134400, itemLink or itemName or UNKNOWN)
     end
     --DisenchanterPlus:Dump(currentSessionIgnoreList)
   end
-  --AceConfigDialog:SelectGroup("DisenchanterPlus", "advanced_tab")
-  --AceConfigRegistry:NotifyChange("DisenchanterPlus")
-  DisenchanterPlus.db.char.general.sessionIgnoredItems = currentSessionIgnoreList
+  AceConfigRegistry:NotifyChange("DisenchanterPlus")
+  DP_DisenchantGroup:SaveSessionIgnoreList(newSessionIgnoreList)
 end
 
 ---Create permanent ignore list
 function DP_DisenchantGroup:CreatePermanentIgnoreListItems()
-  local r = {}
-  local ignoreList = DisenchanterPlus.db.char.general.permanentIgnoredItems or {}
-  if DP_CustomFunctions:TableIsEmpty(ignoreList) then
-    r["0"] = string.format("|cffff3300%s|r", DisenchanterPlus:DP_i18n("Nothing hidden"))
+  local permanentIgnoreList = DP_DisenchantGroup:GetPermanentIgnoreList() or {}
+  if DP_CustomFunctions:TableIsEmpty(permanentIgnoreList) then
+    --permanentIgnoreList["0"] = string.format("|cffff3300%s|r", DisenchanterPlus:DP_i18n("Nothing hidden"))
   else
-    for _, itemID in pairs(ignoreList) do
+    for itemID, _ in pairs(permanentIgnoreList) do
       local itemName, itemLink, _, _, _, _, _, _, _, itemIcon, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
-      r[itemID] = string.format("|T%d:0|t %s", itemIcon or 134400, itemLink or itemName or UNKNOWN)
+      permanentIgnoreList[tostring(itemID)] = string.format("|T%d:0|t %s", itemIcon or 134400, itemLink or itemName or UNKNOWN)
     end
   end
-  return r
+  AceConfigRegistry:NotifyChange("DisenchanterPlus")
+  DP_DisenchantGroup:SavePermanentIgnoreList(permanentIgnoreList)
 end
 
 ---Remove item from permamant ignore list
----@param itemID any
+---@param itemID string
 function DP_DisenchantGroup:RemoveSessionIgnoreListItem(itemID)
-  local ignoreList = currentSessionIgnoreList or {}
+  local ignoreList = DP_DisenchantGroup:GetSessionIgnoreList() or {}
   local newIgnoreList = {}
   DisenchanterPlus:Debug("ItemID to remove = " .. itemID)
-  for currentItemID, _ in pairs(ignoreList) do
+  for currentItemID, currentItemLink in pairs(ignoreList) do
     if currentItemID ~= itemID then
-      DisenchanterPlus:Debug("ItemID to include = " .. currentItemID)
-      table.insert(newIgnoreList, currentItemID)
+      --DisenchanterPlus:Debug("ItemID to include = " .. currentItemID)
+      newIgnoreList[tostring(currentItemID)] = currentItemLink
     end
   end
-  DP_DisenchantProcess:UpdateSessionIgnoredItems(newIgnoreList)
   DP_DisenchantGroup:CreateSessionIgnoreListItems(newIgnoreList)
 end
 
 ---Remove item from permamant ignore list
----@param itemID any
+---@param itemID string
 function DP_DisenchantGroup:RemovePermanentIgnoreListItem(itemID)
-  local ignoreList = DisenchanterPlus.db.char.general.permanentIgnoredItems or {}
-  local newIgnoreList = {}
-  for _, currentItemID in pairs(ignoreList) do
+  local permanentIgnoreList = DP_DisenchantGroup:GetPermanentIgnoreList() or {}
+  local newPermanentIgnoreList = {}
+  for currentItemID, currentItemLink in pairs(permanentIgnoreList) do
     if currentItemID ~= itemID then
-      table.insert(newIgnoreList, currentItemID)
+      newPermanentIgnoreList[tostring(currentItemID)] = currentItemLink
     end
   end
-  DisenchanterPlus.db.char.general.permanentIgnoredItems = newIgnoreList
+  DP_DisenchantGroup:SavePermanentIgnoreList(newPermanentIgnoreList)
   DP_DisenchantGroup:CreatePermanentIgnoreListItems()
 end
 
 ---Get session ignore item list
 ---@return table
-function DP_DisenchantGroup:GetSessionIgnoreListItem()
-  return currentSessionIgnoreList
+function DP_DisenchantGroup:GetSessionIgnoreList()
+  return DisenchanterPlus.db.char.general.sessionIgnoredItems
+end
+
+function DP_DisenchantGroup:GetPermanentIgnoreList()
+  return DisenchanterPlus.db.char.general.permanentIgnoredItems
+end
+
+function DP_DisenchantGroup:SaveSessionIgnoreList(sessionIgnoreList)
+  sessionIgnoreList["0"] = nil
+  DisenchanterPlus.db.char.general.sessionIgnoredItems = sessionIgnoreList
+end
+
+function DP_DisenchantGroup:SavePermanentIgnoreList(permanentIgnoreList)
+  permanentIgnoreList["0"] = nil
+  DisenchanterPlus.db.char.general.permanentIgnoredItems = permanentIgnoreList
 end

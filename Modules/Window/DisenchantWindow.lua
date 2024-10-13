@@ -7,6 +7,9 @@ local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
 ---@type DP_CustomFunctions
 local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
 
+---@type DP_CustomSounds
+local DP_CustomSounds = DP_ModuleLoader:ImportModule("DP_CustomSounds")
+
 ---@type DP_Database
 local DP_Database = DP_ModuleLoader:ImportModule("DP_Database")
 
@@ -125,7 +128,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   settingsButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -20, -20)
   settingsButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Open settings window."), nil, nil, nil, nil, true)
+    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Opens settings window."), nil, nil, nil, nil, true)
     settingsButton.text:SetTextColor(1, 1, 1)
     settingsButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\settings:14:14|t " .. DisenchanterPlus:DP_i18n("Settings"))
   end)
@@ -135,9 +138,9 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
     settingsButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\settings_a:14:14|t " .. DisenchanterPlus:DP_i18n("Settings"))
   end)
   settingsButton:SetScript("OnClick", function(current)
-    DP_DisenchantWindow:CloseWindow()
-    DP_DisenchantGroup:CreateSessionIgnoreListItems(DP_DisenchantProcess:GetSessionIgnoredItems())
+    DP_CustomSounds:PlayCustomSound("WindowClose")
     DP_SlashCommands:OpenSettingsWindow()
+    DP_DisenchantWindow:CloseWindow()
   end)
   DisenchanterPlusBaseFrame.settingsButton = settingsButton
 
@@ -167,6 +170,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
     noButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\close_a:14:14|t " .. DisenchanterPlus:DP_i18n("No"))
   end)
   noButton:SetScript("OnClick", function(current)
+    DP_CustomSounds:PlayCustomSound("WindowClose")
     if itemToDisenchant ~= nil then
       DP_DisenchantProcess:AddSessionIgnoredItem(itemToDisenchant)
     end
@@ -198,6 +202,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
     clearSessionButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\clean_list1_a:16:16|t")
   end)
   clearSessionButton:SetScript("OnClick", function(current)
+    DP_CustomSounds:PlayCustomSound("WindowClose")
     if itemToDisenchant ~= nil then
       DP_DisenchantProcess:EmptySessionIgnoredItemsList()
       DisenchanterPlusBaseFrame.clearSessionButton:Hide()
@@ -266,7 +271,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   ignoreButton:SetPoint("BOTTOMLEFT", DisenchanterPlusBaseFrame, 20, 20)
   ignoreButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Add this item to the ignore list."), nil, nil, nil, nil, true)
+    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Add this item to the permanent ignore list."), nil, nil, nil, nil, true)
     ignoreButton.text:SetTextColor(1, 1, 1)
     ignoreButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\cancel1:14:14|t " .. DisenchanterPlus:DP_i18n("Ignore"))
   end)
@@ -276,6 +281,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
     ignoreButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\cancel1_a:14:14|t " .. DisenchanterPlus:DP_i18n("Ignore"))
   end)
   ignoreButton:SetScript("OnClick", function(current)
+    DP_CustomSounds:PlayCustomSound("WindowClose")
     if itemToDisenchant ~= nil then
       DP_DisenchantProcess:AddPermanentIgnoredItem(itemToDisenchant)
     end
@@ -393,7 +399,6 @@ function DP_DisenchantWindow:CloseWindow()
   DisenchanterPlusBaseFrame.yesButton:SetAttribute("target-bag", nil)
   DisenchanterPlusBaseFrame.yesButton:SetAttribute("target-slot", nil)
   DisenchanterPlusBaseFrame.yesButton:SetAttribute("spell", nil)
-  PlaySound(882)
 end
 
 ---Drag start

@@ -32,7 +32,7 @@ function DP_DatabaseGroup:Config()
         order = 1,
         name = DP_CustomMedias:GetIconFileAsLink("update_a", 16, 16) .. " " .. DisenchanterPlus:DP_i18n("Update"),
         desc = DisenchanterPlus:DP_i18n("Update database manually."),
-        width = 1.2,
+        width = 1,
         disabled = false,
         func = function()
           DP_Database:UpdateDatabase()
@@ -43,7 +43,7 @@ function DP_DatabaseGroup:Config()
         order = 2,
         name = DP_CustomMedias:GetIconFileAsLink("consolidate_a", 16, 16) .. " " .. DisenchanterPlus:DP_i18n("Consolidate"),
         desc = DisenchanterPlus:DP_i18n("Consolidate players and items in database."),
-        width = 1.2,
+        width = 1,
         disabled = false,
         func = function()
           DP_CustomPopup:CreatePopup(
@@ -59,7 +59,7 @@ function DP_DatabaseGroup:Config()
         order = 3,
         name = DP_CustomMedias:GetIconFileAsLink("cleanup_a", 16, 16) .. " " .. DisenchanterPlus:DP_i18n("Clean up"),
         desc = DisenchanterPlus:DP_i18n("Clean up all database by removing old data."),
-        width = 1.2,
+        width = 1,
         disabled = false,
         func = function()
           DP_CustomPopup:CreatePopup(
@@ -75,7 +75,7 @@ function DP_DatabaseGroup:Config()
         order = 4,
         name = DP_CustomMedias:GetIconFileAsLink("purge_a", 16, 16) .. " " .. DisenchanterPlus:DP_i18n("Purge"),
         desc = DisenchanterPlus:DP_i18n("Purge all database entries."),
-        width = 1.2,
+        width = 1,
         disabled = false,
         func = function()
           DP_CustomPopup:CreatePopup(
