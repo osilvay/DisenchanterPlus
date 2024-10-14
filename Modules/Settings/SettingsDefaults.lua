@@ -5,12 +5,12 @@ function DP_SettingsDefaults:Load()
   return {
     global = {
       data = {
-        characters = {
-        },
-        players = {
-        },
-        realms = {
-        },
+        items = {},
+        dusts = {},
+        essences = {},
+        shards = {},
+        crystals = {},
+        unknown = {},
       },
       characters = {
         char = {
@@ -24,8 +24,16 @@ function DP_SettingsDefaults:Load()
         debug = false,
       },
       general = {
+        disableAll = false,
         disenchanProcessEnabled = true,
         tooltipsEnabled = true,
+        pressKeyDown = "1_none",
+        showTitle = true,
+        showItemID = false,
+        zeroValues = true,
+        itemsToShow = 5,
+        showExpectedEssences = true,
+        showRealEssences = true,
         autoDisenchantEnabled = true,
         autoDisenchantDbTimeout = 10,
         itemQuality = {
@@ -39,7 +47,9 @@ function DP_SettingsDefaults:Load()
         },
         permanentIgnoredItems = {
         },
-        onlySoulbound = false
+        sessionIgnoredItems = {
+        },
+        onlySoulbound = false,
       },
     },
   }

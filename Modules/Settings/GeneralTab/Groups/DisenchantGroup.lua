@@ -41,7 +41,7 @@ function DP_DisenchantGroup:Config(order)
         name = DisenchanterPlus:DP_i18n("Enable"),
         desc = DisenchanterPlus:DP_i18n("Enable auto disenchant items."),
         width = "full",
-        disabled = false,
+        disabled = function() return DisenchanterPlus.db.char.general.disableAll end,
         get = function()
           return DisenchanterPlus.db.char.general.autoDisenchantEnabled
         end,
@@ -49,15 +49,16 @@ function DP_DisenchantGroup:Config(order)
           DisenchanterPlus.db.char.general.autoDisenchantEnabled = value
           if value then
             C_Timer.After(0.1, function()
-              DP_DisenchantProcess:StartAutoDisenchant()
+              DP_DisenchantProcess:StartAutoDisenchant(false)
             end)
           else
             C_Timer.After(0.1, function()
-              DP_DisenchantProcess:CancelAutoDisenchant()
+              DP_DisenchantProcess:CancelAutoDisenchant(false)
             end)
           end
         end,
       },
+      separator_1 = DP_CustomConfig:CreateSeparatorConfig(1.1),
       autoDisenchantDbTimeout = {
         type = "range",
         order = 2,
@@ -106,6 +107,7 @@ function DP_DisenchantGroup:Config(order)
           DisenchanterPlus.db.char.general[info[#info]][entry] = value
         end,
       },
+      --[[
       sessionIgnoredItems = {
         type = "select",
         order = 5,
@@ -135,17 +137,32 @@ function DP_DisenchantGroup:Config(order)
           DP_DisenchantGroup:RemoveSessionIgnoreListItem(value)
         end,
       },
+      ]]
       clearSessionIgnoredItems = {
         type = "execute",
         order = 6,
         name = DP_CustomMedias:GetIconFileAsLink("clean_list1_a", 16, 16) .. " " .. DisenchanterPlus:DP_i18n("Clean session"),
         desc = DisenchanterPlus:DP_i18n("Clear the ignore list of this session."),
-        width = 1,
+        width = 1.5,
         disabled = function() return (not DisenchanterPlus.db.char.general.autoDisenchantEnabled); end,
         func = function()
           DP_DisenchantProcess:EmptySessionIgnoredItemsList()
+          DisenchanterPlus:Info(DisenchanterPlus:DP_i18n("Items in session list cleared."))
         end,
       },
+      clearPermanentIgnoredItems = {
+        type = "execute",
+        order = 7,
+        name = DP_CustomMedias:GetIconFileAsLink("cleanup_a", 16, 16) .. " " .. DisenchanterPlus:DP_i18n("Clean permanent"),
+        desc = DisenchanterPlus:DP_i18n("Clear the permanent ignore list."),
+        width = 1.5,
+        disabled = function() return (not DisenchanterPlus.db.char.general.autoDisenchantEnabled); end,
+        func = function()
+          DP_DisenchantProcess:EmptyPermanentIgnoredItemsList()
+          DisenchanterPlus:Info(DisenchanterPlus:DP_i18n("Items in permanent ignore list cleared."))
+        end,
+      },
+      --[[
       permanentIgnoredItems = {
         type = "select",
         order = 7,
@@ -175,6 +192,7 @@ function DP_DisenchantGroup:Config(order)
           DP_DisenchantGroup:RemovePermanentIgnoreListItem(value)
         end,
       }
+      ]]
     }
   }
 end
@@ -226,7 +244,7 @@ end
 function DP_DisenchantGroup:RemoveSessionIgnoreListItem(itemID)
   local ignoreList = DP_DisenchantGroup:GetSessionIgnoreList() or {}
   local newIgnoreList = {}
-  DisenchanterPlus:Debug("ItemID to remove = " .. itemID)
+  --DisenchanterPlus:Debug("ItemID to remove = " .. itemID)
   for currentItemID, currentItemLink in pairs(ignoreList) do
     if currentItemID ~= itemID then
       --DisenchanterPlus:Debug("ItemID to include = " .. currentItemID)

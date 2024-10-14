@@ -7,9 +7,18 @@ local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
 ---@type DP_CustomColors
 local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
 
+local dusts = {}
 local essences = {}
+local shards = {}
+local crystals = {}
 local items = {}
+
 local armor, weapon, all
+local dust = "dust"
+local essence = "essence"
+local shard = "shard"
+local crystal = "crystal"
+local unkonwun = string.lower(UNKNOWN)
 
 local strange_dust = 10940
 local soul_dust = 11083
@@ -74,6 +83,51 @@ local disenchantData = {
   { 450, 305, 999, "2-5x", hypnotic_dust, "1-2x", greater_celestial_essence, "1x", heavenly_shard,         "1x", maelstrom_crystal },
 }
 
+local enchantingItemType = {
+  [strange_dust]              = dust,
+  [soul_dust]                 = dust,
+  [vision_dust]               = dust,
+  [dream_dust]                = dust,
+  [illusion_dust]             = dust,
+  [arcane_dust]               = dust,
+  [infinite_dust]             = dust,
+  [hypnotic_dust]             = dust,
+  [lesser_magic_essence]      = essence,
+  [greater_magic_essence]     = essence,
+  [lesser_astral_essence]     = essence,
+  [greater_astral_essence]    = essence,
+  [lesser_mystic_essence]     = essence,
+  [greater_mystic_essence]    = essence,
+  [lesser_nether_essence]     = essence,
+  [greater_nether_essence]    = essence,
+  [lesser_eternal_essence]    = essence,
+  [greater_eternal_essence]   = essence,
+  [lesser_planar_essence]     = essence,
+  [greater_planar_essence]    = essence,
+  [lesser_cosmic_essence]     = essence,
+  [greater_cosmic_essence]    = essence,
+  [lesser_celestial_essence]  = essence,
+  [greater_celestial_essence] = essence,
+  [small_glimmering_shard]    = shard,
+  [large_glimmering_shard]    = shard,
+  [small_glowing_shard]       = shard,
+  [large_glowing_shard]       = shard,
+  [small_radiant_shard]       = shard,
+  [large_radiant_shard]       = shard,
+  [small_brilliant_shard]     = shard,
+  [large_brilliant_shard]     = shard,
+  [small_prismatic_shard]     = shard,
+  [large_prismatic_shard]     = shard,
+  [small_dream_shard]         = shard,
+  [dream_shard]               = shard,
+  [small_heavenly_shard]      = shard,
+  [heavenly_shard]            = shard,
+  [nexus_crystal]             = crystal,
+  [void_crystal]              = crystal,
+  [abyss_crystal]             = crystal,
+  [maelstrom_crystal]         = crystal
+}
+
 function DP_Database:Initialize()
   armor = DisenchanterPlus:DP_i18n("Armor")
   weapon = DisenchanterPlus:DP_i18n("Weapon")
@@ -86,6 +140,11 @@ end
 ---@param itemMinLevel number
 ---@return boolean
 function DP_Database:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel)
+  --DisenchanterPlus:Debug("skillLevel " .. tostring(skillLevel))
+  --DisenchanterPlus:Debug("itemLevel " .. tostring(itemLevel))
+  --DisenchanterPlus:Debug("itemMinLevel " .. tostring(itemMinLevel))
+  if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then return true end
+
   local levelToCheck = 0
   for _, currentData in pairs(disenchantData) do
     local currentSkillLevel = currentData[1]
@@ -165,13 +224,13 @@ function DP_Database:GetExpectedDisenchantData()
     local minItemLevel = currentData[2]
     local maxItemLevel = currentData[3]
     local dustText = currentData[4]
-    local dust = currentData[5]
+    local dustData = currentData[5]
     local essenceText = currentData[6]
-    local essence = currentData[7]
+    local essenceData = currentData[7]
     local shardText = currentData[8]
-    local shard = currentData[9]
+    local shardData = currentData[9]
     local crystalText = currentData[10]
-    local crystal = currentData[11]
+    local crystalData = currentData[11]
 
     -- process uncommon **********************************************************************
     local armorEntry = {
@@ -187,42 +246,42 @@ function DP_Database:GetExpectedDisenchantData()
       ItemIDs = {}
     }
 
-    if dust ~= nil then
-      armorEntry.ItemIDs[dust] = {
+    if dustData ~= nil then
+      armorEntry.ItemIDs[dustData] = {
         Percent = expectedPercents.UNCOMMON.Dust[armor],
         QuantityText = dustText
       }
-      weaponEntry.ItemIDs[dust] = {
+      weaponEntry.ItemIDs[dustData] = {
         Percent = expectedPercents.UNCOMMON.Dust[weapon],
         QuantityText = dustText
       }
     end
-    if essence ~= nil then
-      armorEntry.ItemIDs[essence] = {
+    if essenceData ~= nil then
+      armorEntry.ItemIDs[essenceData] = {
         Percent = expectedPercents.UNCOMMON.Essence[armor],
         QuantityText = essenceText
       }
-      weaponEntry.ItemIDs[essence] = {
+      weaponEntry.ItemIDs[essenceData] = {
         Percent = expectedPercents.UNCOMMON.Essence[weapon],
         QuantityText = essenceText
       }
     end
-    if shard ~= nil then
-      armorEntry.ItemIDs[shard] = {
+    if shardData ~= nil then
+      armorEntry.ItemIDs[shardData] = {
         Percent = expectedPercents.UNCOMMON.Shard[armor],
         QuantityText = shardText
       }
-      weaponEntry.ItemIDs[shard] = {
+      weaponEntry.ItemIDs[shardData] = {
         Percent = expectedPercents.UNCOMMON.Shard[weapon],
         QuantityText = shardText
       }
     end
-    if crystal ~= nil then
-      armorEntry.ItemIDs[crystal] = {
+    if crystalData ~= nil then
+      armorEntry.ItemIDs[crystalData] = {
         Percent = expectedPercents.UNCOMMON.Crystal[armor],
         QuantityText = crystalText
       }
-      weaponEntry.ItemIDs[crystal] = {
+      weaponEntry.ItemIDs[crystalData] = {
         Percent = expectedPercents.UNCOMMON.Crystal[weapon],
         QuantityText = crystalText
       }
@@ -237,14 +296,14 @@ function DP_Database:GetExpectedDisenchantData()
       MaxILevel = maxItemLevel,
       ItemIDs = {}
     }
-    if shard ~= nil then
-      rareEntry.ItemIDs[shard] = {
+    if shardData ~= nil then
+      rareEntry.ItemIDs[shardData] = {
         Percent = expectedPercents.RARE.Shard[all],
         QuantityText = shardText
       }
     end
-    if crystal ~= nil then
-      rareEntry.ItemIDs[crystal] = {
+    if crystalData ~= nil then
+      rareEntry.ItemIDs[crystalData] = {
         Percent = expectedPercents.RARE.Crystal[all],
         QuantityText = crystalText
       }
@@ -258,14 +317,14 @@ function DP_Database:GetExpectedDisenchantData()
       MaxILevel = maxItemLevel,
       ItemIDs = {}
     }
-    if shard ~= nil then
-      epicEntry.ItemIDs[shard] = {
+    if shardData ~= nil then
+      epicEntry.ItemIDs[shardData] = {
         Percent = expectedPercents.EPIC.Shard[all],
         QuantityText = shardText
       }
     end
-    if crystal ~= nil then
-      epicEntry.ItemIDs[crystal] = {
+    if crystalData ~= nil then
+      epicEntry.ItemIDs[crystalData] = {
         Percent = expectedPercents.EPIC.Crystal[all],
         QuantityText = crystalText
       }
@@ -291,13 +350,22 @@ end
 ---@return table
 function DP_Database:GetNumEntries()
   local itemList = DisenchanterPlus.db.global.data.items or {}
-  local essencesList = DisenchanterPlus.db.global.data.essences or {}
   local dustList = DisenchanterPlus.db.global.data.dusts or {}
-  return {
+  local essenceList = DisenchanterPlus.db.global.data.essences or {}
+  local shardList = DisenchanterPlus.db.global.data.shards or {}
+  local crystalList = DisenchanterPlus.db.global.data.crystals or {}
+  --local unknownList = DisenchanterPlus.db.global.data.unknown or {}
+
+  local result = {
     [DisenchanterPlus:DP_i18n("Items")] = DP_CustomFunctions:TableLength(itemList),
-    [DisenchanterPlus:DP_i18n("Essences")] = DP_CustomFunctions:TableLength(essencesList),
     [DisenchanterPlus:DP_i18n("Dusts")] = DP_CustomFunctions:TableLength(dustList),
+    [DisenchanterPlus:DP_i18n("Essences")] = DP_CustomFunctions:TableLength(essenceList),
+    [DisenchanterPlus:DP_i18n("Shards")] = DP_CustomFunctions:TableLength(shardList),
+    [DisenchanterPlus:DP_i18n("Crystals")] = DP_CustomFunctions:TableLength(crystalList),
+    --[UNKNOWN] = DP_CustomFunctions:TableLength(unknownList),
   }
+  result = DP_CustomFunctions:SortComplexTableByKey(result)
+  return result
 end
 
 ---Update database
@@ -318,4 +386,27 @@ end
 ---Purge database
 function DP_Database:PurgeDatabase()
   DisenchanterPlus:Info(DisenchanterPlus:DP_i18n("Purge database"))
+end
+
+---Get enchanting item type
+function DP_Database:GetEnchantingItemType(itemID)
+  local result = enchantingItemType[itemID] or nil
+  --DisenchanterPlus:Debug(string.format("Enchanting itemID type %s = %s", tostring(itemID), result))
+  return result
+end
+
+function DP_Database:GetEnchantingItemData(itemID)
+  local type = DP_Database:GetEnchantingItemType(itemID)
+  if type == nil then return end
+  local result
+  if type == dust then
+    result = DisenchanterPlus.db.global.data.dusts[itemID] or {}
+  elseif type == essence then
+    result = DisenchanterPlus.db.global.data.essences[itemID] or {}
+  elseif type == shard then
+    result = DisenchanterPlus.db.global.data.shards[itemID] or {}
+  elseif type == crystal then
+    result = DisenchanterPlus.db.global.data.crystals[itemID] or {}
+  end
+  return result
 end

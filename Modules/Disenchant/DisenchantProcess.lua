@@ -25,7 +25,7 @@ local totalItemsInBagsToDisenchant = 0
 function DP_DisenchantProcess:Initialize()
   C_Timer.After(3, function()
     DP_DisenchantGroup:SaveSessionIgnoreList({})
-    DP_DisenchantProcess:StartAutoDisenchant()
+    DP_DisenchantProcess:StartAutoDisenchant(false)
     DP_DisenchantGroup:CreatePermanentIgnoreListItems()
   end)
 end
@@ -53,6 +53,11 @@ function DP_DisenchantProcess:EmptySessionIgnoredItemsList()
   DP_DisenchantGroup:CreateSessionIgnoreListItems(sessionIgnoredItems)
 end
 
+function DP_DisenchantProcess:EmptyPermanentIgnoredItemsList()
+  DP_DisenchantGroup:SavePermanentIgnoreList({})
+  DP_DisenchantGroup:CreatePermanentIgnoreListItems()
+end
+
 ---Add item to ignored session list
 ---@param itemID number
 function DP_DisenchantProcess:AddPermanentIgnoredItem(itemID)
@@ -78,11 +83,6 @@ end
 ---@param spellID number
 function DP_DisenchantProcess:UnitSpellCastSent(unit, target, castGUID, spellID)
   --DisenchanterPlus:Debug(string.format("UnitSpellCastStart : unitTarget = %s, castGUID = %s, spellID = %d", unitTarget, castGUID, spellID))
-  if unit == "player" and spellID == disenchantSpellID then
-    if not disenchanting then disenchanting = true end
-    DP_DisenchantWindow:CloseWindow()
-    DP_DisenchantProcess:CancelAutoDisenchant(true)
-  end
 end
 
 ---Process spell cast succeded
@@ -137,13 +137,6 @@ end
 function DP_DisenchantProcess:UnitSpellCastStop(unitTarget, castGUID, spellID)
 end
 
----Process spell cast succeded
----@param unitTarget string
----@param castGUID string
----@param spellID number
-function DP_DisenchantProcess:UnitSpellCastSucceeded(unitTarget, castGUID, spellID)
-end
-
 ---Process spell cast failed
 ---@param unitTarget string
 ---@param castGUID string
@@ -170,8 +163,6 @@ end
 
 ---Process loot closed
 function DP_DisenchantProcess:LootClosed()
-  disenchanting = false
-  itemToDisenchant = false
   C_Timer.After(1, function()
     DP_DisenchantProcess:StartAutoDisenchant(true)
   end)
@@ -194,7 +185,7 @@ end
 ---Scan for items
 function DP_DisenchantProcess:ScanForItems()
   if not DisenchanterPlus.db.char.general.autoDisenchantEnabled then
-    DP_DisenchantProcess:CancelAutoDisenchant()
+    DP_DisenchantProcess:CancelAutoDisenchant(true)
     DP_DisenchantWindow:CloseWindow()
   end
   --DisenchanterPlus:Debug("Search items...")

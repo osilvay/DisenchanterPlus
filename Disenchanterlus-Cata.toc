@@ -50,6 +50,7 @@ Modules\Custom\CustomConfig.lua
 Modules\Custom\CustomMedias.lua
 
 Modules\Disenchant\DisenchantProcess.lua
+Modules\Disenchant\LootProcess.lua
 
 Modules\Tooltip\EnchantingTooltip.lua
 

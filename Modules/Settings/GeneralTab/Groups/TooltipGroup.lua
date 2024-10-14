@@ -27,12 +27,101 @@ function DP_TooltipGroup:Config(order)
         name = DisenchanterPlus:DP_i18n("Enable"),
         desc = DisenchanterPlus:DP_i18n("Enable tooltips about enchanting materials."),
         width = "full",
-        disabled = false,
+        disabled = function() return DisenchanterPlus.db.char.general.disableAll end,
         get = function()
           return DisenchanterPlus.db.char.general.tooltipsEnabled
         end,
         set = function(info, value)
           DisenchanterPlus.db.char.general.tooltipsEnabled = value
+        end,
+      },
+      separator_1 = DP_CustomConfig:CreateSeparatorConfig(1.1),
+      pressKeyDown = {
+        type = "select",
+        order = 2,
+        width = "full",
+        name = DisenchanterPlus:DP_i18n("Press key to show"),
+        values = DP_CustomConfig:KeyDownDropdownConfig(),
+        disabled = function() return not DisenchanterPlus.db.char.general.tooltipsEnabled end,
+        get = function() return DisenchanterPlus.db.char.general.pressKeyDown end,
+        set = function(info, value)
+          DisenchanterPlus.db.char.general.pressKeyDown = value
+        end,
+      },
+      --separator_1 = DP_CustomConfig:CreateSeparatorConfig(2),
+      showTitle = {
+        type = "toggle",
+        order = 3,
+        name = DisenchanterPlus:DP_i18n("Show title"),
+        desc = DisenchanterPlus:DP_i18n("Toggle showing title."),
+        width = "full",
+        disabled = function() return (not DisenchanterPlus.db.char.general.tooltipsEnabled); end,
+        get = function() return DisenchanterPlus.db.char.general.showTitle end,
+        set = function(info, value)
+          DisenchanterPlus.db.char.general.showTitle = value
+        end,
+      },
+      showItemID = {
+        type = "toggle",
+        order = 4,
+        name = DisenchanterPlus:DP_i18n("Show ItemID"),
+        desc = DisenchanterPlus:DP_i18n("Toggle showing item ids."),
+        width = "full",
+        disabled = function() return (not DisenchanterPlus.db.char.general.tooltipsEnabled); end,
+        get = function() return DisenchanterPlus.db.char.general.showItemID end,
+        set = function(info, value)
+          DisenchanterPlus.db.char.general.showItemID = value
+        end,
+      },
+      zeroValues = {
+        type = "toggle",
+        order = 5,
+        name = DisenchanterPlus:DP_i18n("Show zero values"),
+        desc = DisenchanterPlus:DP_i18n("Toggle showing zero values."),
+        width = "full",
+        disabled = function() return (not DisenchanterPlus.db.char.general.tooltipsEnabled); end,
+        get = function() return DisenchanterPlus.db.char.general.zeroValues end,
+        set = function(info, value)
+          DisenchanterPlus.db.char.general.zeroValues = value
+        end,
+      },
+      showExpectedEssences = {
+        type = "toggle",
+        order = 6,
+        name = DisenchanterPlus:DP_i18n("Show expected essences"),
+        desc = DisenchanterPlus:DP_i18n("Toggle showing of expected essences on items."),
+        width = "full",
+        disabled = function() return (not DisenchanterPlus.db.char.general.tooltipsEnabled); end,
+        get = function() return DisenchanterPlus.db.char.general.showExpectedEssences end,
+        set = function(info, value)
+          DisenchanterPlus.db.char.general.showExpectedEssences = value
+        end,
+      },
+      showRealEssences = {
+        type = "toggle",
+        order = 7,
+        name = DisenchanterPlus:DP_i18n("Show real essences"),
+        desc = DisenchanterPlus:DP_i18n("Toggle showing of real essences on items."),
+        width = "full",
+        disabled = function() return (not DisenchanterPlus.db.char.general.tooltipsEnabled); end,
+        get = function() return DisenchanterPlus.db.char.general.showRealEssences end,
+        set = function(info, value)
+          DisenchanterPlus.db.char.general.showRealEssences = value
+        end,
+      },
+      itemsToShow = {
+        type = "range",
+        order = 8,
+        name = DisenchanterPlus:DP_i18n("Items to show"),
+        desc = DisenchanterPlus:DP_i18n("Items to show in tooltip."),
+        width = "full",
+        min = 1,
+        max = 20,
+        step = 1,
+        disabled = function() return (not DisenchanterPlus.db.char.general.tooltipsEnabled); end,
+        get = function() return DisenchanterPlus.db.char.general.itemsToShow end,
+        set = function(info, value)
+          DisenchanterPlus.db.char.general.itemsToShow = value
         end,
       },
     }

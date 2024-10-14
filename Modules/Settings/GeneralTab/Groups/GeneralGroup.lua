@@ -30,6 +30,33 @@ function DP_GeneralGroup:Config(order)
     inline = true,
     name = "",
     args = {
+      disableAll = {
+        type = "toggle",
+        order = 1,
+        name = DisenchanterPlus:DP_i18n("Disable all"),
+        desc = DisenchanterPlus:DP_i18n("Disable all settings."),
+        width = "full",
+        disabled = false,
+        get = function()
+          local value = DisenchanterPlus.db.char.general.disableAll
+          DP_GeneralGroup:CheckStatus(value)
+          return DisenchanterPlus.db.char.general.disableAll
+        end,
+        set = function(info, value)
+          DP_GeneralGroup:CheckStatus(value)
+          DisenchanterPlus.db.char.general.disableAll = value
+        end,
+      },
     },
   }
+end
+
+function DP_GeneralGroup:CheckStatus(status)
+  if status then
+    DisenchanterPlus.db.char.general.tooltipsEnabled = false
+    DisenchanterPlus.db.char.general.autoDisenchantEnabled = false
+  else
+    DisenchanterPlus.db.char.general.tooltipsEnabled = true
+    DisenchanterPlus.db.char.general.autoDisenchantEnabled = true
+  end
 end

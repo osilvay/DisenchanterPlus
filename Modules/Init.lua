@@ -22,11 +22,15 @@ local DP_DisenchanterPlusEvents = DP_ModuleLoader:ImportModule("DP_DisenchanterP
 ---@type DP_EnchantingTooltip
 local DP_EnchantingTooltip = DP_ModuleLoader:ImportModule("DP_EnchantingTooltip")
 
+---@type DP_Database
+local DP_Database = DP_ModuleLoader:ImportModule("DP_Database")
+
 function DP_Init:Initialize()
   DP_MinimapIcon:Initialize()
   DP_SlashCommands.RegisterSlashCommands()
   DP_WelcomeWindow:Initialize()
   DP_Settings:Initialize()
+  DP_Database:Initialize()
   DP_EnchantingTooltip:Initialize()
   DP_DisenchanterPlusEvents:Initialize()
   C_Timer.After(3, function()

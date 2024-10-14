@@ -5,6 +5,9 @@ local _DP_DisenchanterPlusEvents = {}
 ---@type DP_Database
 local DP_Database = DP_ModuleLoader:ImportModule("DP_Database")
 
+---@type DP_LootProcess
+local DP_LootProcess = DP_ModuleLoader:ImportModule("DP_LootProcess")
+
 ---@type DP_DisenchantProcess
 local DP_DisenchantProcess = DP_ModuleLoader:ImportModule("DP_DisenchantProcess")
 
@@ -15,10 +18,11 @@ function DP_DisenchanterPlusEvents:Initialize()
   DisenchanterPlus:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", _DP_DisenchanterPlusEvents.UnitSpellCastSucceeded)
   DisenchanterPlus:RegisterEvent("UNIT_SPELLCAST_FAILED", _DP_DisenchanterPlusEvents.UnitSpellCastFailed)
   DisenchanterPlus:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED", _DP_DisenchanterPlusEvents.UnitSpellCastInterrupted)
+  DisenchanterPlus:RegisterEvent("LOOT_READY", _DP_DisenchanterPlusEvents.LootReady)
   DisenchanterPlus:RegisterEvent("LOOT_CLOSED", _DP_DisenchanterPlusEvents.LootClosed)
   DisenchanterPlus:RegisterEvent("BAG_UPDATE", _DP_DisenchanterPlusEvents.BagUpdate)
-
-  DP_Database:Initialize()
+  DisenchanterPlus:RegisterEvent("ITEM_LOCKED", _DP_DisenchanterPlusEvents.ItemLocked)
+  DP_LootProcess:Initialize()
   DP_DisenchantProcess:Initialize()
 end
 
@@ -35,7 +39,7 @@ function _DP_DisenchanterPlusEvents.UnitSpellCastStop(_, unitTarget, castGUID, s
 end
 
 function _DP_DisenchanterPlusEvents.UnitSpellCastSucceeded(_, unitTarget, castGUID, spellID)
-  DP_DisenchantProcess:UnitSpellCastSucceeded(unitTarget, castGUID, spellID)
+  DP_LootProcess:UnitSpellCastSucceeded(unitTarget, castGUID, spellID)
 end
 
 function _DP_DisenchanterPlusEvents.UnitSpellCastFailed(_, unitTarget, castGUID, spellID)
@@ -46,10 +50,19 @@ function _DP_DisenchanterPlusEvents.UnitSpellCastInterrupted(_, unitTarget, cast
   DP_DisenchantProcess:UnitSpellCastInterrupted(unitTarget, castGUID, spellID)
 end
 
+function _DP_DisenchanterPlusEvents.LootReady(_)
+  DP_LootProcess:LootReady()
+end
+
 function _DP_DisenchanterPlusEvents.LootClosed(_)
+  DP_LootProcess:LootClosed()
   DP_DisenchantProcess:LootClosed()
 end
 
 function _DP_DisenchanterPlusEvents.BagUpdate(_, bagIndex)
   DP_DisenchantProcess:BagUpdate(bagIndex)
+end
+
+function _DP_DisenchanterPlusEvents.ItemLocked(_, bagOrSlotIndex, slotIndex)
+  DP_LootProcess:ItemLocked(bagOrSlotIndex, slotIndex)
 end

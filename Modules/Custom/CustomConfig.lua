@@ -172,7 +172,7 @@ function DP_CustomConfig:CreateSeparatorConfig(order)
     args = {
       --spacer_1 = DP_CustomFrames:Spacer(1, false),
       separator = {
-        type = "header",
+        type = "description",
         order = 1,
         name = "",
       }

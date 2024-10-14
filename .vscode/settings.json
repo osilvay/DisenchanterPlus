@@ -55,6 +55,7 @@
     "CHAT_FLAG_AFK",
     "class",
     "message",
-    "UNKNOWN"
+    "UNKNOWN",
+    "GameTooltipTextLeft1"
   ]
 }
