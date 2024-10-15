@@ -112,3 +112,5 @@ L["Real"]                                                         = true
 L["No data"]                                                      = true
 L["Items in session list cleared."]                               = true
 L["Items in permanent ignore list cleared."]                      = true
+L["more"]                                                         = true
+L["Disenchanting"]                                                = true

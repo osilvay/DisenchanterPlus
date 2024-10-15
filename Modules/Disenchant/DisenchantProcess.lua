@@ -93,6 +93,10 @@ function DP_DisenchantProcess:UnitSpellCastStart(unitTarget, castGUID, spellID)
   --DisenchanterPlus:Debug(string.format("UnitSpellCastStart : unitTarget = %s, castGUID = %s, spellID = %d", unitTarget, castGUID, spellID))
   if unitTarget == "player" and spellID == disenchantSpellID then
     if not disenchanting then disenchanting = true end
+    local itemName, itemLink, itemIcon = DP_DisenchantWindow:GetItemToDisenchant()
+    if itemLink ~= nil and itemIcon ~= nil then
+      DisenchanterPlus:Info(string.format("%s |T%d:0|t %s", DisenchanterPlus:DP_i18n("Disenchanting"), itemIcon, itemLink))
+    end
     DP_DisenchantWindow:CloseWindow()
     DP_DisenchantProcess:CancelAutoDisenchant(true)
   end

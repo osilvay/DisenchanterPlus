@@ -12,106 +12,7 @@ local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
 
 function DP_EnchantingTooltip:Initialize()
   PercentByQualityAndLevel = DP_Database:GetExpectedDisenchantData()
-  hooksecurefunc(GameTooltip, "SetBagItem", DP_EnchantingTooltip.SetBagItem)
-  hooksecurefunc(GameTooltip, "SetInventoryItem", DP_EnchantingTooltip.SetInventoryItem)
-  hooksecurefunc(GameTooltip, "SetAuctionItem", DP_EnchantingTooltip.SetAuctionItem)
-  if GameTooltip.SetItemKey then
-    hooksecurefunc(GameTooltip, "SetItemKey", DP_EnchantingTooltip.SetItemKey)
-  end
-  hooksecurefunc(GameTooltip, "SetHyperlink", DP_EnchantingTooltip.SetHyperlink)
-  --[[
-  SetBuybackItem
-  SetMerchantItem
-  SetRecipeReagentItem
-  SetTradeSkillItem
-  SetCraftItem
-  SetLootItem
-  SetSendMailItem
-  SetInboxItem
-  SetTradePlayerItem
-  SetTradeTargetItem
-  ]]
-end
-
----SetBagItem hook
----@param self DP_EnchantingTooltip
----@param bag number
----@param slot number
-function DP_EnchantingTooltip.SetBagItem(self, bag, slot)
-  if (not slot) then return end
-  if not DP_CustomFunctions:IsKeyPressed(DisenchanterPlus.db.char.general.pressKeyDown) then return end
-  if not DisenchanterPlus.db.char.general.tooltipsEnabled then return end
-
-  local itemLocation = ItemLocation:CreateFromBagAndSlot(bag, slot)
-  if C_Item.DoesItemExist(itemLocation) then
-    local item = {
-      itemID = C_Item.GetItemID(itemLocation)
-    }
-    DP_EnchantingTooltip:ShowTooltip(item)
-    GameTooltip:Show()
-  end
-end
-
----SetInventoryItem hook
----@param self DP_EnchantingTooltip
----@param unit string
----@param slot number
-function DP_EnchantingTooltip.SetInventoryItem(self, unit, slot)
-  if (not slot) then return end
-  if not DP_CustomFunctions:IsKeyPressed(DisenchanterPlus.db.char.general.pressKeyDown) then return end
-  if not DisenchanterPlus.db.char.general.tooltipsEnabled then return end
-  local item = {
-    itemID = GetInventoryItemID(unit, slot)
-  }
-  DP_EnchantingTooltip:ShowTooltip(item)
-  GameTooltip:Show()
-end
-
----SetAuctionItem hook
----@param self DP_EnchantingTooltip
----@param type string
----@param index number
-function DP_EnchantingTooltip.SetAuctionItem(self, type, index)
-  if (not index) then return end
-  if not DP_CustomFunctions:IsKeyPressed(DisenchanterPlus.db.char.general.pressKeyDown) then return end
-  if not DisenchanterPlus.db.char.general.tooltipsEnabled then return end
-  local _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, itemID, _ = GetAuctionItemInfo(type, index);
-  local item = {
-    itemID = itemID
-  }
-  DP_EnchantingTooltip:ShowTooltip(item)
-  GameTooltip:Show()
-end
-
----SetItemKey hook
----@param self DP_EnchantingTooltip
----@param itemID number
----@param itemLevel number
----@param itemSuffix number
-function DP_EnchantingTooltip.SetItemKey(self, itemID, itemLevel, itemSuffix)
-  if not DP_CustomFunctions:IsKeyPressed(DisenchanterPlus.db.char.general.pressKeyDown) then return end
-  local info = C_TooltipInfo.GetItemKey(itemID, itemLevel, itemSuffix)
-  if info == nil then return end
-  local item = {
-    itemID = itemID
-  }
-  DP_EnchantingTooltip:ShowTooltip(item)
-  GameTooltip:Show()
-end
-
----SetHyperlink hook
----@param self DP_EnchantingTooltip
----@param itemLink string
-function DP_EnchantingTooltip.SetHyperlink(self, itemLink)
-  if not DP_CustomFunctions:IsKeyPressed(DisenchanterPlus.db.char.general.pressKeyDown) then return end
-  local itemID, strippedItemLink = GetItemInfoFromHyperlink(itemLink)
-
-  if itemID == nil then return end
-  local item = {
-    itemID = itemID
-  }
-  DP_EnchantingTooltip:ShowTooltip(item)
-  GameTooltip:Show()
+  GameTooltip:HookScript("OnTooltipSetItem", DP_EnchantingTooltip.OnGameTooltipSetItem)
 end
 
 -- #######################################################################################################################################
@@ -119,7 +20,7 @@ end
 ---Show tooltip
 ---@param itemInfo table
 function DP_EnchantingTooltip:ShowTooltip(itemInfo)
-  local itemID = itemInfo.itemID
+  local itemID = itemInfo.ItemID
   local showTooltip = false
   local isEnchantingItem = false
   local isItem = false
@@ -144,24 +45,22 @@ function DP_EnchantingTooltip:ShowTooltip(itemInfo)
   end
   if not showTooltip then return end
 
+  -- draw title
   local isShowItemID = DisenchanterPlus.db.char.general.showItemID
   local isShowTitle = DisenchanterPlus.db.char.general.showTitle
   local itemIDText = DP_CustomColors:Colorize(DP_CustomColors:CustomColors("ROWID"), tostring(itemID))
   if not isShowItemID then
     itemIDText = ""
   end
-  local titleText = DisenchanterPlus:MessageWithAddonColor(DisenchanterPlus:DP_i18n("Enchanting"))
 
-  if isItem then
-    titleText = string.format("%s", titleText)
+  if isShowTitle then
+    local titleText = string.format("%s", DisenchanterPlus:MessageWithAddonColor(DisenchanterPlus:DP_i18n("Enchanting")))
     GameTooltip:AddLine(" ")
     GameTooltip:AddDoubleLine(titleText, itemIDText)
+  end
+  if isItem then
     DP_EnchantingTooltip:ProcessItem(itemID)
   elseif isEnchantingItem then
-    local numItems = 0
-    titleText = string.format("%s |cff999999(%d %s)|r", titleText, numItems, DisenchanterPlus:DP_i18n("items"))
-    GameTooltip:AddLine(" ")
-    GameTooltip:AddDoubleLine(titleText, itemIDText)
     DP_EnchantingTooltip:ProcessEnchantingItem(itemID)
   end
 end
@@ -188,9 +87,8 @@ function DP_EnchantingTooltip:ProcessItem(itemID)
     for enchantingItemID, enchantingItemInfo in pairs(enchantingItems) do
       local currentItemInfo = DP_Database:GetEnchantingItemData(enchantingItemID)
       if currentItemInfo ~= nil then
-        currentItemInfo.Source = nil
-        currentItemInfo.Quantity = enchantingItemInfo.Quantity
-        currentItemInfo.Items = enchantingItemInfo.Items
+        currentItemInfo.Quantity = enchantingItemInfo.Quantity or 0
+        currentItemInfo.Items = enchantingItemInfo.Items or 0
 
         totalEnchantingItems = totalEnchantingItems + 1
         totalQuantity = totalQuantity + (enchantingItemInfo.Quantity or 0)
@@ -320,6 +218,101 @@ end
 function DP_EnchantingTooltip:ProcessEnchantingItem(itemID)
   if itemID == nil then return end
   if DisenchanterPlus.db.char.general.showRealEssences then
-    local itemRealData = {}
+    local enchantingItemInfo = DP_Database:GetEnchantingItemData(itemID)
+    if enchantingItemInfo == nil then return end
+    local sourceItems = enchantingItemInfo.Source or {}
+    local essenceRealData = {}
+    local differentItems = 0
+    local totalItems = 0
+    local totalQuantity = 0
+
+    for sourceItemID, sourceItemInfo in pairs(sourceItems) do
+      local savedItemInfo = DP_Database:GetItemData(sourceItemID)
+      --DisenchanterPlus:Dump(savedItemInfo)
+
+      if savedItemInfo ~= nil then
+        savedItemInfo.Quantity = sourceItemInfo.Quantity
+        savedItemInfo.Items = sourceItemInfo.Items
+        savedItemInfo.ItemID = sourceItemID
+
+        differentItems = differentItems + 1
+        totalItems = totalItems + (sourceItemInfo.Items or 0)
+        totalQuantity = totalQuantity + (sourceItemInfo.Quantity or 0)
+        --DisenchanterPlus:Dump(currentItemInfo)
+        table.insert(essenceRealData, savedItemInfo)
+      end
+      --savedItemInfo.EnchantingItems = nil
+    end
+    table.sort(essenceRealData, function(a, b) return a.Items ~= nil and b.Items ~= nil and a.Items < b.Items end)
+    --DisenchanterPlus:Dump(essenceRealData)
+
+    -- draw title
+    local isShowTitle = DisenchanterPlus.db.char.general.showTitle
+    if isShowTitle then
+      local titleText = string.format("|cff999999(%d %s)|r", differentItems, DisenchanterPlus:DP_i18n("items"))
+      GameTooltip:AddLine(titleText)
+    end
+
+    local index = 1
+    local currentPercent = 0
+    for _, currentItemInfo in pairs(essenceRealData) do
+      local quantity = currentItemInfo.Quantity or 0
+      local items = currentItemInfo.Items or 0
+      if (items == 0 and DisenchanterPlus.db.char.general.zeroValues) or items > 0 then
+        if index > DisenchanterPlus.db.char.general.itemsToShow then
+          if totalItems > DisenchanterPlus.db.char.general.itemsToShow then
+            local remainingPercent = "0"
+            if currentPercent > 100 then currentPercent = 100 end
+            if currentPercent > 0 then
+              remainingPercent = string.format("%.2f", 100 - currentPercent)
+            end
+            local remaining = string.format("%.2f", (totalItems - DisenchanterPlus.db.char.general.itemsToShow))
+            local leftTotal = string.format("   %d |cffc1c1c1%s...|r", remaining, DisenchanterPlus:DP_i18n("more"))
+            local rightTotal = string.format("|cff919191%s|r", remainingPercent) .. " |cfff1b131%|r"
+            GameTooltip:AddDoubleLine(leftTotal, rightTotal)
+          end
+          break
+        end
+
+        -- draw item
+        local percentage = string.format("%.2f", 0)
+        local itemLink = currentItemInfo.ItemLink
+        local itemIcon = currentItemInfo.ItemIcon
+
+        if itemLink == nil or itemIcon == nil then
+          local _, cachedItemLink, _, _, _, _, _, _, _, cachedItemIcon, _, _, _, _, _, _, _ = C_Item.GetItemInfo(currentItemInfo.ItemID)
+          if itemLink == nil then itemLink = cachedItemLink end
+          if itemIcon == nil then itemIcon = cachedItemIcon end
+        end
+
+        if totalItems >= 1 then
+          percentage = string.format("%.2f", (items * 100) / totalItems)
+        end
+        currentPercent = currentPercent + tonumber(percentage)
+
+        local percentageText = string.format("|cfff1f1f1%s|r", percentage or "0")
+        local leftTextLine = string.format(" + |T%d:0|t %s |cff91c1f1x|r|cff6191f1%d|r", itemIcon or "", itemLink or "", items or 0)
+        local rightTextLine = string.format("%s", percentageText) .. " |cfff1b131%|r"
+        GameTooltip:AddDoubleLine(leftTextLine, rightTextLine)
+        index = index + 1
+      end
+    end
+  end
+end
+
+function DP_EnchantingTooltip.OnGameTooltipShow(tooltip, ...)
+end
+
+function DP_EnchantingTooltip.OnGameTooltipSetItem(tooltip, ...)
+  local itemName, itemLink = tooltip:GetItem()
+  local itemID = GetItemInfoFromHyperlink(itemLink)
+  if not itemID or itemID == 0 then
+    DisenchanterPlus:Warning("Not an item")
+  else
+    --DisenchanterPlus:Info("Item : " .. itemName .. " - " .. itemLink)
+    local itemInfo = {
+      ItemID = itemID
+    }
+    DP_EnchantingTooltip:ShowTooltip(itemInfo)
   end
 end

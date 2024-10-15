@@ -386,6 +386,11 @@ end
 ---Purge database
 function DP_Database:PurgeDatabase()
   DisenchanterPlus:Info(DisenchanterPlus:DP_i18n("Purge database"))
+  DisenchanterPlus.db.global.data.items = {}
+  DisenchanterPlus.db.global.data.dusts = {}
+  DisenchanterPlus.db.global.data.essences = {}
+  DisenchanterPlus.db.global.data.shards = {}
+  DisenchanterPlus.db.global.data.crystals = {}
 end
 
 ---Get enchanting item type
@@ -395,10 +400,20 @@ function DP_Database:GetEnchantingItemType(itemID)
   return result
 end
 
+function DP_Database:GetItemData(itemID)
+  return DisenchanterPlus.db.global.data.items[itemID] or nil
+end
+
+function DP_Database:SetItemData(itemID, itemInfo)
+  --DisenchanterPlus:Debug(string.format("Saving enchanting itemID type %s", tostring(itemID)))
+  if itemID == nil then return end
+  DisenchanterPlus.db.global.data.items[itemID] = itemInfo
+end
+
 function DP_Database:GetEnchantingItemData(itemID)
   local type = DP_Database:GetEnchantingItemType(itemID)
   if type == nil then return end
-  local result
+  local result = {}
   if type == dust then
     result = DisenchanterPlus.db.global.data.dusts[itemID] or {}
   elseif type == essence then
@@ -409,4 +424,18 @@ function DP_Database:GetEnchantingItemData(itemID)
     result = DisenchanterPlus.db.global.data.crystals[itemID] or {}
   end
   return result
+end
+
+function DP_Database:SetEnchantingItemData(itemID, lootInfo)
+  local type = DP_Database:GetEnchantingItemType(itemID)
+  if type == nil then return end
+  if type == dust then
+    DisenchanterPlus.db.global.data.dusts[itemID] = lootInfo
+  elseif type == essence then
+    DisenchanterPlus.db.global.data.essences[itemID] = lootInfo
+  elseif type == shard then
+    DisenchanterPlus.db.global.data.shards[itemID] = lootInfo
+  elseif type == crystal then
+    DisenchanterPlus.db.global.data.crystals[itemID] = lootInfo
+  end
 end

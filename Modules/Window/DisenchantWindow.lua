@@ -28,8 +28,8 @@ local LibStub = LibStub
 --local currentBarWidth = 0
 
 local DEFAULT_DIALOG_BACKDROP = {
-  bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]],
-  edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
+  bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+  edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
   tile = true,
   tileSize = 32,
   edgeSize = 32,
@@ -452,4 +452,21 @@ end
 ---@return boolean
 function DP_DisenchantWindow:ItemToDisenchant()
   return itemToDisenchant
+end
+
+---Get item to disenchant
+---@return string|nil
+---@return string|nil
+---@return integer|nil
+function DP_DisenchantWindow:GetItemToDisenchant()
+  local itemName, itemLink, itemIcon
+  local bagIndex = tonumber(DisenchanterPlusBaseFrame.yesButton:GetAttribute("target-bag")) or nil
+  local slot = tonumber(DisenchanterPlusBaseFrame.yesButton:GetAttribute("target-slot")) or nil
+  if bagIndex ~= nil and slot ~= nil and tonumber(bagIndex) and tonumber(slot) then
+    local iBagIndex = math.floor(bagIndex)
+    local iSlot = math.floor(slot)
+    local itemID = C_Container.GetContainerItemID(iBagIndex, iSlot);
+    itemName, itemLink, _, _, _, _, _, _, _, itemIcon, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
+  end
+  return itemName, itemLink, itemIcon
 end
