@@ -7,6 +7,7 @@
 ## Features
 
 - **Tracking:** Track items obtained from disenchant items.
+- **Searching:** _(TODO)_ Disenchant items from inventory.
 - **Auto-Disenchant:** Disenchant items from inventory.
 
 ## Slash Commands
@@ -15,7 +16,7 @@ The addon can be managed using the following slash commands:
 
 - `/dplus`: Display help information.
 - `/dplus confit`: Opens configuration window.
-- `/dplus main`: _(TODO)_ Opens the disenchanted statistics window.
+- `/dplus main`: _(TODO)_ Opens the items and essences items search window.
 
 ## Compatibility
 
