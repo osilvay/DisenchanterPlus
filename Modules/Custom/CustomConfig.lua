@@ -14,9 +14,6 @@ local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors");
 ---@type DP_CustomPopup
 local DP_CustomPopup = DP_ModuleLoader:ImportModule("DP_CustomPopup")
 
----@type DP_CustomDialog
-local DP_CustomDialog = DP_ModuleLoader:ImportModule("DP_CustomDialog")
-
 ---Generate delete character dropdown config
 ---@param characterList table
 ---@param deleteCharacterFn function
