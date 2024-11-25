@@ -186,6 +186,16 @@ function DP_DisenchantProcess:SessionIgnoredItemsHasElements()
   return false
 end
 
+---Checks if there are items in the permanent ignore list
+---@return boolean
+function DP_DisenchantProcess:PermanentIgnoredItemsHasElements()
+  local permanentIgnoreList = DP_DisenchantGroup:GetPermanentIgnoreList() or {}
+  if not DP_CustomFunctions:TableIsEmpty(permanentIgnoreList) then
+    return true
+  end
+  return false
+end
+
 ---Scan for items
 function DP_DisenchantProcess:ScanForItems()
   if not DisenchanterPlus.db.char.general.autoDisenchantEnabled then

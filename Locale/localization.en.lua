@@ -114,3 +114,5 @@ L["Items in session list cleared."]                               = true
 L["Items in permanent ignore list cleared."]                      = true
 L["more"]                                                         = true
 L["Disenchanting"]                                                = true
+L["Session ignore list cleared"]                                  = true
+L["Permanent ignore list cleared"]                                = true

@@ -43,6 +43,7 @@ function _DP_EventHandler:PlayerLogin()
       factionName = englishFaction,
       locale = locale
     }
+    if DisenchanterPlus.db.global.data.characters == nil then DisenchanterPlus.db.global.data.characters = {} end
     DisenchanterPlus.db.global.data.characters[key] = true
     DisenchanterPlus.db.global.data.locale = nil
 

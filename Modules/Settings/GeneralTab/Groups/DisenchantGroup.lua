@@ -141,9 +141,9 @@ function DP_DisenchantGroup:Config(order)
       clearSessionIgnoredItems = {
         type = "execute",
         order = 6,
-        name = DP_CustomMedias:GetIconFileAsLink("clean_list1_a", 16, 16) .. " " .. DisenchanterPlus:DP_i18n("Clean session"),
+        name = DP_CustomMedias:GetIconFileAsLink("clean_list1_a", 16, 16) .. " " .. DisenchanterPlus:DP_i18n("Clean session list"),
         desc = DisenchanterPlus:DP_i18n("Clear the ignore list of this session."),
-        width = 1.5,
+        width = "full",
         disabled = function() return (not DisenchanterPlus.db.char.general.autoDisenchantEnabled); end,
         func = function()
           DP_DisenchantProcess:EmptySessionIgnoredItemsList()
@@ -153,9 +153,9 @@ function DP_DisenchantGroup:Config(order)
       clearPermanentIgnoredItems = {
         type = "execute",
         order = 7,
-        name = DP_CustomMedias:GetIconFileAsLink("cleanup_a", 16, 16) .. " " .. DisenchanterPlus:DP_i18n("Clean permanent"),
+        name = DP_CustomMedias:GetIconFileAsLink("cleanup_a", 16, 16) .. " " .. DisenchanterPlus:DP_i18n("Clean permanent list"),
         desc = DisenchanterPlus:DP_i18n("Clear the permanent ignore list."),
-        width = 1.5,
+        width = "full",
         disabled = function() return (not DisenchanterPlus.db.char.general.autoDisenchantEnabled); end,
         func = function()
           DP_DisenchantProcess:EmptyPermanentIgnoredItemsList()

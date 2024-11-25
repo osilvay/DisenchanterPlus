@@ -187,7 +187,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   noButton:Hide()
 
   -- clear session button ******************************************************************************************
-  local clearSessionButton = CreateFrame("Button", "AutoDisenchant_NoButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "BackdropTemplate")
+  local clearSessionButton = CreateFrame("Button", "AutoDisenchant_ClearSessionButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "BackdropTemplate")
   clearSessionButton:SetSize(22, 22)
   clearSessionButton:SetPoint("BOTTOMRIGHT", DisenchanterPlusBaseFrame, -210, 20)
   clearSessionButton:SetScript("OnEnter", function(current)
@@ -206,6 +206,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
     if itemToDisenchant ~= nil then
       DP_DisenchantProcess:EmptySessionIgnoredItemsList()
       DisenchanterPlusBaseFrame.clearSessionButton:Hide()
+      DisenchanterPlus:Info(DisenchanterPlus:DP_i18n("Session ignore list cleared"))
     end
   end)
   clearSessionButton:SetBackdrop({
@@ -296,6 +297,46 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   ignoreButton.text = ignoreText
   ignoreButton:Hide()
 
+  -- clear permanent button ******************************************************************************************
+  local clearPermanentButton = CreateFrame("Button", "AutoDisenchant_ClearPermanentButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "BackdropTemplate")
+  clearPermanentButton:SetSize(22, 22)
+  clearPermanentButton:SetPoint("BOTTOMLEFT", DisenchanterPlusBaseFrame, 110, 20)
+  clearPermanentButton:SetScript("OnEnter", function(current)
+    GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
+    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Clear the permanent ignore list."), nil, nil, nil, nil, true)
+    clearPermanentButton.text:SetTextColor(1, 1, 1)
+    clearPermanentButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\clean_list2:16:16|t")
+  end)
+  clearPermanentButton:SetScript("OnLeave", function(current)
+    GameTooltip:Hide()
+    clearPermanentButton.text:SetTextColor(0.6, 0.6, 0.6)
+    clearPermanentButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\clean_list2_a:16:16|t")
+  end)
+  clearPermanentButton:SetScript("OnClick", function(current)
+    DP_CustomSounds:PlayCustomSound("WindowClose")
+    if itemToDisenchant ~= nil then
+      DP_DisenchantProcess:EmptyPermanentIgnoredItemsList()
+      DisenchanterPlusBaseFrame.clearPermanentButton:Hide()
+      DisenchanterPlus:Info(DisenchanterPlus:DP_i18n("Permanent ignore list cleared"))
+    end
+  end)
+  clearPermanentButton:SetBackdrop({
+    bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+    tile = true,
+    edgeSize = 2,
+    insets = { left = 1, right = 1, top = 1, bottom = 1 },
+  })
+  clearPermanentButton:SetBackdropColor(0, 0, 0, 0)
+  DisenchanterPlusBaseFrame.clearPermanentButton = clearPermanentButton
+
+  local clearPermanentText = clearPermanentButton:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  local clearPermanentString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\clean_list2_a:16:16|t"
+  clearPermanentText:SetPoint("CENTER", clearPermanentButton, "CENTER")
+  clearPermanentText:SetText(clearPermanentString)
+  clearPermanentText:SetTextColor(0.6, 0.6, 0.6)
+  clearPermanentButton.text = clearPermanentText
+
+  clearPermanentButton:Hide()
   --[[
   -- progress bar ******************************************************************************************
   local progressBar = CreateFrame("Button", "AutoDisenchant_ProgressBar", DisenchanterPlusBaseFrame)
@@ -382,6 +423,12 @@ function DP_DisenchantWindow:OpenWindow(bagItems, tradeskill)
         DisenchanterPlusBaseFrame.clearSessionButton:Show()
       else
         DisenchanterPlusBaseFrame.clearSessionButton:Hide()
+      end
+
+      if DP_DisenchantProcess:PermanentIgnoredItemsHasElements() then
+        DisenchanterPlusBaseFrame.clearPermanentButton:Show()
+      else
+        DisenchanterPlusBaseFrame.clearPermanentButton:Hide()
       end
 
       DisenchanterPlusBaseFrame.ignoreButton:Show()

@@ -30,20 +30,20 @@ end
 
 ---Error message
 function DisenchanterPlus:Error(message)
-  DisenchanterPlus:Print("|cfffc8686[ERROR]|r : " .. message)
+  DisenchanterPlus:Print("|cfffc8686[ERROR]|r " .. message)
 end
 
 ---Warning message
 function DisenchanterPlus:Warning(message)
   if DisenchanterPlus:IsDebugEnabled() then
-    DisenchanterPlus:Print("|cfffcb986[WARNING]|r : " .. message)
+    DisenchanterPlus:Print("|cfffcb986[WARNING]|r " .. message)
   end
 end
 
 ---Info message
 function DisenchanterPlus:Info(message)
   if DisenchanterPlus:IsDebugEnabled() then
-    DisenchanterPlus:Print("|cff86f0fc[INFO]|r : " .. message)
+    DisenchanterPlus:Print("|cff86f0fc[INFO]|r " .. message)
   end
 end
 
@@ -51,14 +51,14 @@ end
 function DisenchanterPlus:Debug(message)
   if DisenchanterPlus:IsDebugEnabled() then
     if message == nil then message = 'nil' end
-    DisenchanterPlus:Print("|cfffcfc86[DEBUG]|r : " .. message)
+    DisenchanterPlus:Print("|cfffcfc86[DEBUG]|r " .. message)
   end
 end
 
 ---Log message
 function DisenchanterPlus:Log(message)
   if DisenchanterPlus:IsDebugEnabled() then
-    DisenchanterPlus:Print("|cffa1a1a1[LOG]|r : " .. message)
+    DisenchanterPlus:Print("|cffa1a1a1[LOG]|r " .. message)
   end
 end
 

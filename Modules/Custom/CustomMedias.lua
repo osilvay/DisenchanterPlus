@@ -49,7 +49,8 @@ disenchanterPlusIcons = {
   ["update_a"]      = "Interface/AddOns/DisenchanterPlus/Images/Icons/update_a",
   ["clean_list1"]   = "Interface/AddOns/DisenchanterPlus/Images/Icons/clean_list1",
   ["clean_list1_a"] = "Interface/AddOns/DisenchanterPlus/Images/Icons/clean_list1_a",
-
+  ["clean_list2"]   = "Interface/AddOns/DisenchanterPlus/Images/Icons/clean_list2",
+  ["clean_list2_a"] = "Interface/AddOns/DisenchanterPlus/Images/Icons/clean_list2_a",
 }
 
 disenchanterPlusMedias = {

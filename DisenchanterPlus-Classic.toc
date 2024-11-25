@@ -1,4 +1,4 @@
-## Interface: 11504
+## Interface: 11505
 ## Title: |cffffffffLog|r|cff57b6ffBook|r |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v0.0.1|r
 ## Version: 0.0.1
 ## Notes: DisenchanterPlus Plus for wow classic era

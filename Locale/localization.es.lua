@@ -114,3 +114,5 @@ L["Items in session list cleared."]                               = "Objetos en 
 L["Items in permanent ignore list cleared."]                      = "Objetos en la lista de ignorados permanentemente limpiados."
 L["more"]                                                         = "más"
 L["Disenchanting"]                                                = "Desencantando"
+L["Session ignore list cleared"]                                  = "Lista de ignorados en sesión vaciada"
+L["Permanent ignore list cleared"]                                = "Lista de ignorados permanentemente vaciada"
