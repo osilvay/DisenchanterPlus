@@ -1,4 +1,4 @@
-## Interface: 40400
+## Interface: 40401
 ## Title: |cffffffffLog|r|cff57b6ffBook|r |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v0.0.1|r
 ## Version: 0.0.1
 ## Notes: DisenchanterPlus Plus for wow cata classic
