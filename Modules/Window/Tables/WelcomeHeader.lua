@@ -40,7 +40,7 @@ function DP_WelcomeHeader:ContainerHeaderFrame(containerTable, parentFrame)
   ---@type AceGUIButton
   local settingsButton = AceGUI:Create("Button")
   local settingsIcon = DP_CustomMedias:GetIconFileAsLink("settings_a", 16, 16)
-  settingsButton:SetWidth(140)
+  settingsButton:SetWidth(150)
   settingsButton:SetPoint("TOPRIGHT", parentFrame.frame, "TOPRIGHT", -20, -15)
   settingsButton:SetText(settingsIcon .. " " .. DisenchanterPlus:DP_i18n('Settings'))
   settingsButton:SetCallback("OnClick", function()

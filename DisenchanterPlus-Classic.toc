@@ -1,7 +1,7 @@
 ## Interface: 11505
 ## Title: |cffffffffLog|r|cff57b6ffBook|r |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v0.0.1|r
 ## Version: 1.0.0
-## Notes: DisenchanterPlus Plus for wow classic era
+## Notes: Disenchanter tool for wow classic era
 ## Author: osilvay
 ## SavedVariables: DisenchanterPlusDB
 ## OptionalDeps: Ace3, CallbackHandler-1.0, LibStub
