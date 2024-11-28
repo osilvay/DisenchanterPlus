@@ -19,8 +19,11 @@ local DP_DisenchantProcess = DP_ModuleLoader:ImportModule("DP_DisenchantProcess"
 ---@type DP_SlashCommands
 local DP_SlashCommands = DP_ModuleLoader:ImportModule("DP_SlashCommands")
 
----@type DP_DisenchantGroup
-local DP_DisenchantGroup = DP_ModuleLoader:ImportModule("DP_DisenchantGroup")
+---@type DP_MinimapIcon
+local DP_MinimapIcon = DP_ModuleLoader:ImportModule("DP_MinimapIcon")
+
+---@type DP_CustomMedias
+local DP_CustomMedias = DP_ModuleLoader:ImportModule("DP_CustomMedias")
 
 local LibStub = LibStub
 --local AceGUI = LibStub("AceGUI-3.0")
@@ -174,6 +177,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
     DP_CustomSounds:PlayCustomSound("WindowClose")
     DP_DisenchantWindow:CloseWindow()
     DP_DisenchantProcess:PauseDisenchantProcess()
+    DP_MinimapIcon:UpdateIcon(DP_CustomMedias:GetMediaFile("disenchanterplus_paused"))
   end)
   DisenchanterPlusBaseFrame.pauseButton = pauseButton
 
@@ -207,6 +211,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
     DP_DisenchantWindow:CloseWindow()
     C_Timer.After(0.5, function()
       DP_DisenchantProcess:StartsDisenchantProcess()
+      DP_MinimapIcon:UpdateIcon(DP_CustomMedias:GetMediaFile("disenchanterplus_running"))
     end)
   end)
   DisenchanterPlusBaseFrame.playButton = playButton

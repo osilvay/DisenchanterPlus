@@ -16,6 +16,9 @@ local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
 ---@type DP_DisenchantProcess
 local DP_DisenchantProcess = DP_ModuleLoader:ImportModule("DP_DisenchantProcess")
 
+---@type DP_MinimapIcon
+local DP_MinimapIcon = DP_ModuleLoader:ImportModule("DP_MinimapIcon")
+
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 
 ---Header
@@ -50,10 +53,12 @@ function DP_DisenchantGroup:Config(order)
           if value then
             C_Timer.After(0.1, function()
               DP_DisenchantProcess:StartAutoDisenchant(false)
+              DP_MinimapIcon:UpdateIcon(DP_CustomMedias:GetMediaFile("disenchanterplus_running"))
             end)
           else
             C_Timer.After(0.1, function()
               DP_DisenchantProcess:CancelAutoDisenchant(false)
+              DP_MinimapIcon:UpdateIcon(DP_CustomMedias:GetMediaFile("disenchanterplus_paused"))
             end)
           end
         end,
