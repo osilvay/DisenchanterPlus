@@ -107,37 +107,6 @@ function DP_DisenchantGroup:Config(order)
           DisenchanterPlus.db.char.general[info[#info]][entry] = value
         end,
       },
-      --[[
-      sessionIgnoredItems = {
-        type = "select",
-        order = 5,
-        width = "full",
-        name = DisenchanterPlus:DP_i18n("Remove from session ignore list"),
-        values = function()
-          local sessionIgnoreList = DP_DisenchantGroup:GetSessionIgnoreList() or {}
-          if DP_CustomFunctions:TableIsEmpty(sessionIgnoreList) then
-            sessionIgnoreList["0"] = string.format("|cffff3300%s|r", DisenchanterPlus:DP_i18n("Nothing hidden"))
-          end
-          return sessionIgnoreList
-        end,
-        confirm = function(info, value)
-          local sessionIgnoreList = DP_DisenchantGroup:GetSessionIgnoreList()
-          if sessionIgnoreList[value] == nil or value == "0" then return end
-          return DisenchanterPlus:DP_i18n("Are you sure you want to remove this ignored item?") .. "\n\n" .. sessionIgnoreList[value] ..
-              "\n\n|cffff3300" .. DisenchanterPlus:DP_i18n("This operation can not be undone...") .. "|r"
-        end,
-        disabled = function() return (not DisenchanterPlus.db.char.general.autoDisenchantEnabled); end,
-        get = function()
-          DP_DisenchantGroup:CreateSessionIgnoreListItems(DP_DisenchantGroup:GetSessionIgnoreList())
-          return DisenchanterPlus.db.char.general.sessionIgnoredItems
-        end,
-        set = function(info, value)
-          local sessionIgnoreList = DP_DisenchantGroup:GetSessionIgnoreList()
-          if sessionIgnoreList[value] == nil or value == "0" then return end
-          DP_DisenchantGroup:RemoveSessionIgnoreListItem(value)
-        end,
-      },
-      ]]
       clearSessionIgnoredItems = {
         type = "execute",
         order = 6,
@@ -162,37 +131,6 @@ function DP_DisenchantGroup:Config(order)
           DisenchanterPlus:Info(DisenchanterPlus:DP_i18n("Items in permanent ignore list cleared."))
         end,
       },
-      --[[
-      permanentIgnoredItems = {
-        type = "select",
-        order = 7,
-        width = "full",
-        name = DisenchanterPlus:DP_i18n("Remove from permanent ignore list"),
-        values = function()
-          local permanentIgnoreList = DP_DisenchantGroup:GetPermanentIgnoreList() or {}
-          if DP_CustomFunctions:TableIsEmpty(permanentIgnoreList) then
-            permanentIgnoreList["0"] = string.format("|cffff3300%s|r", DisenchanterPlus:DP_i18n("Nothing hidden"))
-          end
-          return permanentIgnoreList
-        end,
-        confirm = function(info, value)
-          local permanentIgnoreList = DP_DisenchantGroup:GetPermanentIgnoreList()
-          if permanentIgnoreList[value] == nil or value == "0" then return end
-          return DisenchanterPlus:DP_i18n("Are you sure you want to remove this ignored item?") .. "\n\n" .. permanentIgnoreList[value] ..
-              "\n\n|cffff3300" .. DisenchanterPlus:DP_i18n("This operation can not be undone...") .. "|r"
-        end,
-        disabled = function() return (not DisenchanterPlus.db.char.general.autoDisenchantEnabled); end,
-        get = function()
-          DP_DisenchantGroup:CreatePermanentIgnoreListItems()
-          return DP_DisenchantGroup:GetPermanentIgnoreList()
-        end,
-        set = function(info, value)
-          local permanentIgnoreList = DP_DisenchantGroup:GetPermanentIgnoreList()
-          if permanentIgnoreList[value] == nil or value == "0" then return end
-          DP_DisenchantGroup:RemovePermanentIgnoreListItem(value)
-        end,
-      }
-      ]]
     }
   }
 end

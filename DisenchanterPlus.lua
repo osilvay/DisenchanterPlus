@@ -15,7 +15,7 @@ DisenchanterPlus.DEBUG_INFO = "|cff00bc32[INFO]|r"
 DisenchanterPlus.DEBUG_DEVELOP = "|cff7c83ff[DEVELOP]|r"
 DisenchanterPlus.DEBUG_SPAM = "|cffff8484[SPAM]|r"
 local AddonColor = "ffed6bff"
-local AddonVersion = "1.0.0"
+local AddonVersion = "1.0.1"
 
 function DisenchanterPlus:OnInitialize()
   DisenchanterPlus.db = LibStub("AceDB-3.0"):New("DisenchanterPlusDB", DP_SettingsDefaults:Load(), true)

@@ -7,6 +7,12 @@ local DP_Settings = DP_ModuleLoader:ImportModule("DP_Settings")
 ---@type DP_WelcomeWindow
 local DP_WelcomeWindow = DP_ModuleLoader:ImportModule("DP_WelcomeWindow")
 
+---@type DP_DisenchantWindow
+local DP_DisenchantWindow = DP_ModuleLoader:ImportModule("DP_DisenchantWindow")
+
+---@type DP_CustomSounds
+local DP_CustomSounds = DP_ModuleLoader:ImportModule("DP_CustomSounds")
+
 function DP_SlashCommands.RegisterSlashCommands()
   DisenchanterPlus:RegisterChatCommand("disenchanterplus", DP_SlashCommands.HandleCommands)
   DisenchanterPlus:RegisterChatCommand("dplus", DP_SlashCommands.HandleCommands)
@@ -28,6 +34,10 @@ end
 function DP_SlashCommands:CloseAllFrames()
   DP_Settings:HideSettingsFrame()
   DP_WelcomeWindow:HideDisenchanterPlusWindowFrame()
+  if DP_DisenchantWindow:IsWindowOpened() then
+    DP_CustomSounds:PlayCustomSound("WindowClose")
+    DP_DisenchantWindow:CloseWindow()
+  end
 end
 
 function DP_SlashCommands:OpenSettingsWindow()

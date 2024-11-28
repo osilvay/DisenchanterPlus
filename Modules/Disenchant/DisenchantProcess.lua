@@ -49,13 +49,25 @@ end
 
 ---Checks if there are items in the session ignore list
 function DP_DisenchantProcess:EmptySessionIgnoredItemsList()
+  DP_DisenchantWindow:CloseWindow()
   local sessionIgnoredItems = {}
   DP_DisenchantGroup:CreateSessionIgnoreListItems(sessionIgnoredItems)
+  itemToDisenchant = false
+  disenchanting = false
+  C_Timer.After(0.5, function()
+    DP_DisenchantProcess:ScanForItems()
+  end)
 end
 
 function DP_DisenchantProcess:EmptyPermanentIgnoredItemsList()
+  DP_DisenchantWindow:CloseWindow()
   DP_DisenchantGroup:SavePermanentIgnoreList({})
   DP_DisenchantGroup:CreatePermanentIgnoreListItems()
+  itemToDisenchant = false
+  disenchanting = false
+  C_Timer.After(0.5, function()
+    DP_DisenchantProcess:ScanForItems()
+  end)
 end
 
 ---Add item to ignored session list
@@ -134,6 +146,27 @@ function DP_DisenchantProcess:CancelAutoDisenchant(silent)
   end
 end
 
+---Pause disenchant process
+function DP_DisenchantProcess:PauseDisenchantProcess()
+  DP_DisenchantProcess:CancelAutoDisenchant(false)
+end
+
+---Starts disenchant process
+function DP_DisenchantProcess:StartsDisenchantProcess()
+  disenchanting = false
+  itemToDisenchant = false
+  DP_DisenchantProcess:StartAutoDisenchant(false)
+end
+
+---Checks if autodisenchant is enabled
+---@return boolean
+function DP_DisenchantProcess:AutoDisenchantEnabled()
+  if autoDisenchantDbTimeoutTicker ~= nil then
+    return true
+  end
+  return false
+end
+
 ---Process spell cast stop
 ---@param unitTarget string
 ---@param castGUID string
@@ -196,6 +229,20 @@ function DP_DisenchantProcess:PermanentIgnoredItemsHasElements()
   return false
 end
 
+---Open disenchant window
+function DP_DisenchantProcess:OpenDisenchantWindow()
+  if InCombatLockdown() or UnitAffectingCombat("player") or disenchanting or itemToDisenchant then return end
+
+  --local disenchantIsKnown = IsSpellKnown(disenchantSpellID)
+  --if not disenchantIsKnown then return end
+
+  --local tradeskill = DP_DisenchantProcess:CheckTradeskill()
+  --if tradeskill == nil then return end
+
+  DP_DisenchantWindow:OpenWindow({}, {})
+  DP_DisenchantWindow:UpdateItemsLeft(totalItemsInBagsToDisenchant)
+end
+
 ---Scan for items
 function DP_DisenchantProcess:ScanForItems()
   if not DisenchanterPlus.db.char.general.autoDisenchantEnabled then
@@ -217,6 +264,10 @@ function DP_DisenchantProcess:ScanForItems()
   if tradeskill == nil then return end
 
   local itemInfoFromBag = DP_DisenchantProcess:GetItemFromBag()
+
+  --DisenchanterPlus:Debug(DP_DisenchantWindow:ItemToDisenchant())
+  --DisenchanterPlus:Dump(itemInfoFromBag)
+
   if itemInfoFromBag ~= nil and DP_DisenchantWindow:ItemToDisenchant() == nil then
     itemToDisenchant = true
     DP_DisenchantWindow:OpenWindow(itemInfoFromBag, tradeskill)

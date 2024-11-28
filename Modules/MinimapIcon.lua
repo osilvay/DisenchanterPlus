@@ -17,6 +17,9 @@ local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
 ---@type DP_CustomMedias
 local DP_CustomMedias = DP_ModuleLoader:ImportModule("DP_CustomMedias")
 
+---@type DP_DisenchantProcess
+local DP_DisenchantProcess = DP_ModuleLoader:ImportModule("DP_DisenchantProcess")
+
 local _LibDBIcon = LibStub("LibDBIcon-1.0");
 
 function DP_MinimapIcon:Initialize()
@@ -24,32 +27,59 @@ function DP_MinimapIcon:Initialize()
   DisenchanterPlus.minimapConfigIcon = _LibDBIcon
 end
 
+---Create data object
+---@return LibDataBroker.DataDisplay|LibDataBroker.QuickLauncher
 function _DP_MinimapIcon:CreateDataBrokerObject()
-  local LDBDataObject = LibStub("LibDataBroker-1.1"):NewDataObject("DisenchanterPlus", {
+  local autoDisenchantEnabled = DisenchanterPlus.db.char.general.autoDisenchantEnabled
+  local icon = DP_CustomMedias:GetMediaFile("disenchanterplus_paused")
+  if autoDisenchantEnabled then
+    icon = DP_CustomMedias:GetMediaFile("disenchanterplus_running")
+  end
+
+  local dataObject = {
     type = "data source",
     text = string.format("|cffe1e1f1DisenchanterPlus|r |c%sPlus|r", DisenchanterPlus:GetAddonColor()),
-    icon = DP_CustomMedias:GetMediaFile("disenchanterplus"),
+    icon = icon,
     OnClick = function(_, button)
       if button == "LeftButton" then
-        DP_SlashCommands:CloseAllFrames()
-        DP_WelcomeWindow:OpenDisenchanterPlusWindowFrame()
+        if IsShiftKeyDown() then
+          DP_SlashCommands:CloseAllFrames()
+          DP_DisenchantProcess:PauseDisenchantProcess()
+          DP_MinimapIcon:UpdateIcon(DP_CustomMedias:GetMediaFile("disenchanterplus_paused"))
+        else
+          DP_SlashCommands:CloseAllFrames()
+          DP_DisenchantProcess:OpenDisenchantWindow()
+        end
       elseif button == "RightButton" then
-        DP_SlashCommands:CloseAllFrames()
-        DP_Settings:OpenSettingsFrame()
+        if IsShiftKeyDown() then
+          DP_SlashCommands:CloseAllFrames()
+          DP_DisenchantProcess:StartsDisenchantProcess()
+          DP_MinimapIcon:UpdateIcon(DP_CustomMedias:GetMediaFile("disenchanterplus_running"))
+        else
+          DP_SlashCommands:CloseAllFrames()
+          DP_Settings:OpenSettingsFrame()
+        end
       end
     end,
     OnTooltipShow = function(tooltip)
       tooltip:AddLine(DisenchanterPlus:GetAddonColoredName())
       tooltip:AddLine(DP_CustomColors:Colorize(DP_CustomColors:CustomColors("HIGHLIGHTED"), DisenchanterPlus:DP_i18n("Left Click")) .. ": " .. DP_CustomColors:Colorize(DP_CustomColors:CustomColors("TEXT_VALUE"), DisenchanterPlus:DP_i18n("Open main window")));
       tooltip:AddLine(DP_CustomColors:Colorize(DP_CustomColors:CustomColors("HIGHLIGHTED"), DisenchanterPlus:DP_i18n("Right Click")) .. ": " .. DP_CustomColors:Colorize(DP_CustomColors:CustomColors("TEXT_VALUE"), DisenchanterPlus:DP_i18n("Open settings window")));
+      tooltip:AddLine(DP_CustomColors:Colorize(DP_CustomColors:CustomColors("HIGHLIGHTED"), DisenchanterPlus:DP_i18n("Shift + Left Click")) .. ": " .. DP_CustomColors:Colorize(DP_CustomColors:CustomColors("TEXT_VALUE"), DisenchanterPlus:DP_i18n("Pause auto disenchant")));
+      tooltip:AddLine(DP_CustomColors:Colorize(DP_CustomColors:CustomColors("HIGHLIGHTED"), DisenchanterPlus:DP_i18n("Shift + Right Click")) .. ": " .. DP_CustomColors:Colorize(DP_CustomColors:CustomColors("TEXT_VALUE"), DisenchanterPlus:DP_i18n("Starts auto disenchant")));
     end,
-  });
+  }
 
+  local LDBDataObject = LibStub("LibDataBroker-1.1"):NewDataObject("DisenchanterPlus", dataObject);
   self.LDBDataObject = LDBDataObject
   return LDBDataObject
 end
 
 --- Update the LibDataBroker text
-function DP_MinimapIcon:UpdateText(text, value)
-  _DP_MinimapIcon.LDBDataObject.text = text
+function DP_MinimapIcon:UpdateText(value)
+  _DP_MinimapIcon.LDBDataObject.text = value
+end
+
+function DP_MinimapIcon:UpdateIcon(value)
+  _DP_MinimapIcon.LDBDataObject.icon = value
 end

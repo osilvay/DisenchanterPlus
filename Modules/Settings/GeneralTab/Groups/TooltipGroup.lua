@@ -32,6 +32,7 @@ function DP_TooltipGroup:Config(order)
           return DisenchanterPlus.db.char.general.tooltipsEnabled
         end,
         set = function(info, value)
+          DisenchanterPlus:Print(tostring(value))
           DisenchanterPlus.db.char.general.tooltipsEnabled = value
         end,
       },

@@ -38,8 +38,6 @@ function DP_GeneralGroup:Config(order)
         width = "full",
         disabled = false,
         get = function()
-          local value = DisenchanterPlus.db.char.general.disableAll
-          DP_GeneralGroup:CheckStatus(value)
           return DisenchanterPlus.db.char.general.disableAll
         end,
         set = function(info, value)
