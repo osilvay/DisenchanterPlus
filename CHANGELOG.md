@@ -1,3 +1,7 @@
+### Version 1.0.2
+
+- Correction when auto disenchant status changes
+
 ### Version 1.0.1
 
 - Now can start/stop auto disenchant from minimap button.
