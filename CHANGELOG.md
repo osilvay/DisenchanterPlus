@@ -1,4 +1,4 @@
-### Version 1.0.2
+### Version 1.0.3
 
 - Correction when the auto disenchant status changes the minimap icon doesnt do it.
 
