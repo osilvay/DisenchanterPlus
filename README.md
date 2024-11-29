@@ -42,7 +42,3 @@ Your feedback is valuable! If you encounter any issues or have suggestions:
 ## License
 
 This project is licensed under the all rights reserved.
-
-## Disclaimer
-
-**Disclaimer:** This addon is provided "as is" without warranty. Use at your own risk. The author is not responsible for any issues arising from its use.
