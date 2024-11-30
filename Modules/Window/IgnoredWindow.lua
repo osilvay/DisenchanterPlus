@@ -134,7 +134,7 @@ function DP_IgnoredWindow:CreateIgnoredWindow()
   closeButton:Show()
 
   -- tab1 ******************************************************************************************
-  local tab1Button = DP_CustomFrames:CreateTab(IgnoredWindowBaseFrame, "IgnoreWindow_Tab1", 1, "Session items", true, (424 - 40) / 2, 24)
+  local tab1Button = DP_CustomFrames:CreateTab(IgnoredWindowBaseFrame, "IgnoreWindow_Tab1", 1, DisenchanterPlus:DP_i18n("Session items"), true, (424 - 40) / 2, 24)
   tab1Button:SetPoint("TOPLEFT", IgnoredWindowBaseFrame, "TOPLEFT", 20, -45);
 
   IgnoredWindowBaseFrame.tab1Button = tab1Button
@@ -153,7 +153,7 @@ function DP_IgnoredWindow:CreateIgnoredWindow()
   tabScrollFrame:Show()
 
   -- tab2 ******************************************************************************************
-  local tab2Button = DP_CustomFrames:CreateTab(IgnoredWindowBaseFrame, "IgnoreWindow_Tab2", 1, "Permanent items", false, (424 - 40) / 2, 24)
+  local tab2Button = DP_CustomFrames:CreateTab(IgnoredWindowBaseFrame, "IgnoreWindow_Tab2", 1, DisenchanterPlus:DP_i18n("Permanent items"), false, (424 - 40) / 2, 24)
   tab2Button:SetPoint("LEFT", tab1Button, "RIGHT", 0, 0);
 
   IgnoredWindowBaseFrame.tab2Button = tab2Button
