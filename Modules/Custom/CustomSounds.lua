@@ -6,7 +6,7 @@ local disenchanterPlusSoundTable
 ---Play critical hit sound
 ---@param name string
 function DP_CustomSounds:PlayCustomSound(name)
-  C_Timer.After(0.1, function()
+  C_Timer.After(0.01, function()
     PlaySoundFile(DP_CustomSounds:GetSoundFile(name), "Master")
   end)
 end
@@ -23,4 +23,5 @@ disenchanterPlusSoundTable = {
   ["MoneyDialogClose"] = "Interface/Addons/DisenchanterPlus/Sounds/MoneyDialogClose.ogg",
   ["WindowClose"]      = "Interface/Addons/DisenchanterPlus/Sounds/CharacterSheetClose.ogg",
   ["WindowOpen"]       = "Interface/Addons/DisenchanterPlus/Sounds/CharacterSheetOpen.ogg",
+  ["TabChange"]        = "Interface/Addons/DisenchanterPlus/Sounds/TabChange.ogg",
 }

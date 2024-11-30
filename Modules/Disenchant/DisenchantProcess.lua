@@ -16,6 +16,9 @@ local DP_DisenchantGroup = DP_ModuleLoader:ImportModule("DP_DisenchantGroup")
 ---@type DP_DisenchantWindow
 local DP_DisenchantWindow = DP_ModuleLoader:ImportModule("DP_DisenchantWindow")
 
+---@type DP_IgnoredWindow
+local DP_IgnoredWindow = DP_ModuleLoader:ImportModule("DP_IgnoredWindow")
+
 local autoDisenchantDbTimeoutTicker = nil
 local disenchantSpellID = 13262
 local disenchanting = false
@@ -149,6 +152,10 @@ end
 ---Pause disenchant process
 function DP_DisenchantProcess:PauseDisenchantProcess()
   DP_DisenchantProcess:CancelAutoDisenchant(false)
+end
+
+function DP_DisenchantProcess:CloseDisenchantProcess()
+  DP_DisenchantProcess:CancelAutoDisenchant(true)
 end
 
 ---Starts disenchant process

@@ -222,11 +222,9 @@ function DP_DisenchantGroup:GetPermanentIgnoreList()
 end
 
 function DP_DisenchantGroup:SaveSessionIgnoreList(sessionIgnoreList)
-  sessionIgnoreList["0"] = nil
   DisenchanterPlus.db.char.general.sessionIgnoredItems = sessionIgnoreList
 end
 
 function DP_DisenchantGroup:SavePermanentIgnoreList(permanentIgnoreList)
-  permanentIgnoreList["0"] = nil
   DisenchanterPlus.db.char.general.permanentIgnoredItems = permanentIgnoreList
 end

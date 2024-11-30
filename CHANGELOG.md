@@ -1,3 +1,8 @@
+### Version 1.0.4-alpha1
+
+- Added window with ignored items tabbed by permanent or session.
+- Bug fixes
+
 ### Version 1.0.3
 
 - Corrections in project.

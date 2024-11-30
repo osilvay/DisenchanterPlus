@@ -55,5 +55,6 @@ function _DP_EventHandler:PlayerLogin()
       DisenchanterPlus.db.global.characters[DisenchanterPlus.key].info = info
     end
   end
+  DisenchanterPlus.db.char.general.sessionIgnoredItems = {}
   DP_Init:Initialize()
 end
