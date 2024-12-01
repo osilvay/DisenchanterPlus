@@ -2,4 +2,10 @@
   <Binding name="DISENCHANTER_PLUS_ACCEPT_DISENCHANT" header="Accept disenchant" category="Disenchanter Plus">
     DisenchanterPlus:RunKeybindAcceptDisenchant()
   </Binding>
+  <Binding name="DISENCHANTER_PLUS_CANCEL_DISENCHANT" header="Cancel disenchant" category="Disenchanter Plus">
+    DisenchanterPlus:RunKeybindCancelDisenchant()
+  </Binding>
+    <Binding name="DISENCHANTER_PLUS_IGNORE_DISENCHANT" header="Ignore disenchant" category="Disenchanter Plus">
+    DisenchanterPlus:RunKeybindIgnoreDisenchant()
+  </Binding>
 </Bindings>

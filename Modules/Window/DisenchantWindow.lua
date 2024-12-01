@@ -35,8 +35,8 @@ local DEFAULT_DIALOG_BACKDROP = {
   bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
   edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
   tile = true,
-  tileSize = 16,
-  edgeSize = 16,
+  tileSize = 24,
+  edgeSize = 24,
   insets = {
     left = 5,
     right = 5,
@@ -51,6 +51,12 @@ local CUSTOM_DIALOG_BACKDROP = {
   insets = { left = 4, right = 4, top = 4, bottom = 4 },
 }
 local emptySlot = "Interface/AddOns/DisenchanterPlus/Images/Inventory/INVTYPE_SLOT"
+local uncommonIcon = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\uncommon:16:16|t" --2
+local rareIcon = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\rare:16:16|t"         --3
+local epicIcon = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\epic:16:16|t"         --4
+local uncommonIconFill = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\uncommon_fill:16:16|t"
+local rareIconFill = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\rare_fill:16:16|t"
+local epicIconFill = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\epic_fill:16:16|t"
 
 local DisenchanterPlusBaseFrame
 local textFrameBgColorAlpha = 0.80
@@ -81,7 +87,8 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   local titleText = DisenchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
   titleText:SetTextColor(1, 1, 1)
   titleText:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, 20, -20)
-  titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchanting") .. " :")
+  titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchanting") .. " : " .. uncommonIcon .. " " .. rareIcon .. " " .. epicIcon)
+  DisenchanterPlusBaseFrame.titleText = titleText
 
   local itemLeftText = DisenchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
   itemLeftText:SetTextColor(0.6, 0.6, 0.6)
@@ -311,9 +318,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   yesButton:SetAttribute("type", "spell")
   yesButton:SetAttribute("target-item", nil)
 
-  if DisenchanterPlus.db.char.general.acceptDisenchant ~= nil then
-    SetBindingClick(DisenchanterPlus.db.char.general.acceptDisenchant, "AutoDisenchant_YesButton", "LeftButton")
-  end
+  DP_DisenchantWindow:UpdateKeybindings()
 
   yesButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
@@ -500,7 +505,7 @@ function DP_DisenchantWindow:OpenWindow(bagItems, tradeskill)
       DisenchanterPlusBaseFrame.yesButton:Show()
       DisenchanterPlusBaseFrame.noButton:Show()
 
-      if DP_DisenchantProcess:PermanentIgnoredItemsHasElements() then
+      if DP_DisenchantProcess:PermanentIgnoredItemsHasElements() or DP_DisenchantProcess:SessionIgnoredItemsHasElements() then
         DisenchanterPlusBaseFrame.clearPermanentButton:Show()
       else
         DisenchanterPlusBaseFrame.clearPermanentButton:Hide()
@@ -508,6 +513,7 @@ function DP_DisenchantWindow:OpenWindow(bagItems, tradeskill)
 
       DisenchanterPlusBaseFrame.ignoreButton:Show()
       windowOpened = true
+      DP_DisenchantWindow:RedrawQualities()
     end)
   end
 
@@ -640,6 +646,39 @@ function DP_DisenchantWindow:GetItemToDisenchant()
 end
 
 function DP_DisenchantWindow:RunKeybindAcceptDisenchant()
-  --DisenchanterPlusBaseFrame.yesButton:Click()
-  --DisenchanterPlusBaseFrame.yesButton:ExecuteAttribute("LeftButton")
+end
+
+function DP_DisenchantWindow:RunKeybindCancelDisenchant()
+  DP_CustomSounds:PlayCustomSound("WindowClose")
+  if itemToDisenchant ~= nil then
+    DP_DisenchantProcess:AddSessionIgnoredItem(itemToDisenchant)
+  end
+end
+
+function DP_DisenchantWindow:RunKeybindIgnoreDisenchant()
+  DP_CustomSounds:PlayCustomSound("WindowClose")
+  if itemToDisenchant ~= nil then
+    DP_DisenchantProcess:AddPermanentIgnoredItem(itemToDisenchant)
+  end
+end
+
+function DP_DisenchantWindow:RedrawQualities()
+  local qualities = DisenchanterPlus.db.char.general.itemQuality
+  local uncommonIconString = uncommonIcon
+  if qualities["2"] == nil or qualities["2"] then uncommonIconString = uncommonIconFill end
+
+  local rareIconString = rareIcon
+  if qualities["3"] == nil or qualities["3"] then rareIconString = rareIconFill end
+
+  local epicIconString = epicIcon
+  if qualities["4"] == nil or qualities["4"] then epicIconString = epicIconFill end
+
+  DisenchanterPlusBaseFrame.titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchanting") .. " : " .. uncommonIconString .. " " .. rareIconString .. " " .. epicIconString)
+  --DisenchanterPlusBaseFrame.titleText:SetAlpha(0.8)
+end
+
+function DP_DisenchantWindow:UpdateKeybindings()
+  if DisenchanterPlus.db.char.general.acceptDisenchant ~= nil then
+    SetBindingClick(DisenchanterPlus.db.char.general.acceptDisenchant, "AutoDisenchant_YesButton", "LeftButton")
+  end
 end

@@ -18,9 +18,11 @@ DisenchanterPlus.DEBUG_INFO = "|cff00bc32[INFO]|r"
 DisenchanterPlus.DEBUG_DEVELOP = "|cff7c83ff[DEVELOP]|r"
 DisenchanterPlus.DEBUG_SPAM = "|cffff8484[SPAM]|r"
 local AddonColor = "ffed6bff"
-local AddonVersion = "1.0.4-alpha1"
+local AddonVersion = "1.0.4-alpha3"
 
 BINDING_NAME_DISENCHANTER_PLUS_ACCEPT_DISENCHANT = L["Accept disenchant"]
+BINDING_NAME_DISENCHANTER_PLUS_CANCEL_DISENCHANT = L["Cancel disenchant"]
+BINDING_NAME_DISENCHANTER_PLUS_IGNORE_DISENCHANT = L["Ignore item"]
 
 function DisenchanterPlus:OnInitialize()
   DisenchanterPlus.db = LibStub("AceDB-3.0"):New("DisenchanterPlusDB", DP_SettingsDefaults:Load(), true)
@@ -153,4 +155,16 @@ function DisenchanterPlus:RunKeybindAcceptDisenchant()
   if not DisenchanterPlus.started then return end
   DisenchanterPlus:Debug("Run accept disenchant")
   --DP_DisenchantWindow:RunKeybindAcceptDisenchant()
+end
+
+function DisenchanterPlus:RunKeybindCancelDisenchant()
+  if not DisenchanterPlus.started then return end
+  DisenchanterPlus:Debug("Run cancel disenchant")
+  DP_DisenchantWindow:RunKeybindCancelDisenchant()
+end
+
+function DisenchanterPlus:RunKeybindIgnoreDisenchant()
+  if not DisenchanterPlus.started then return end
+  DisenchanterPlus:Debug("Run ignore disenchant")
+  DP_DisenchantWindow:RunKeybindIgnoreDisenchant()
 end

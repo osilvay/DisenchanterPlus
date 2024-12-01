@@ -19,6 +19,9 @@ local DP_DisenchantProcess = DP_ModuleLoader:ImportModule("DP_DisenchantProcess"
 ---@type DP_MinimapIcon
 local DP_MinimapIcon = DP_ModuleLoader:ImportModule("DP_MinimapIcon")
 
+---@type DP_DisenchantWindow
+local DP_DisenchantWindow = DP_ModuleLoader:ImportModule("DP_DisenchantWindow")
+
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 
 ---Header
@@ -110,6 +113,7 @@ function DP_DisenchantGroup:Config(order)
         end,
         set = function(info, entry, value)
           DisenchanterPlus.db.char.general[info[#info]][entry] = value
+          DP_DisenchantWindow:RedrawQualities()
         end,
       },
       clearSessionIgnoredItems = {

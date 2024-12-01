@@ -41,7 +41,7 @@ function DP_SettingsDefaults:Load()
         itemQuality = {
           ["2"] = true,
           ["3"] = true,
-          ["4"] = false,
+          ["4"] = true,
         },
         disenchantFrameOffset = {
           xOffset = 0,
