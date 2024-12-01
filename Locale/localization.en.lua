@@ -129,3 +129,4 @@ L["Items ignored"]                                                = true
 L["Remove."]                                                      = true
 L["Session items"]                                                = true
 L["Permanent items"]                                              = true
+L["Close window."]                                                = true

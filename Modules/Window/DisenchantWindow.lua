@@ -56,7 +56,7 @@ local DisenchanterPlusBaseFrame
 local textFrameBgColorAlpha = 0.80
 local windowOpened = false
 local itemToDisenchant
-local currentItemProcessed = 0
+local ignoreWindowOpened = false
 
 ---Initilize
 function DP_DisenchantWindow:CreateAutoDisenchantWindow()
@@ -73,10 +73,6 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   DisenchanterPlusBaseFrame:EnableMouse(true)
   DisenchanterPlusBaseFrame:SetScript("OnMouseDown", DP_DisenchantWindow.OnDragStart)
   DisenchanterPlusBaseFrame:SetScript("OnMouseUp", DP_DisenchantWindow.OnDragStop)
-  DisenchanterPlusBaseFrame:SetScript("OnEnter", function()
-  end)
-  DisenchanterPlusBaseFrame:SetScript("OnLeave", function()
-  end)
 
   DisenchanterPlusBaseFrame:SetBackdrop(DEFAULT_DIALOG_BACKDROP)
   DisenchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, textFrameBgColorAlpha)
@@ -167,7 +163,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   closeButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -10, -10)
   closeButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Close ignored items window."), nil, nil, nil, nil, true)
+    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Close window."), nil, nil, nil, nil, true)
     closeButton.text:SetTextColor(1, 1, 1)
     closeButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\close:14:14|t ") --.. DisenchanterPlus:DP_i18n("Settings")
   end)
@@ -509,6 +505,10 @@ function DP_DisenchantWindow:OpenWindow(bagItems, tradeskill)
       windowOpened = true
     end)
   end
+
+  if ignoreWindowOpened then
+    DP_IgnoredWindow:OpenWindow()
+  end
 end
 
 function DP_DisenchantWindow:IsWindowOpened()
@@ -518,9 +518,14 @@ end
 ---Close window
 function DP_DisenchantWindow:CloseWindow()
   if DisenchanterPlusBaseFrame == nil then return end
+
   if DP_IgnoredWindow:IsWindowOpened() then
+    ignoreWindowOpened = true
     DP_IgnoredWindow:CloseWindow()
+  else
+    ignoreWindowOpened = false
   end
+
   DisenchanterPlusBaseFrame:Hide()
 
   windowOpened = false

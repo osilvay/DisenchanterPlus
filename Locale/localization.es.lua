@@ -129,3 +129,4 @@ L["Items ignored"]                                                = "Objetos ign
 L["Remove."]                                                      = "Eliminar."
 L["Session items"]                                                = "Objetos de sesión"
 L["Permanent items"]                                              = "Objetos permanentes"
+L["Close window."]                                                = "Cerrar ventana."

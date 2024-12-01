@@ -108,7 +108,7 @@ function DP_IgnoredWindow:CreateIgnoredWindow()
   closeButton:SetPoint("TOPRIGHT", IgnoredWindowBaseFrame, -10, -10)
   closeButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Close ignored items window."), nil, nil, nil, nil, true)
+    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Close window."), nil, nil, nil, nil, true)
     closeButton.text:SetTextColor(1, 1, 1)
     closeButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\close:14:14|t ") --.. DisenchanterPlus:DP_i18n("Settings")
   end)
@@ -195,15 +195,36 @@ function DP_IgnoredWindow:OpenWindow()
       IgnoredWindowBaseFrame:SetBackdropColor(0, 0, 0, textFrameBgColorAlpha)
       IgnoredWindowBaseFrame:Show()
       windowOpened = true
+      DP_IgnoredWindow.UpdatePosition()
+      DP_IgnoredWindow.PopulateIgnoreList(ignoreListType.Session, IgnoredWindowBaseFrame.tabScrollContentFrame)
+      DP_IgnoredWindow:UpdateTabQuantities()
     end)
   end
+end
+
+function DP_IgnoredWindow:UpdateTabQuantities()
+  if not DP_IgnoredWindow:IsWindowOpened() then return end
+  -- tab 1
+  local sessionQuantity = DP_CustomFunctions:TableLength(DP_DisenchantGroup:GetSessionIgnoreList())
+  local sessionQuantityString = string.format("|cff666666%d|r", sessionQuantity)
+  if sessionQuantity > 0 then
+    sessionQuantityString = string.format("|cffffcc66%d|r", sessionQuantity)
+  end
+  local permanentQuantity = DP_CustomFunctions:TableLength(DP_DisenchantGroup:GetPermanentIgnoreList())
+  local permanentQuantityString = string.format("|cff666666%d|r", permanentQuantity)
+  if permanentQuantity > 0 then
+    permanentQuantityString = string.format("|cffffcc66%d|r", permanentQuantity)
+  end
+
+  IgnoredWindowBaseFrame.tab1Button.text:SetText(DisenchanterPlus:DP_i18n("Session items") .. " " .. sessionQuantityString)
+  IgnoredWindowBaseFrame.tab2Button.text:SetText(DisenchanterPlus:DP_i18n("Permanent items") .. " " .. permanentQuantityString)
 end
 
 function DP_IgnoredWindow:IsWindowOpened()
   return windowOpened
 end
 
----Close window
+---close window
 function DP_IgnoredWindow:CloseWindow()
   if IgnoredWindowBaseFrame == nil then return end
   IgnoredWindowBaseFrame:Hide()
@@ -212,19 +233,27 @@ end
 
 ---Drag start
 function DP_IgnoredWindow.OnDragStart()
+  if IgnoredWindowBaseFrame == nil then return end
   IgnoredWindowBaseFrame:Hide()
 end
 
 ---Drag stop
 function DP_IgnoredWindow.OnDragStop()
+  if IgnoredWindowBaseFrame == nil then return end
   if not DP_IgnoredWindow:IsWindowOpened() then return end
-  local xOffset = DisenchanterPlus.db.char.general.disenchantFrameOffset.xOffset
-  local yOffset = DisenchanterPlus.db.char.general.disenchantFrameOffset.yOffset
-  IgnoredWindowBaseFrame:SetPoint("CENTER", UIParent, "CENTER", xOffset, yOffset - 215)
+  DP_IgnoredWindow.UpdatePosition()
   IgnoredWindowBaseFrame:Show()
 end
 
+function DP_IgnoredWindow.UpdatePosition()
+  local xOffset = DisenchanterPlus.db.char.general.disenchantFrameOffset.xOffset
+  local yOffset = DisenchanterPlus.db.char.general.disenchantFrameOffset.yOffset
+  IgnoredWindowBaseFrame:SetPoint("CENTER", UIParent, "CENTER", xOffset, yOffset - 215)
+end
+
 function DP_IgnoredWindow.PopulateIgnoreList(listType, tabFrame)
+  DP_IgnoredWindow:UpdateTabQuantities()
+
   local itemNum = 1
   local offsetV = 24
   tabFrame.line = {}
@@ -263,13 +292,17 @@ function DP_IgnoredWindow.PopulateIgnoreList(listType, tabFrame)
         GameTooltip:SetText(DisenchanterPlus:DP_i18n("Remove."), nil, nil, nil, nil, true)
         deleteButton.text:SetTextColor(1, 1, 1)
         deleteButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\delete:20:20|t")
-        tabFrame.line[current.lineID]:SetBackdropColor(1, 1, 1, 0.3)
+        if tabFrame.line[current.lineID] ~= nil then
+          tabFrame.line[current.lineID]:SetBackdropColor(1, 1, 1, 0.3)
+        end
       end)
       deleteButton:SetScript("OnLeave", function(current)
         GameTooltip:Hide()
-        deleteButton.text:SetTextColor(0.6, 0.6, 0.6)
-        deleteButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\delete_a:20:20|t")
-        tabFrame.line[current.lineID]:SetBackdropColor(1, 1, 1, 0)
+        if tabFrame.line[current.lineID] ~= nil then
+          deleteButton.text:SetTextColor(0.6, 0.6, 0.6)
+          deleteButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\delete_a:20:20|t")
+          tabFrame.line[current.lineID]:SetBackdropColor(1, 1, 1, 0)
+        end
       end)
       deleteButton:SetScript("OnClick", function(current)
         if current.listType == ignoreListType.Permanent then
