@@ -310,6 +310,11 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   yesButton:SetAttribute("unit", "none")
   yesButton:SetAttribute("type", "spell")
   yesButton:SetAttribute("target-item", nil)
+
+  if DisenchanterPlus.db.char.general.acceptDisenchant ~= nil then
+    SetBindingClick(DisenchanterPlus.db.char.general.acceptDisenchant, "AutoDisenchant_YesButton", "LeftButton")
+  end
+
   yesButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(DisenchanterPlus:DP_i18n("Proceed with disenchantment."), nil, nil, nil, nil, true)
@@ -632,4 +637,9 @@ function DP_DisenchantWindow:GetItemToDisenchant()
     itemName, itemLink, _, _, _, _, _, _, _, itemIcon, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
   end
   return itemName, itemLink, itemIcon
+end
+
+function DP_DisenchantWindow:RunKeybindAcceptDisenchant()
+  --DisenchanterPlusBaseFrame.yesButton:Click()
+  --DisenchanterPlusBaseFrame.yesButton:ExecuteAttribute("LeftButton")
 end

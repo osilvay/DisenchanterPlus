@@ -1,0 +1,5 @@
+<Bindings>
+  <Binding name="DISENCHANTER_PLUS_ACCEPT_DISENCHANT" header="Accept disenchant" category="Disenchanter Plus">
+    DisenchanterPlus:RunKeybindAcceptDisenchant()
+  </Binding>
+</Bindings>

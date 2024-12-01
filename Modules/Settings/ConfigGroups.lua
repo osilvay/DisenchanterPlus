@@ -13,6 +13,9 @@ local DP_DatabaseGroup = DP_ModuleLoader:ImportModule("DP_DatabaseGroup")
 ---@type DP_TooltipGroup
 local DP_TooltipGroup = DP_ModuleLoader:ImportModule("DP_TooltipGroup")
 
+---@type DP_KeybindingGroup
+local DP_KeybindingGroup = DP_ModuleLoader:ImportModule("DP_KeybindingGroup")
+
 ---@type DP_DisenchantGroup
 local DP_DisenchantGroup = DP_ModuleLoader:ImportModule("DP_DisenchantGroup")
 
@@ -32,6 +35,8 @@ function DP_ConfigGroups:Get(key, method, order)
     return DP_ConfigGroups:Method(DP_TooltipGroup, method, order)
   elseif key == "disenchant" then
     return DP_ConfigGroups:Method(DP_DisenchantGroup, method, order)
+  elseif key == "keybinding" then
+    return DP_ConfigGroups:Method(DP_KeybindingGroup, method, order)
   end
   return {}
 end

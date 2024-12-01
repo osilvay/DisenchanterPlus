@@ -31,6 +31,7 @@ Modules\Settings\GeneralTab\GeneralTab.lua
 Modules\Settings\GeneralTab\Groups\GeneralGroup.lua
 Modules\Settings\GeneralTab\Groups\TooltipGroup.lua
 Modules\Settings\GeneralTab\Groups\DisenchantGroup.lua
+Modules\Settings\GeneralTab\Groups\KeybindingGroup.lua
 Modules\Settings\AdvancedTab\AdvancedTab.lua
 Modules\Settings\AdvancedTab\Groups\AdvancedGroup.lua
 Modules\Settings\MaintenanceTab\MaintenanceTab.lua

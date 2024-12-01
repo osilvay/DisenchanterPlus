@@ -304,8 +304,9 @@ function DP_EnchantingTooltip.OnGameTooltipShow(tooltip, ...)
 end
 
 function DP_EnchantingTooltip.OnGameTooltipSetItem(tooltip, ...)
-  local itemName, itemLink = tooltip:GetItem()
-  local itemID = GetItemInfoFromHyperlink(itemLink)
+  local _, itemLink = tooltip:GetItem()
+  local itemID, _, _, _, _, _, _ = C_Item.GetItemInfoInstant(itemLink)
+
   if not itemID or itemID == 0 then
     DisenchanterPlus:Warning("Not an item")
   else

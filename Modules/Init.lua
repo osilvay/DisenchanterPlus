@@ -35,5 +35,6 @@ function DP_Init:Initialize()
   DP_DisenchanterPlusEvents:Initialize()
   C_Timer.After(3, function()
     DisenchanterPlus:Print(string.format("%s |cff9191a1%s|r", DisenchanterPlus:DP_i18n("Initialized"), DisenchanterPlus:GetAddonVersionString()))
+    DisenchanterPlus.started = true
   end)
 end

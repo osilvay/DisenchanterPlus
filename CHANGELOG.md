@@ -1,3 +1,9 @@
+### Version 1.0.4-alpha2
+
+- Added keybind support to accept disenchant
+- Fixed an error with Blizzard_SharedXML and GetItemInfoFromHyperlink
+- Lib update
+
 ### Version 1.0.4-alpha1
 
 - Added window with ignored items tabbed by permanent or session.

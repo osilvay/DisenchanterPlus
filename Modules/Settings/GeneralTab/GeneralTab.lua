@@ -32,8 +32,10 @@ function DP_Settings.tabs.general:Initialize(order)
       general = DP_ConfigGroups:Get("general", "config", 1.1),
       tooltips_header = DP_ConfigGroups:Get("tooltips", "header", 2),
       tooltips = DP_ConfigGroups:Get("tooltips", "config", 2.1),
-      disenchant_header = DP_ConfigGroups:Get("disenchant", "header", 3),
-      disenchant = DP_ConfigGroups:Get("disenchant", "config", 3.1),
+      keybinding_header = DP_ConfigGroups:Get("keybinding", "header", 3),
+      keybinding = DP_ConfigGroups:Get("keybinding", "config", 3.1),
+      disenchant_header = DP_ConfigGroups:Get("disenchant", "header", 4),
+      disenchant = DP_ConfigGroups:Get("disenchant", "config", 4.1),
     },
   }
 end

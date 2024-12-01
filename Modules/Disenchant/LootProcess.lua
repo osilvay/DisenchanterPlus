@@ -48,57 +48,59 @@ function DP_LootProcess:LootReady()
   for slotIndex = 1, GetNumLootItems() do
     local lootLink = GetLootSlotLink(slotIndex)
     local slotType = GetLootSlotType(slotIndex)
-    local itemID = GetItemInfoFromHyperlink(lootLink)
-    if itemID == nil then return end
+    if lootLink ~= nil and slotType ~= nil then
+      local itemID, _, _, _, _, _, _ = C_Item.GetItemInfoInstant(lootLink)
+      if itemID == nil then return end
 
-    local lootIcon, lootName, lootQuantity, currencyID, lootQuality, _, _, _, _ = GetLootSlotInfo(slotIndex)
-    --local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = C_Item.GetItemInfo(lootLink)
+      local lootIcon, lootName, lootQuantity, currencyID, lootQuality, _, _, _, _ = GetLootSlotInfo(slotIndex)
+      --local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = C_Item.GetItemInfo(lootLink)
 
-    --DisenchanterPlus:Debug("itemID : " .. tostring(itemID))
-    local enchantingItemType = DP_LootProcess:CheckEnchantingItemType(itemID)
-    if enchantingItemType == nil then return end
+      --DisenchanterPlus:Debug("itemID : " .. tostring(itemID))
+      local enchantingItemType = DP_LootProcess:CheckEnchantingItemType(itemID)
+      if enchantingItemType == nil then return end
 
-    if itemID ~= -1 then
-      local sources = { GetLootSourceInfo(slotIndex) }
-      --DisenchanterPlus:Debug(string.format(" %d > quality = %d, name =  %s [%d mobs] - item_id = %d - quantity = %d", i, lootQuantity, lootName, #sources / 2, itemID, lootQuantity))
-      --DisenchanterPlus:Dump(sources)
-      for sourceIndex = 1, #sources, 2 do
-        local guidType = select(1, strsplit("-", sources[sourceIndex]))
-        --DisenchanterPlus:Debug("guidType = " .. tostring(guidType))
-        --if guidType ~= "Item" then
+      if itemID ~= -1 then
+        local sources = { GetLootSourceInfo(slotIndex) }
+        --DisenchanterPlus:Debug(string.format(" %d > quality = %d, name =  %s [%d mobs] - item_id = %d - quantity = %d", i, lootQuantity, lootName, #sources / 2, itemID, lootQuantity))
+        --DisenchanterPlus:Dump(sources)
+        for sourceIndex = 1, #sources, 2 do
+          local guidType = select(1, strsplit("-", sources[sourceIndex]))
+          --DisenchanterPlus:Debug("guidType = " .. tostring(guidType))
+          --if guidType ~= "Item" then
 
-        local lootInfo = {
-          ItemName = lootName,
-          Quality = lootQuality,
-          Quantity = tonumber(lootQuantity),
-          Type = slotType,
-          ItemLink = lootLink,
-          ItemIcon = lootIcon,
-          ItemID = itemID,
-          CurrencyID = currencyID,
-          Time = GetServerTime(),
-          IsTradeSkill = IsTradeSkill,
-          EnchantingItemType = enchantingItemType,
-          Source = {},
-        }
-        if lootLink then
-          _, _, lootInfo.Tier = string.find(lootLink, "|A:Professions%-ChatIcon%-Quality%-Tier(%d):")
-        end
-
-        if IsTradeSkill then
-          --DisenchanterPlus:Debug(TradeSkillInfo.Name)
-          if TradeSkillInfo.Name == "Enchanting" and IsItemLocked then
-            lootInfo.Source[ItemLockedInfo.ItemID] = {
-              Items = 1,
-              Quality = ItemLockedInfo.Quality,
-              ItemName = ItemLockedInfo.ItemName,
-              Quantity = tonumber(lootQuantity)
-            }
+          local lootInfo = {
+            ItemName = lootName,
+            Quality = lootQuality,
+            Quantity = tonumber(lootQuantity),
+            Type = slotType,
+            ItemLink = lootLink,
+            ItemIcon = lootIcon,
+            ItemID = itemID,
+            CurrencyID = currencyID,
+            Time = GetServerTime(),
+            IsTradeSkill = IsTradeSkill,
+            EnchantingItemType = enchantingItemType,
+            Source = {},
+          }
+          if lootLink then
+            _, _, lootInfo.Tier = string.find(lootLink, "|A:Professions%-ChatIcon%-Quality%-Tier(%d):")
           end
-        end
 
-        -- stores item
-        DP_LootProcess:SaveEnchantingItemDetails(lootInfo)
+          if IsTradeSkill then
+            --DisenchanterPlus:Debug(TradeSkillInfo.Name)
+            if TradeSkillInfo.Name == "Enchanting" and IsItemLocked then
+              lootInfo.Source[ItemLockedInfo.ItemID] = {
+                Items = 1,
+                Quality = ItemLockedInfo.Quality,
+                ItemName = ItemLockedInfo.ItemName,
+                Quantity = tonumber(lootQuantity)
+              }
+            end
+          end
+
+          -- stores item
+          DP_LootProcess:SaveEnchantingItemDetails(lootInfo)
+        end
       end
     end
   end

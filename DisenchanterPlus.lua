@@ -7,6 +7,9 @@ local DP_EventHandler = DP_ModuleLoader:ImportModule("DP_EventHandler");
 ---@type DP_CustomFunctions
 local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
 
+---@type DP_DisenchantWindow
+local DP_DisenchantWindow = DP_ModuleLoader:ImportModule("DP_DisenchantWindow")
+
 local L = LibStub("AceLocale-3.0"):GetLocale("DisenchanterPlus")
 
 DisenchanterPlus.DEBUG_CRITICAL = "|cff00f2e6[CRITICAL]|r"
@@ -16,6 +19,8 @@ DisenchanterPlus.DEBUG_DEVELOP = "|cff7c83ff[DEVELOP]|r"
 DisenchanterPlus.DEBUG_SPAM = "|cffff8484[SPAM]|r"
 local AddonColor = "ffed6bff"
 local AddonVersion = "1.0.4-alpha1"
+
+BINDING_NAME_DISENCHANTER_PLUS_ACCEPT_DISENCHANT = L["Accept disenchant"]
 
 function DisenchanterPlus:OnInitialize()
   DisenchanterPlus.db = LibStub("AceDB-3.0"):New("DisenchanterPlusDB", DP_SettingsDefaults:Load(), true)
@@ -96,7 +101,7 @@ end
 ---Prints message
 ---@param message string
 function DisenchanterPlus:Print(message)
-  print(string.format("|cffe1e1f1Disenchanter|r |c%sPlus|r: |cffe1d1d1%s|r", DisenchanterPlus:GetAddonColor(), message))
+  print(string.format("|cffe1e1f1Disenchanter|r |c%sPlus|r: %s", DisenchanterPlus:GetAddonColor(), message))
 end
 
 local cachedTitle
@@ -142,4 +147,10 @@ end
 
 function DisenchanterPlus:GetAddonColoredName()
   return string.format("|cffe1e1e1Disenchanter|r |c%sPlus|r", DisenchanterPlus:GetAddonColor())
+end
+
+function DisenchanterPlus:RunKeybindAcceptDisenchant()
+  if not DisenchanterPlus.started then return end
+  DisenchanterPlus:Debug("Run accept disenchant")
+  --DP_DisenchantWindow:RunKeybindAcceptDisenchant()
 end

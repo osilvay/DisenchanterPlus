@@ -27,6 +27,8 @@ function DP_SettingsDefaults:Load()
         disableAll = false,
         disenchanProcessEnabled = true,
         tooltipsEnabled = true,
+        keybindingEnabled = false,
+        acceptDisenchant = nil,
         pressKeyDown = "1_none",
         showTitle = true,
         showItemID = false,
