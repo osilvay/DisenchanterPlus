@@ -1,3 +1,7 @@
+## **Version 1.0.5**
+
+- Bug fixes.
+
 ## **Version 1.0.4**
 
 - Added qualities that can be disenchanted in disenchant window.

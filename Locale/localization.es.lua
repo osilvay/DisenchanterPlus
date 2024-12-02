@@ -141,3 +141,4 @@ L["Ignore this item during this session."]                        = "Ignorar est
 L["Ignore item"]                                                  = "Ignorar objeto"
 L["Ignore this item permanently."]                                = "Ignora este objeto permanentemente."
 L["You don't have the enchanting skill."]                         = "No tienes la habilidad de encantamiento."
+L["Close window and pause disenchant process."]                   = "Cerrar la ventana y pausar el proceso de desencantado."

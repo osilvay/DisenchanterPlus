@@ -20,6 +20,9 @@ local DP_CustomMedias = DP_ModuleLoader:ImportModule("DP_CustomMedias")
 ---@type DP_DisenchantProcess
 local DP_DisenchantProcess = DP_ModuleLoader:ImportModule("DP_DisenchantProcess")
 
+---@type DP_DisenchantWindow
+local DP_DisenchantWindow = DP_ModuleLoader:ImportModule("DP_DisenchantWindow")
+
 local _LibDBIcon = LibStub("LibDBIcon-1.0");
 
 function DP_MinimapIcon:Initialize()
@@ -49,8 +52,10 @@ function _DP_MinimapIcon:CreateDataBrokerObject()
             DP_MinimapIcon:UpdateIcon(DP_CustomMedias:GetMediaFile("disenchanterplus_paused"))
           end
         else
-          DP_SlashCommands:CloseAllFrames()
-          DP_DisenchantProcess:OpenDisenchantWindow()
+          if not DP_DisenchantWindow:IsWindowOpened() then
+            DP_SlashCommands:CloseAllFrames()
+            DP_DisenchantProcess:OpenDisenchantWindow()
+          end
         end
       elseif button == "RightButton" then
         if IsShiftKeyDown() then

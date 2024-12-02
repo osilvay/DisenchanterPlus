@@ -207,10 +207,18 @@ end
 
 ---Process loot closed
 function DP_DisenchantProcess:LootClosed()
+  C_Timer.After(1, function()
+    DP_DisenchantProcess:StartAutoDisenchant(true)
+  end)
 end
 
 ---Process bag update
-function DP_DisenchantProcess:BagUpdate(BagIndex)
+function DP_DisenchantProcess:BagUpdate(bagIndex)
+  if bagIndex < 0 or bagIndex > 4 then return end
+  if DP_DisenchantWindow:IsWindowOpened() then
+    local numItemsLeft = DP_DisenchantProcess:ItemsInBags()
+    DP_DisenchantWindow:UpdateItemsLeft(numItemsLeft)
+  end
 end
 
 ---Checks if there are items in the session ignore list
@@ -299,6 +307,18 @@ function DP_DisenchantProcess:GetItemFromBag(itemLink)
   end
   totalItemsInBagsToDisenchant = itemsInBagsToDisenchant
   return result
+end
+
+function DP_DisenchantProcess:ItemsInBags()
+  local itemsInBagsToDisenchant = 0
+  local sessionIgnoredList = DP_DisenchantGroup:GetSessionIgnoreList() or {}
+  local permanentIgnoredList = DP_DisenchantGroup:GetPermanentIgnoreList() or {}
+  for bagIndex = 0, 4 do
+    --DisenchanterPlus:Debug("Bag : " .. tostring(bagIndex))
+    local _, numItemsInBag = DP_DisenchantProcess:ItemInBag(bagIndex, nil, sessionIgnoredList, permanentIgnoredList)
+    itemsInBagsToDisenchant = itemsInBagsToDisenchant + numItemsInBag
+  end
+  return itemsInBagsToDisenchant
 end
 
 ---Items in bag index

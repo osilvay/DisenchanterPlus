@@ -24,4 +24,5 @@ disenchanterPlusSoundTable = {
   ["WindowClose"]      = "Interface/Addons/DisenchanterPlus/Sounds/CharacterSheetClose.ogg",
   ["WindowOpen"]       = "Interface/Addons/DisenchanterPlus/Sounds/CharacterSheetOpen.ogg",
   ["TabChange"]        = "Interface/Addons/DisenchanterPlus/Sounds/TabChange.ogg",
+  ["ChatScrollButton"] = "Interface/Addons/DisenchanterPlus/Sounds/ChatScrollButton.ogg",
 }

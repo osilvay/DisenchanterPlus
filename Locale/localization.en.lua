@@ -141,3 +141,4 @@ L["Ignore this item during this session."]                        = true
 L["Ignore item"]                                                  = true
 L["Ignore this item permanently."]                                = true
 L["You don't have the enchanting skill."]                         = true
+L["Close window and pause disenchant process."]                   = true
