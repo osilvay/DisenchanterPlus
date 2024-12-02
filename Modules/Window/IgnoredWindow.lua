@@ -31,6 +31,9 @@ local DP_CustomSounds = DP_ModuleLoader:ImportModule("DP_CustomSounds")
 ---@type DP_DisenchantGroup
 local DP_DisenchantGroup = DP_ModuleLoader:ImportModule("DP_DisenchantGroup")
 
+---@type DP_DisenchantWindow
+local DP_DisenchantWindow = DP_ModuleLoader:ImportModule("DP_DisenchantWindow")
+
 local LibStub = LibStub
 local AceGUI = LibStub("AceGUI-3.0")
 
@@ -229,6 +232,7 @@ function DP_IgnoredWindow:CloseWindow()
   if IgnoredWindowBaseFrame == nil then return end
   IgnoredWindowBaseFrame:Hide()
   windowOpened = false
+  DP_DisenchantWindow:CloseIgnoreWindow()
 end
 
 ---Drag start

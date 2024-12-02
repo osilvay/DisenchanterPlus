@@ -242,8 +242,8 @@ function DP_DisenchantProcess:OpenDisenchantWindow()
 
   --local tradeskill = DP_DisenchantProcess:CheckTradeskill()
   --if tradeskill == nil then return end
-
-  DP_DisenchantWindow:OpenWindow({}, {})
+  local tradeskill = DP_DisenchantProcess:CheckTradeskill() or {}
+  DP_DisenchantWindow:OpenWindow({}, tradeskill)
   DP_DisenchantWindow:UpdateItemsLeft(totalItemsInBagsToDisenchant)
 end
 
@@ -399,4 +399,11 @@ function DP_DisenchantProcess:CheckTradeskill()
     end
   end
   return nil
+end
+
+function DP_DisenchantProcess:ProcessRunning()
+  if autoDisenchantDbTimeoutTicker ~= nil then
+    return true
+  end
+  return false
 end

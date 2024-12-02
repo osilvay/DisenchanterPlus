@@ -140,3 +140,4 @@ L["Cancel disenchant"]                                            = "Cancelar de
 L["Ignore this item during this session."]                        = "Ignorar este objeto durante esta sesión."
 L["Ignore item"]                                                  = "Ignorar objeto"
 L["Ignore this item permanently."]                                = "Ignora este objeto permanentemente."
+L["You don't have the enchanting skill."]                         = "No tienes la habilidad de encantamiento."

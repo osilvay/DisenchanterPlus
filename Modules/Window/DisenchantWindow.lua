@@ -89,7 +89,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   local titleText = DisenchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
   titleText:SetTextColor(1, 1, 1)
   titleText:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, 20, -20)
-  titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchanting of") .. " " .. uncommonIcon .. " " .. rareIcon .. " " .. epicIcon)
+  titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchanting from") .. " : " .. uncommonIcon .. " " .. rareIcon .. " " .. epicIcon)
   DisenchanterPlusBaseFrame.titleText = titleText
 
   local itemLeftText = DisenchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -167,7 +167,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   settingsButton:Hide()
 
   -- close button ******************************************************************************************
-  local closeButton = CreateFrame("Button", "Ignored_SettingsButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
+  local closeButton = CreateFrame("Button", "AutoDisenchant_CloseButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
   closeButton:SetSize(32, 22)
   closeButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -10, -10)
   closeButton:SetScript("OnEnter", function(current)
@@ -200,7 +200,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   closeButton:Show()
 
   -- pause button ******************************************************************************************
-  local pauseButton = CreateFrame("Button", "AutoDisenchant_SettingsButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
+  local pauseButton = CreateFrame("Button", "AutoDisenchant_PauseButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
   pauseButton:SetSize(32, 22)
   pauseButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -80, -10)
   pauseButton:SetScript("OnEnter", function(current)
@@ -233,7 +233,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   pauseButton:Hide()
 
   -- play button ******************************************************************************************
-  local playButton = CreateFrame("Button", "AutoDisenchant_SettingsButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
+  local playButton = CreateFrame("Button", "AutoDisenchant_PlayButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
   playButton:SetSize(32, 22)
   playButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -80, -10)
   playButton:SetScript("OnEnter", function(current)
@@ -273,8 +273,12 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   noButton:SetSize(90, 22)
   noButton:SetPoint("BOTTOMRIGHT", DisenchanterPlusBaseFrame, -120, 20)
   noButton:SetScript("OnEnter", function(current)
+    local keybind = ""
+    if DisenchanterPlus.db.char.general.cancelDisenchant ~= nil then
+      keybind = " |cffeeeeff" .. DisenchanterPlus.db.char.general.cancelDisenchant .. "|r"
+    end
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Do not disenchant this item during this game session."), nil, nil, nil, nil, true)
+    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Do not disenchant this item during this game session.") .. keybind, nil, nil, nil, nil, true)
     noButton.text:SetTextColor(1, 1, 1)
     noButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\close:14:14|t " .. DisenchanterPlus:DP_i18n("No"))
   end)
@@ -323,8 +327,12 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   DP_DisenchantWindow:UpdateKeybindings()
 
   yesButton:SetScript("OnEnter", function(current)
+    local keybind = ""
+    if DisenchanterPlus.db.char.general.acceptDisenchant ~= nil then
+      keybind = " |cffeeeeff" .. DisenchanterPlus.db.char.general.acceptDisenchant .. "|r"
+    end
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Proceed with disenchantment."), nil, nil, nil, nil, true)
+    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Proceed with disenchantment.") .. keybind, nil, nil, nil, nil, true)
     yesButton.text:SetTextColor(1, 1, 1)
     yesButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:14:14|t " .. DisenchanterPlus:DP_i18n("Yes"))
   end)
@@ -349,8 +357,12 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   ignoreButton:SetSize(90, 22)
   ignoreButton:SetPoint("BOTTOMLEFT", DisenchanterPlusBaseFrame, 20, 20)
   ignoreButton:SetScript("OnEnter", function(current)
+    local keybind = ""
+    if DisenchanterPlus.db.char.general.ignoreDisenchant ~= nil then
+      keybind = " |cffeeeeff" .. DisenchanterPlus.db.char.general.ignoreDisenchant .. "|r"
+    end
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Add this item to the permanent ignore list."), nil, nil, nil, nil, true)
+    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Add this item to the permanent ignore list.") .. keybind, nil, nil, nil, nil, true)
     ignoreButton.text:SetTextColor(1, 1, 1)
     ignoreButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\cancel1:14:14|t " .. DisenchanterPlus:DP_i18n("Ignore"))
   end)
@@ -376,9 +388,10 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   ignoreButton:Hide()
 
   -- clear permanent button ******************************************************************************************
-  local clearPermanentButton = CreateFrame("Button", "AutoDisenchant_ClearPermanentButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "BackdropTemplate")
-  clearPermanentButton:SetSize(22, 22)
-  clearPermanentButton:SetPoint("BOTTOMLEFT", DisenchanterPlusBaseFrame, 110, 20)
+  --local clearPermanentButton = CreateFrame("Button", "AutoDisenchant_ClearIgnoredButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "BackdropTemplate")
+  local clearPermanentButton = CreateFrame("Button", "AutoDisenchant_ClearIgnoredButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
+  clearPermanentButton:SetSize(32, 22)
+  clearPermanentButton:SetPoint("BOTTOMLEFT", DisenchanterPlusBaseFrame, 120, 20)
   clearPermanentButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(DisenchanterPlus:DP_i18n("Open ignored items list."), nil, nil, nil, nil, true)
@@ -391,16 +404,8 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
     clearPermanentButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\clean_list2_a:16:16|t")
   end)
   clearPermanentButton:SetScript("OnClick", function(current)
-    DP_CustomSounds:PlayCustomSound("WindowOpen")
-    DP_IgnoredWindow:OpenWindow()
+    DP_DisenchantWindow:OpenIgnoreWindow()
   end)
-  clearPermanentButton:SetBackdrop({
-    bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-    tile = true,
-    edgeSize = 2,
-    insets = { left = 1, right = 1, top = 1, bottom = 1 },
-  })
-  clearPermanentButton:SetBackdropColor(0, 0, 0, 0)
   DisenchanterPlusBaseFrame.clearPermanentButton = clearPermanentButton
 
   local clearPermanentText = clearPermanentButton:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -575,7 +580,8 @@ end
 ---@param itemInfo table
 ---@param tradeskill table
 function DP_DisenchantWindow:PopulateItem(itemInfo, tradeskill)
-  if itemInfo ~= nil and not DP_CustomFunctions:TableIsEmpty(itemInfo) then
+  --DisenchanterPlus:Dump(tradeskill)
+  if itemInfo ~= nil and not DP_CustomFunctions:TableIsEmpty(itemInfo) and not DP_CustomFunctions:TableIsEmpty(tradeskill) then
     local canDisenchant = DP_Database:CheckSkillLevelForItem(tradeskill.Level, itemInfo.ItemLevel, itemInfo.ItemMinLevel)
     DisenchanterPlusBaseFrame.item:SetNormalTexture(itemInfo.ItemIcon or unknownSlot)
     DisenchanterPlusBaseFrame.item.text:SetText(itemInfo.ItemLink)
@@ -588,13 +594,13 @@ function DP_DisenchantWindow:PopulateItem(itemInfo, tradeskill)
       local disabledTexture = DisenchanterPlusBaseFrame.yesButton:CreateTexture(nil, nil, "UIPanelButtonDisabledTexture")
       DisenchanterPlusBaseFrame.yesButton:SetDisabledTexture(disabledTexture)
       DisenchanterPlusBaseFrame.yesButton:SetEnabled(false)
-      local footText = "|cffff3300" .. DisenchanterPlus:DP_i18n("You don't have enough skill level.") .. "|r"
+      local footText = "|cffff033d" .. DisenchanterPlus:DP_i18n("You don't have enough skill level.") .. "|r"
       DisenchanterPlusBaseFrame.footText:SetText(footText)
     else
       local enabledTexture = DisenchanterPlusBaseFrame.yesButton:CreateTexture(nil, nil, "UIPanelButtonUpTexture")
       DisenchanterPlusBaseFrame.yesButton:SetNormalTexture(enabledTexture)
       DisenchanterPlusBaseFrame.yesButton:SetEnabled(true)
-      local footText = "|cffccff33" .. DisenchanterPlus:DP_i18n("You have enough skill level.") .. "|r"
+      local footText = "|cff1cff00" .. DisenchanterPlus:DP_i18n("You have enough skill level.") .. "|r"
       DisenchanterPlusBaseFrame.footText:SetText(footText)
     end
     DisenchanterPlusBaseFrame.noButton:SetEnabled(true)
@@ -603,14 +609,16 @@ function DP_DisenchantWindow:PopulateItem(itemInfo, tradeskill)
     DisenchanterPlusBaseFrame.item:SetNormalTexture(unknownSlot)
     DisenchanterPlusBaseFrame.item.text:SetText("")
 
-    local footText = "|cffff3300" .. DisenchanterPlus:DP_i18n("No item found to disenchant.") .. "|r"
-
+    local footText = "|cffffc700" .. DisenchanterPlus:DP_i18n("No item found to disenchant.") .. "|r"
     local autoDisenchantEnabled = DP_DisenchantProcess:AutoDisenchantEnabled()
     if not autoDisenchantEnabled then
-      footText = "|cffff3300" .. DisenchanterPlus:DP_i18n("Auto disenchant process paused.") .. "|r"
+      footText = "|cffffc700" .. DisenchanterPlus:DP_i18n("Auto disenchant process paused.") .. "|r"
     end
-    DisenchanterPlusBaseFrame.footText:SetText(footText)
+    if DP_CustomFunctions:TableIsEmpty(tradeskill) then
+      footText = "|cffff033d" .. DisenchanterPlus:DP_i18n("You don't have the enchanting skill.") .. "|r"
+    end
 
+    DisenchanterPlusBaseFrame.footText:SetText(footText)
     DisenchanterPlusBaseFrame.yesButton:SetAttribute("target-bag", nil)
     DisenchanterPlusBaseFrame.yesButton:SetAttribute("target-slot", nil)
     DisenchanterPlusBaseFrame.yesButton:SetAttribute("spell", nil)
@@ -675,12 +683,29 @@ function DP_DisenchantWindow:RedrawQualities()
   local epicIconString = epicIcon
   if qualities["4"] == nil or qualities["4"] then epicIconString = epicIconFill end
 
-  DisenchanterPlusBaseFrame.titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchanting from") .. " " .. uncommonIconString .. " " .. rareIconString .. " " .. epicIconString)
+  DisenchanterPlusBaseFrame.titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchanting from") .. " : " .. uncommonIconString .. " " .. rareIconString .. " " .. epicIconString)
   --DisenchanterPlusBaseFrame.titleText:SetAlpha(0.8)
 end
 
 function DP_DisenchantWindow:UpdateKeybindings()
   if DisenchanterPlus.db.char.general.acceptDisenchant ~= nil then
     SetBindingClick(DisenchanterPlus.db.char.general.acceptDisenchant, "AutoDisenchant_YesButton", "LeftButton")
+  end
+end
+
+function DP_DisenchantWindow:CloseIgnoreWindow()
+  local normalTexture = DisenchanterPlusBaseFrame.clearPermanentButton:CreateTexture(nil, nil, "UIPanelButtonUpTexture")
+  DisenchanterPlusBaseFrame.clearPermanentButton:SetNormalTexture(normalTexture)
+end
+
+function DP_DisenchantWindow:OpenIgnoreWindow()
+  if DP_IgnoredWindow:IsWindowOpened() then
+    DP_CustomSounds:PlayCustomSound("WindowClose")
+    DP_IgnoredWindow:CloseWindow()
+  else
+    DP_CustomSounds:PlayCustomSound("WindowOpen")
+    local highlightTexture = DisenchanterPlusBaseFrame.clearPermanentButton:CreateTexture(nil, nil, "UIPanelButtonHighlightTexture")
+    DisenchanterPlusBaseFrame.clearPermanentButton:SetNormalTexture(highlightTexture)
+    DP_IgnoredWindow:OpenWindow()
   end
 end

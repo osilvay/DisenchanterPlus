@@ -43,18 +43,22 @@ function _DP_MinimapIcon:CreateDataBrokerObject()
     OnClick = function(_, button)
       if button == "LeftButton" then
         if IsShiftKeyDown() then
-          DP_SlashCommands:CloseAllFrames()
-          DP_DisenchantProcess:PauseDisenchantProcess()
-          DP_MinimapIcon:UpdateIcon(DP_CustomMedias:GetMediaFile("disenchanterplus_paused"))
+          if DP_DisenchantProcess:ProcessRunning() then
+            DP_SlashCommands:CloseAllFrames()
+            DP_DisenchantProcess:PauseDisenchantProcess()
+            DP_MinimapIcon:UpdateIcon(DP_CustomMedias:GetMediaFile("disenchanterplus_paused"))
+          end
         else
           DP_SlashCommands:CloseAllFrames()
           DP_DisenchantProcess:OpenDisenchantWindow()
         end
       elseif button == "RightButton" then
         if IsShiftKeyDown() then
-          DP_SlashCommands:CloseAllFrames()
-          DP_DisenchantProcess:StartsDisenchantProcess()
-          DP_MinimapIcon:UpdateIcon(DP_CustomMedias:GetMediaFile("disenchanterplus_running"))
+          if not DP_DisenchantProcess:ProcessRunning() then
+            DP_SlashCommands:CloseAllFrames()
+            DP_DisenchantProcess:StartsDisenchantProcess()
+            DP_MinimapIcon:UpdateIcon(DP_CustomMedias:GetMediaFile("disenchanterplus_running"))
+          end
         else
           DP_SlashCommands:CloseAllFrames()
           DP_Settings:OpenSettingsFrame()
