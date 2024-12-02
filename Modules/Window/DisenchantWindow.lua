@@ -51,6 +51,8 @@ local CUSTOM_DIALOG_BACKDROP = {
   insets = { left = 4, right = 4, top = 4, bottom = 4 },
 }
 local emptySlot = "Interface/AddOns/DisenchanterPlus/Images/Inventory/INVTYPE_SLOT"
+local unknownSlot = "Interface/AddOns/DisenchanterPlus/Images/Inventory/Unknown"
+
 local uncommonIcon = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\uncommon:16:16|t" --2
 local rareIcon = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\rare:16:16|t"         --3
 local epicIcon = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\epic:16:16|t"         --4
@@ -87,7 +89,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   local titleText = DisenchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
   titleText:SetTextColor(1, 1, 1)
   titleText:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, 20, -20)
-  titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchanting") .. " : " .. uncommonIcon .. " " .. rareIcon .. " " .. epicIcon)
+  titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchanting of") .. " " .. uncommonIcon .. " " .. rareIcon .. " " .. epicIcon)
   DisenchanterPlusBaseFrame.titleText = titleText
 
   local itemLeftText = DisenchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -105,8 +107,8 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   -- item ******************************************************************************************
   local itemButton = CreateFrame("Button", "AutoDisenchant_ItemFrame", DisenchanterPlusBaseFrame)
   itemButton:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, "TOPLEFT", 20, -70)
-  --itemButton:SetNormalTexture(emptySlot)
-  --itemButton:SetText(string.format("|T%s:%s:%s|t", emptySlot, "48", "48"))
+  itemButton:SetNormalTexture(unknownSlot)
+  itemButton:SetText(string.format("|T%s:%s:%s|t", unknownSlot, "48", "48"))
   itemButton:SetHeight(48)
   itemButton:SetWidth(48)
   itemButton:SetScript("OnEnter", function(current)
@@ -116,8 +118,8 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
     if bagIndex ~= nil and slot ~= nil and tonumber(bagIndex) and tonumber(slot) then
       local iBagIndex = math.floor(bagIndex)
       local iSlot = math.floor(slot)
-      local itemID = C_Container.GetContainerItemID(iBagIndex, iSlot);
-      GameTooltip:SetItemByID(itemID)
+      local containerInfo = C_Container.GetContainerItemInfo(iBagIndex, iSlot)
+      GameTooltip:SetHyperlink(containerInfo["hyperlink"])
     end
     GameTooltip:Show()
   end)
@@ -575,7 +577,7 @@ end
 function DP_DisenchantWindow:PopulateItem(itemInfo, tradeskill)
   if itemInfo ~= nil and not DP_CustomFunctions:TableIsEmpty(itemInfo) then
     local canDisenchant = DP_Database:CheckSkillLevelForItem(tradeskill.Level, itemInfo.ItemLevel, itemInfo.ItemMinLevel)
-    DisenchanterPlusBaseFrame.item:SetNormalTexture(itemInfo.ItemIcon or emptySlot)
+    DisenchanterPlusBaseFrame.item:SetNormalTexture(itemInfo.ItemIcon or unknownSlot)
     DisenchanterPlusBaseFrame.item.text:SetText(itemInfo.ItemLink)
     DisenchanterPlusBaseFrame.yesButton:SetAttribute("target-bag", itemInfo.BagIndex)
     DisenchanterPlusBaseFrame.yesButton:SetAttribute("target-slot", itemInfo.Slot)
@@ -598,7 +600,7 @@ function DP_DisenchantWindow:PopulateItem(itemInfo, tradeskill)
     DisenchanterPlusBaseFrame.noButton:SetEnabled(true)
     DisenchanterPlusBaseFrame.ignoreButton:SetEnabled(true)
   else
-    DisenchanterPlusBaseFrame.item:SetNormalTexture(emptySlot)
+    DisenchanterPlusBaseFrame.item:SetNormalTexture(unknownSlot)
     DisenchanterPlusBaseFrame.item.text:SetText("")
 
     local footText = "|cffff3300" .. DisenchanterPlus:DP_i18n("No item found to disenchant.") .. "|r"
@@ -673,7 +675,7 @@ function DP_DisenchantWindow:RedrawQualities()
   local epicIconString = epicIcon
   if qualities["4"] == nil or qualities["4"] then epicIconString = epicIconFill end
 
-  DisenchanterPlusBaseFrame.titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchanting") .. " : " .. uncommonIconString .. " " .. rareIconString .. " " .. epicIconString)
+  DisenchanterPlusBaseFrame.titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchanting from") .. " " .. uncommonIconString .. " " .. rareIconString .. " " .. epicIconString)
   --DisenchanterPlusBaseFrame.titleText:SetAlpha(0.8)
 end
 

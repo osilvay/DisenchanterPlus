@@ -133,6 +133,10 @@ function DP_EnchantingTooltip:ProcessItem(itemID)
       end
     end
   end
+
+  if DisenchanterPlus.db.char.general.showExpectedEssences or DisenchanterPlus.db.char.general.showRealEssences then
+    GameTooltip:AddLine(" ")
+  end
 end
 
 ---Get expected item data

@@ -1,4 +1,13 @@
-### Version 1.0.4-alpha3
+### Version 1.0.4
+
+- Added qualities that can be disenchanted in disenchant window.
+- Added keybind support to accept, cancel and ignore items.
+- Added window with ignored items tabbed by permanent or session.
+- Fixed an error with Blizzard_SharedXML and GetItemInfoFromHyperlink.
+- Lib update.
+- Bug fixes.
+
+### Version 1.0.4
 
 - Added keybindings for cancel and ignore items.
 - Added qualities that can be disenchanted in disenchant window.
