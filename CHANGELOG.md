@@ -1,3 +1,10 @@
+## **Version 1.0.6**
+
+- Closing the main window now does not pause the automatic disenchant.
+- Add an option to the settings to show/hide the qualities that are going to be disenchanted
+- Fixed a bug with combat lockdown.
+- Fixed a bug when displaying the item name in the disenchant window
+
 ## **Version 1.0.5**
 
 - Bug fixes.
@@ -7,7 +14,7 @@
 - Added qualities that can be disenchanted in disenchant window.
 - Added keybind support to accept, cancel and ignore items.
 - Added window with ignored items tabbed by permanent or session.
-- Fixed an error with Blizzard_SharedXML and GetItemInfoFromHyperlink.
+- Fixed a bug with Blizzard_SharedXML and GetItemInfoFromHyperlink.
 - Fixed tooltips on generic items.
 - Lib update.
 - Bug fixes.
@@ -20,7 +27,7 @@
 ## **Version 1.0.4-alpha2**
 
 - Added keybind support to accept disenchant.
-- Fixed an error with Blizzard_SharedXML and GetItemInfoFromHyperlink.
+- Fixed a bug with Blizzard_SharedXML and GetItemInfoFromHyperlink.
 - Lib update.
 
 ## **Version 1.0.4-alpha1**

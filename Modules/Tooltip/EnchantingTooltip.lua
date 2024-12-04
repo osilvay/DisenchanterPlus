@@ -12,7 +12,11 @@ local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
 
 function DP_EnchantingTooltip:Initialize()
   PercentByQualityAndLevel = DP_Database:GetExpectedDisenchantData()
-  GameTooltip:HookScript("OnTooltipSetItem", DP_EnchantingTooltip.OnGameTooltipSetItem)
+
+  if DisenchanterPlus.IsMainline then
+  else
+    GameTooltip:HookScript("OnTooltipSetItem", DP_EnchantingTooltip.OnGameTooltipSetItem)
+  end
 end
 
 -- #######################################################################################################################################
@@ -309,7 +313,8 @@ end
 
 function DP_EnchantingTooltip.OnGameTooltipSetItem(tooltip, ...)
   local _, itemLink = tooltip:GetItem()
-  local itemID, _, _, _, _, _, _ = C_Item.GetItemInfoInstant(itemLink)
+  if itemLink == nil then return end
+  local itemID = C_Item.GetItemIDForItemInfo(itemLink)
 
   if not itemID or itemID == 0 then
     DisenchanterPlus:Warning("Not an item")

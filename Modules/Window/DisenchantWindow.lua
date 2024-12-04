@@ -89,7 +89,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   local titleText = DisenchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
   titleText:SetTextColor(1, 1, 1)
   titleText:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, 20, -20)
-  titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchanting from") .. " : " .. uncommonIcon .. " " .. rareIcon .. " " .. epicIcon)
+  titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchanting"))
   DisenchanterPlusBaseFrame.titleText = titleText
 
   local itemLeftText = DisenchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -103,6 +103,24 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   footText:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, 20, -103)
   footText:SetText("")
   DisenchanterPlusBaseFrame.footText = footText
+
+  local qualitiesText = DisenchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  qualitiesText:SetTextColor(1, 1, 1)
+  qualitiesText:SetAlpha(0.5)
+  qualitiesText:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -10, -35)
+  qualitiesText:SetText("")
+  qualitiesText:SetScript("OnEnter", function(current)
+    GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
+    local tooltipText = DP_DisenchantWindow:RedrawQualitiesTooltip()
+    GameTooltip:SetText(tooltipText, nil, nil, nil, nil, true)
+    current:SetAlpha(0.8)
+  end)
+  qualitiesText:SetScript("OnLeave", function(current)
+    GameTooltip:Hide()
+    current:SetAlpha(0.5)
+  end)
+
+  DisenchanterPlusBaseFrame.qualitiesText = qualitiesText
 
   -- item ******************************************************************************************
   local itemButton = CreateFrame("Button", "AutoDisenchant_ItemFrame", DisenchanterPlusBaseFrame)
@@ -131,6 +149,9 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   local itemText = itemButton:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
   itemText:SetTextColor(1, 1, 1)
   itemText:SetPoint("LEFT", itemButton, 56, 0)
+  itemText:SetJustifyH("LEFT")
+  itemText:SetJustifyV("MIDDLE")
+  itemText:SetSize(330, 48)
   itemText:SetText("")
   itemButton.text = itemText
 
@@ -172,7 +193,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   closeButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -10, -10)
   closeButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Close window and pause disenchant process."), nil, nil, nil, nil, true)
+    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Close window until next iteration."), nil, nil, nil, nil, true)
     closeButton.text:SetTextColor(1, 1, 1)
     closeButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\close:14:14|t ") --.. DisenchanterPlus:DP_i18n("Settings")
   end)
@@ -183,9 +204,9 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   end)
   closeButton:SetScript("OnClick", function(current)
     DP_CustomSounds:PlayCustomSound("WindowClose")
-    DP_DisenchantWindow:CloseWindow()
+    --DP_DisenchantWindow:CloseWindow()
     DP_DisenchantProcess:CloseDisenchantProcess()
-    DP_MinimapIcon:UpdateIcon(DP_CustomMedias:GetMediaFile("disenchanterplus_paused"))
+    --DP_MinimapIcon:UpdateIcon(DP_CustomMedias:GetMediaFile("disenchanterplus_paused"))
   end)
 
   local closeText = closeButton:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -322,6 +343,9 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   local texture = yesButton:CreateTexture(nil, nil, "UIPanelButtonUpTexture")
   yesButton:SetNormalTexture(texture)
   yesButton:SetHighlightTexture(yesDummyButton:GetHighlightTexture())
+
+  local disabledTexture = yesDummyButton:CreateTexture(nil, nil, "UIPanelButtonDisabledTexture")
+  yesButton:SetDisabledTexture(disabledTexture)
 
   yesButton:RegisterForClicks("LeftButtonUp", "LeftButtonDown")
   yesButton:SetAttribute("unit", "none")
@@ -539,6 +563,7 @@ end
 
 ---Close window
 function DP_DisenchantWindow:CloseWindow()
+  if InCombatLockdown() or UnitAffectingCombat("player") then return end
   if DisenchanterPlusBaseFrame == nil then return end
 
   if DP_IgnoredWindow:IsWindowOpened() then
@@ -636,6 +661,22 @@ function DP_DisenchantWindow:PopulateItem(itemInfo, tradeskill)
   end
 end
 
+function DP_DisenchantWindow:DisableButtons()
+  --local disabledTexture = DisenchanterPlusBaseFrame.yesButton:CreateTexture(nil, nil, "UIPanelButtonDisabledTexture")
+  --DisenchanterPlusBaseFrame.yesButton:SetDisabledTexture(disabledTexture)
+  DisenchanterPlusBaseFrame.yesButton:SetEnabled(false)
+  DisenchanterPlusBaseFrame.noButton:SetEnabled(false)
+  DisenchanterPlusBaseFrame.ignoreButton:SetEnabled(false)
+end
+
+function DP_DisenchantWindow:EnableButtons()
+  --local disabledTexture = DisenchanterPlusBaseFrame.yesButton:CreateTexture(nil, nil, "UIPanelButtonDisabledTexture")
+  --DisenchanterPlusBaseFrame.yesButton:SetDisabledTexture(disabledTexture)
+  DisenchanterPlusBaseFrame.yesButton:SetEnabled(true)
+  DisenchanterPlusBaseFrame.noButton:SetEnabled(true)
+  DisenchanterPlusBaseFrame.ignoreButton:SetEnabled(true)
+end
+
 ---Item to disenchant
 ---@return boolean
 function DP_DisenchantWindow:ItemToDisenchant()
@@ -677,18 +718,29 @@ function DP_DisenchantWindow:RunKeybindIgnoreDisenchant()
 end
 
 function DP_DisenchantWindow:RedrawQualities()
+  if DisenchanterPlus.db.char.general.showItemQuality then
+    local qualities = DisenchanterPlus.db.char.general.itemQuality
+    local uncommonIconString = uncommonIcon
+    if qualities["2"] == nil or qualities["2"] then uncommonIconString = uncommonIconFill end
+
+    local rareIconString = rareIcon
+    if qualities["3"] == nil or qualities["3"] then rareIconString = rareIconFill end
+
+    local epicIconString = epicIcon
+    if qualities["4"] == nil or qualities["4"] then epicIconString = epicIconFill end
+    DisenchanterPlusBaseFrame.qualitiesText:SetText(uncommonIconString .. " " .. rareIconString .. " " .. epicIconString)
+  else
+    DisenchanterPlusBaseFrame.qualitiesText:SetText("")
+  end
+end
+
+function DP_DisenchantWindow:RedrawQualitiesTooltip()
   local qualities = DisenchanterPlus.db.char.general.itemQuality
-  local uncommonIconString = uncommonIcon
-  if qualities["2"] == nil or qualities["2"] then uncommonIconString = uncommonIconFill end
-
-  local rareIconString = rareIcon
-  if qualities["3"] == nil or qualities["3"] then rareIconString = rareIconFill end
-
-  local epicIconString = epicIcon
-  if qualities["4"] == nil or qualities["4"] then epicIconString = epicIconFill end
-
-  DisenchanterPlusBaseFrame.titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchanting from") .. " : " .. uncommonIconString .. " " .. rareIconString .. " " .. epicIconString)
-  --DisenchanterPlusBaseFrame.titleText:SetAlpha(0.8)
+  local tooltipString = DisenchanterPlus:DP_i18n("Qualities") .. " :"
+  if qualities["2"] == nil or qualities["2"] then tooltipString = tooltipString .. " |cff1eff00" .. string.lower(DisenchanterPlus:DP_i18n("Uncommon")) .. "|r" end
+  if qualities["3"] == nil or qualities["3"] then tooltipString = tooltipString .. " |cff0070dd" .. string.lower(DisenchanterPlus:DP_i18n("Rare")) .. "|r" end
+  if qualities["4"] == nil or qualities["4"] then tooltipString = tooltipString .. " |cffa335ee" .. string.lower(DisenchanterPlus:DP_i18n("Epic")) .. "|r" end
+  return tooltipString
 end
 
 function DP_DisenchantWindow:UpdateKeybindings()

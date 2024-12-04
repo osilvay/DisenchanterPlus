@@ -100,6 +100,18 @@ function DP_DisenchantGroup:Config(order)
           DisenchanterPlus.db.char.general.onlySoulbound = value
         end,
       },
+      showItemQuality = {
+        type = "toggle",
+        order = 3,
+        name = DisenchanterPlus:DP_i18n("Show item qualities"),
+        desc = DisenchanterPlus:DP_i18n("Show item qualities in disenchanting window."),
+        width = "full",
+        disabled = function() return (not DisenchanterPlus.db.char.general.autoDisenchantEnabled); end,
+        get = function() return DisenchanterPlus.db.char.general.showItemQuality end,
+        set = function(info, value)
+          DisenchanterPlus.db.char.general.showItemQuality = value
+        end,
+      },
       itemQuality = {
         type = "multiselect",
         order = 4,

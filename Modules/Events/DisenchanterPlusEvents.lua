@@ -22,6 +22,9 @@ function DP_DisenchanterPlusEvents:Initialize()
   DisenchanterPlus:RegisterEvent("LOOT_CLOSED", _DP_DisenchanterPlusEvents.LootClosed)
   DisenchanterPlus:RegisterEvent("BAG_UPDATE", _DP_DisenchanterPlusEvents.BagUpdate)
   DisenchanterPlus:RegisterEvent("ITEM_LOCKED", _DP_DisenchanterPlusEvents.ItemLocked)
+  DisenchanterPlus:RegisterEvent("PLAYER_REGEN_DISABLED", _DP_DisenchanterPlusEvents.PlayerRegenDisabled)
+  DisenchanterPlus:RegisterEvent("PLAYER_REGEN_ENABLED", _DP_DisenchanterPlusEvents.PlayerRegenEnabled)
+
   DP_LootProcess:Initialize()
   DP_DisenchantProcess:Initialize()
 end
@@ -65,4 +68,12 @@ end
 
 function _DP_DisenchanterPlusEvents.ItemLocked(_, bagOrSlotIndex, slotIndex)
   DP_LootProcess:ItemLocked(bagOrSlotIndex, slotIndex)
+end
+
+function _DP_DisenchanterPlusEvents.PlayerRegenDisabled(_)
+  DP_DisenchantProcess:PlayerRegenDisabled()
+end
+
+function _DP_DisenchanterPlusEvents.PlayerRegenEnabled(_)
+  DP_DisenchantProcess:PlayerRegenEnabled()
 end

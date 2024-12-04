@@ -20,14 +20,18 @@ local shard = "shard"
 local crystal = "crystal"
 local unkonwun = string.lower(UNKNOWN)
 
+
+
+
+
+
+
+-- vanilla
 local strange_dust = 10940
 local soul_dust = 11083
 local vision_dust = 11137
 local dream_dust = 11176
 local illusion_dust = 16204
-local arcane_dust = 22445
-local infinite_dust = 34054
-local hypnotic_dust = 52555
 local lesser_magic_essence = 10938
 local greater_magic_essence = 10939
 local lesser_astral_essence = 10998
@@ -38,12 +42,6 @@ local lesser_nether_essence = 11174
 local greater_nether_essence = 11175
 local lesser_eternal_essence = 16202
 local greater_eternal_essence = 16203
-local lesser_planar_essence = 22447
-local greater_planar_essence = 22446
-local lesser_cosmic_essence = 34056
-local greater_cosmic_essence = 34055
-local lesser_celestial_essence = 52718
-local greater_celestial_essence = 52719
 local small_glimmering_shard = 10978
 local large_glimmering_shard = 11084
 local small_glowing_shard = 11138
@@ -52,16 +50,38 @@ local small_radiant_shard = 11177
 local large_radiant_shard = 11178
 local small_brilliant_shard = 14343
 local large_brilliant_shard = 14344
+local nexus_crystal = 20725
+
+-- outland
+local arcane_dust = 22445
+local lesser_planar_essence = 22447
+local greater_planar_essence = 22446
 local small_prismatic_shard = 22448
 local large_prismatic_shard = 22449
+local void_crystal = 22450
+
+-- northrend
+local infinite_dust = 34054
+local lesser_cosmic_essence = 34056
+local greater_cosmic_essence = 34055
 local small_dream_shard = 34053
 local dream_shard = 34052
+local abyss_crystal = 34057
+
+-- cataclysm
+local hypnotic_dust = 52555
+local lesser_celestial_essence = 52718
+local greater_celestial_essence = 52719
 local small_heavenly_shard = 52720
 local heavenly_shard = 52721
-local nexus_crystal = 20725
-local void_crystal = 22450
-local abyss_crystal = 34057
 local maelstrom_crystal = 52722
+
+-- pandaria
+local spirit_dust = 0
+local mysterious_essence = 0
+local small_Ethereal_shard = 0
+local ethereal_shard = 0
+local sha_crystal = 0
 
 local disenchantData = {
   { 1,   5,   10,  "1-2x", strange_dust,  "1-2x", lesser_magic_essence,      nil,  nil,                    nil,  nil },
@@ -125,7 +145,12 @@ local enchantingItemType = {
   [nexus_crystal]             = crystal,
   [void_crystal]              = crystal,
   [abyss_crystal]             = crystal,
-  [maelstrom_crystal]         = crystal
+  [maelstrom_crystal]         = crystal,
+  [spirit_dust]               = dust,
+  [mysterious_essence]        = essence,
+  [small_Ethereal_shard]      = shard,
+  [ethereal_shard]            = shard,
+  [sha_crystal]               = crystal
 }
 
 function DP_Database:Initialize()

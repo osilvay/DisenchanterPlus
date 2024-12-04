@@ -155,7 +155,10 @@ function DP_DisenchantProcess:PauseDisenchantProcess()
 end
 
 function DP_DisenchantProcess:CloseDisenchantProcess()
-  DP_DisenchantProcess:CancelAutoDisenchant(true)
+  --DP_DisenchantProcess:CancelAutoDisenchant(true)
+  DP_DisenchantWindow:CloseWindow()
+  itemToDisenchant = false
+  disenchanting = false
 end
 
 ---Starts disenchant process
@@ -239,6 +242,14 @@ function DP_DisenchantProcess:PermanentIgnoredItemsHasElements()
     return true
   end
   return false
+end
+
+function DP_DisenchantProcess:PlayerRegenDisabled()
+  DP_DisenchantWindow:DisableButtons()
+end
+
+function DP_DisenchantProcess:PlayerRegenEnabled()
+  DP_DisenchantWindow:EnableButtons()
 end
 
 ---Open disenchant window
