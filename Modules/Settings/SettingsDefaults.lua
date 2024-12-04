@@ -52,7 +52,7 @@ function DP_SettingsDefaults:Load()
         sessionIgnoredItems = {
         },
         onlySoulbound = false,
-        showItemQuality = false,
+        showItemQuality = true,
       },
     },
   }
