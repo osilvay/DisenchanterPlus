@@ -198,7 +198,7 @@ function DP_Database:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel,
   --DisenchanterPlus:Debug("skillLevel " .. tostring(skillLevel))
   --DisenchanterPlus:Debug("itemLevel " .. tostring(itemLevel))
   --DisenchanterPlus:Debug("itemMinLevel " .. tostring(itemMinLevel))
-  DisenchanterPlus:Debug("itemQuality " .. tostring(itemQuality))
+  --DisenchanterPlus:Debug("itemQuality " .. tostring(itemQuality))
   if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then return true end
 
   local levelToCheck = 0

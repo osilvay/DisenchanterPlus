@@ -251,7 +251,7 @@ function DP_LootProcess:ItemLocked(bagOrSlotIndex, slotIndex)
     local containerInfo = C_Container.GetContainerItemInfo(bagOrSlotIndex, slotIndex)
     if containerInfo == nil then return end
 
-    --LogBook:Dump(containerInfo)
+    --DisenchanterPlus:Dump(containerInfo)
     IsItemLocked = true
     ItemLockedInfo = {
       ItemName = containerInfo.itemName,

@@ -606,7 +606,7 @@ end
 ---@param itemInfo table
 ---@param tradeskill table
 function DP_DisenchantWindow:PopulateItem(itemInfo, tradeskill)
-  DisenchanterPlus:Dump(itemInfo)
+  --DisenchanterPlus:Dump(itemInfo)
   if itemInfo ~= nil and not DP_CustomFunctions:TableIsEmpty(itemInfo) and not DP_CustomFunctions:TableIsEmpty(tradeskill) then
     local canDisenchant = DP_Database:CheckSkillLevelForItem(tradeskill.Level, itemInfo.ItemLevel, itemInfo.ItemMinLevel, itemInfo.ItemQuality)
     DisenchanterPlusBaseFrame.item:SetNormalTexture(itemInfo.ItemIcon or unknownSlot)

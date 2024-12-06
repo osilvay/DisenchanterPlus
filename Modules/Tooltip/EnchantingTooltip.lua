@@ -147,7 +147,7 @@ end
 ---@param itemID number
 function DP_EnchantingTooltip:GetExpectedItemData(itemID)
   local itemExpectedData = DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID) or {}
-  --LogBook:Dump(itemExpectedData)
+  --DisenchanterPlus:Dump(itemExpectedData)
   if DP_CustomFunctions:TableLength(itemExpectedData) > 0 then
     table.sort(itemExpectedData, function(a, b) return a.ItemQuality ~= nil and b.ItemQuality ~= nil and a.ItemQuality < b.ItemQuality end)
   end
