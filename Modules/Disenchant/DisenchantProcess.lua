@@ -1,23 +1,14 @@
 ---@class DP_DisenchantProcess
 local DP_DisenchantProcess = DP_ModuleLoader:CreateModule("DP_DisenchantProcess")
 
----@type DP_Database
-local DP_Database = DP_ModuleLoader:ImportModule("DP_Database")
-
 ---@type DP_CustomFunctions
 local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
-
----@type DP_CustomColors
-local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
 
 ---@type DP_DisenchantGroup
 local DP_DisenchantGroup = DP_ModuleLoader:ImportModule("DP_DisenchantGroup")
 
 ---@type DP_DisenchantWindow
 local DP_DisenchantWindow = DP_ModuleLoader:ImportModule("DP_DisenchantWindow")
-
----@type DP_IgnoredWindow
-local DP_IgnoredWindow = DP_ModuleLoader:ImportModule("DP_IgnoredWindow")
 
 local autoDisenchantDbTimeoutTicker = nil
 local disenchantSpellID = 13262
@@ -358,9 +349,8 @@ function DP_DisenchantProcess:ItemInBag(bagIndex, itemLinkToSearch, sessionIgnor
     local containerInfo = C_Container.GetContainerItemInfo(bagIndex, slot)
 
     if containerInfo ~= nil and containerInfo.itemID ~= nil then
-      local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, _, _, _, itemTexture, _, _, _, _, _, _, _ = C_Item.GetItemInfo(containerInfo.itemID)
+      local itemName, _, itemQuality, itemLevel, itemMinLevel, itemType, _, _, _, itemTexture, _, _, _, _, _, _, _ = C_Item.GetItemInfo(containerInfo.itemID)
       local isBound = containerInfo.isBound
-
 
       if (itemType == DisenchanterPlus:DP_i18n("Armor") or itemType == DisenchanterPlus:DP_i18n("Weapon")) and
           not DP_CustomFunctions:TableHasKey(sessionIgnoredList, tostring(containerInfo.itemID)) and
@@ -370,7 +360,7 @@ function DP_DisenchantProcess:ItemInBag(bagIndex, itemLinkToSearch, sessionIgnor
         --DisenchanterPlus:Dump(sessionIgnoredItems)
         --DisenchanterPlus:Debug(containerInfo.hyperlink)
         --DisenchanterPlus:Debug(itemLink)
-        --DisenchanterPlus:Debug(tostring(itemQuality) .. " = " .. tostring(containerInfo.itemID) .. " " .. itemTexture)
+        DisenchanterPlus:Debug("itemQuality = " .. tostring(itemQuality) .. ", itemID = " .. tostring(containerInfo.itemID) .. ", texture = " .. itemTexture)
         numItemsInBag = numItemsInBag + 1
         if result == nil then
           result = {

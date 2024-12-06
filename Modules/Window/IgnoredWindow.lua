@@ -1,26 +1,8 @@
 ---@class DP_IgnoredWindow
 local DP_IgnoredWindow = DP_ModuleLoader:CreateModule("DP_IgnoredWindow")
 
----@type DP_CustomColors
-local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
-
 ---@type DP_CustomFunctions
 local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
-
----@type DP_Database
-local DP_Database = DP_ModuleLoader:ImportModule("DP_Database")
-
----@type DP_DisenchantProcess
-local DP_DisenchantProcess = DP_ModuleLoader:ImportModule("DP_DisenchantProcess")
-
----@type DP_SlashCommands
-local DP_SlashCommands = DP_ModuleLoader:ImportModule("DP_SlashCommands")
-
----@type DP_MinimapIcon
-local DP_MinimapIcon = DP_ModuleLoader:ImportModule("DP_MinimapIcon")
-
----@type DP_CustomMedias
-local DP_CustomMedias = DP_ModuleLoader:ImportModule("DP_CustomMedias")
 
 ---@type DP_CustomFrames
 local DP_CustomFrames = DP_ModuleLoader:ImportModule("DP_CustomFrames")

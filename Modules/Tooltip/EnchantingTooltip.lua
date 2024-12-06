@@ -25,9 +25,11 @@ end
 ---@param itemInfo table
 function DP_EnchantingTooltip:ShowTooltip(itemInfo)
   local itemID = itemInfo.ItemID
-  local showTooltip = false
   local isEnchantingItem = false
   local isItem = false
+
+  local showTooltip = DP_CustomFunctions:IsKeyPressed(DisenchanterPlus.db.char.general.pressKeyDown)
+  if not showTooltip then return end
 
   if DP_Database:GetEnchantingItemType(itemID) ~= nil then
     isEnchantingItem = true
@@ -36,17 +38,15 @@ function DP_EnchantingTooltip:ShowTooltip(itemInfo)
   if itemID == nil then return end
   --DisenchanterPlus:Debug("ShowTooltip [" .. tostring(itemID) .. "]")
 
-  local _, _, itemQuality, _, _, itemType, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
+  local _, itemType, _, _, _, _, _ = C_Item.GetItemInfoInstant(itemID)
   --LogBook:Debug(string.format("itemQuality = %s - itemType = %s", tostring(itemQuality), tostring(itemType)))
-  --if itemQuality == nil or itemType == nil or itemQuality < 2 then return end
 
   if itemType == DisenchanterPlus:DP_i18n("Armor") or itemType == DisenchanterPlus:DP_i18n("Weapon") then
     isItem = true
   end
 
-  if isEnchantingItem or isItem then
-    showTooltip = true
-  end
+  showTooltip = (isItem or isEnchantingItem)
+
   if not showTooltip then return end
 
   -- draw title
@@ -161,6 +161,7 @@ function DP_EnchantingTooltip:GetExpectedItemData(itemID)
       local quantity = currentExpecteItem.QuantityText
       local percentage = string.format("%.2f", currentExpecteItem.Percent)
       local _, itemLink, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(currentExpecteItem.ItemID)
+
       local itemIcon = C_Item.GetItemIconByID(currentExpecteItem.ItemID)
       local percentageText = string.format("|cfff1f1f1%s|r", percentage or "0")
       if itemIcon ~= nil and itemLink ~= nil then
@@ -179,6 +180,7 @@ end
 function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
   local _, _, itemQuality, itemLevel, itemMinLevel, itemType, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
   local essencesData = {}
+
   if itemQuality == 2 then
     essencesData = PercentByQualityAndLevel["UNCOMMON"][itemType]
   elseif itemQuality == 3 then

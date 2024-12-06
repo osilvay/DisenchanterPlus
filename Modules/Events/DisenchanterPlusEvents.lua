@@ -2,9 +2,6 @@
 local DP_DisenchanterPlusEvents = DP_ModuleLoader:CreateModule("DP_DisenchanterPlusEvents")
 local _DP_DisenchanterPlusEvents = {}
 
----@type DP_Database
-local DP_Database = DP_ModuleLoader:ImportModule("DP_Database")
-
 ---@type DP_LootProcess
 local DP_LootProcess = DP_ModuleLoader:ImportModule("DP_LootProcess")
 

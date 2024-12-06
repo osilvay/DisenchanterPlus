@@ -10,11 +10,11 @@ local isOpened = false
 local _DP_CreateContainer, _DP_CreateDescription, _DP_CreateButtonContainer, _DP_CreateSeparator, _DP_CreateAcceptButton, _DP_CreateCancelButton
 local title, description, _acceptFn
 local DEFAULT_DIALOG_BACKDROP = {
-  bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]],
-  edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
+  bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+  edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
   tile = true,
-  tileSize = 32,
-  edgeSize = 32,
+  tileSize = 24,
+  edgeSize = 24,
   insets = {
     left = 5,
     right = 5,
@@ -79,7 +79,8 @@ _DP_CreatePopupWindow = function()
     popup:Hide()
   end)
   DP_CustomPopup:CreateWindowContent(popup)
-  popup.frame:SetBackdrop(DEFAULT_DIALOG_BACKDROP)
+  --popup.frame:SetBackdrop(DEFAULT_DIALOG_BACKDROP)
+  --popup.frame:SetBackdropColor(0, 0, 0, 1)
   return popup
 end
 

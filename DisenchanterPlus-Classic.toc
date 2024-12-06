@@ -1,6 +1,6 @@
 ## Interface: 11505
-## Title: |cffffffffLog|r|cff57b6ffBook|r |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v1.0.6|r
-## Version: 1.0.6
+## Title: |cffffffffLog|r|cff57b6ffBook|r |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v1.0.7-alpha1|r
+## Version: 1.0.7-alpha1
 ## Notes: Disenchanter tool for wow classic era
 ## Author: osilvay
 ## SavedVariables: DisenchanterPlusDB
@@ -29,13 +29,16 @@ Modules\Settings\SettingsDefaults.lua
 Modules\Settings\ConfigGroups.lua
 Modules\Settings\GeneralTab\GeneralTab.lua
 Modules\Settings\GeneralTab\Groups\GeneralGroup.lua
-Modules\Settings\GeneralTab\Groups\TooltipGroup.lua
-Modules\Settings\GeneralTab\Groups\DisenchantGroup.lua
-Modules\Settings\GeneralTab\Groups\KeybindingGroup.lua
 Modules\Settings\AdvancedTab\AdvancedTab.lua
 Modules\Settings\AdvancedTab\Groups\AdvancedGroup.lua
 Modules\Settings\MaintenanceTab\MaintenanceTab.lua
 Modules\Settings\MaintenanceTab\Groups\DatabaseGroup.lua
+Modules\Settings\DisenchantTab\DisenchantTab.lua
+Modules\Settings\DisenchantTab\Groups\DisenchantGroup.lua
+Modules\Settings\KeybindingsTab\KeybindingsTab.lua
+Modules\Settings\KeybindingsTab\Groups\KeybindingsGroup.lua
+Modules\Settings\TooltipsTab\TooltipsTab.lua
+Modules\Settings\TooltipsTab\Groups\TooltipsGroup.lua
 
 Modules\Window\DisenchantWindow.lua
 Modules\Window\IgnoredWindow.lua

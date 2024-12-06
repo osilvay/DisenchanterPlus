@@ -1,3 +1,13 @@
+## **Version 1.0.7-alpha1**
+
+- Settings panel redone.
+- Code cleanup.
+- Bug fixes.
+
+## **Version 1.0.6**
+
+- Fixed a bug that the "Press Key to Show" option for tooltip disenchant information doesn't seem to do anything. (Road-block issue)
+
 ## **Version 1.0.6**
 
 - Closing the main window now does not pause the automatic disenchant.

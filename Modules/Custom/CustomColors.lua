@@ -1,9 +1,6 @@
 ---@class DP_CustomColors
 local DP_CustomColors = DP_ModuleLoader:CreateModule("DP_CustomColors")
 
----@type DP_CustomFunctions
-local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
-
 ---Custom class colors
 ---@param color_index string
 ---@return string colorized_string

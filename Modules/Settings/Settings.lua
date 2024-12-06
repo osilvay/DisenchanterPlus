@@ -1,12 +1,6 @@
 ---@class DP_Settings
 local DP_Settings = DP_ModuleLoader:CreateModule("DP_Settings")
 
----@type DP_CustomFunctions
-local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
-
----@type DP_SettingsDefaults
-local DP_SettingsDefaults = DP_ModuleLoader:ImportModule("DP_SettingsDefaults");
-
 ---@type DP_CustomPopup
 local DP_CustomPopup = DP_ModuleLoader:ImportModule("DP_CustomPopup");
 
@@ -53,10 +47,11 @@ function DP_Settings:DrawSettingsFrame()
   --disenchanterPlusSettingsFrame:Hide()
   disenchanterPlusSettingsFrame:SetCallback("OnShow", function(widget)
     --DisenchanterPlus:Debug("Showing settings...")
+    DP_CustomSounds:PlayCustomSound("WindowOpen")
     DP_DisenchantGroup:CreateSessionIgnoreListItems(DP_DisenchantGroup:GetSessionIgnoreList())
   end)
   disenchanterPlusSettingsFrame:SetCallback("OnClose", function(widget)
-    --DP_CustomSounds:PlayCustomSound("WindowClose")
+    DP_CustomSounds:PlayCustomSound("WindowClose")
     if DP_CustomPopup:IsOpened() then
       DP_CustomPopup:CancelPopup()
     end
@@ -73,8 +68,13 @@ end
 ---@return table
 DP_Settings._CreateSettingsTable = function()
   local general_tab = DP_Settings.tabs.general:Initialize(2)
-  local advanced_tab = DP_Settings.tabs.advanced:Initialize(3)
-  local maintenance_tab = DP_Settings.tabs.maintenance:Initialize(4)
+  local disenchant_tab = DP_Settings.tabs.disenchant:Initialize(3)
+  local tooltips_tab = DP_Settings.tabs.tooltips:Initialize(4)
+  local keybindings_tab = DP_Settings.tabs.keybindings:Initialize(5)
+  local advanced_tab = DP_Settings.tabs.advanced:Initialize(10)
+  local maintenance_tab = DP_Settings.tabs.maintenance:Initialize(11)
+
+
   return {
     name = "DisenchanterPlus",
     handler = DisenchanterPlus,
@@ -82,6 +82,9 @@ DP_Settings._CreateSettingsTable = function()
     childGroups = "tree",
     args = {
       general_tab = general_tab,
+      disenchant_tab = disenchant_tab,
+      tooltips_tab = tooltips_tab,
+      keybindings_tab = keybindings_tab,
       advanced_tab = advanced_tab,
       maintenance_tab = maintenance_tab,
       --profiles_tab = LibStub("AceDBOptions-3.0"):GetOptionsTable(DisenchanterPlus.db),
@@ -106,8 +109,8 @@ function DP_Settings:OpenSettingsFrame()
   if not DisenchanterPlusSettingsFrame:IsShown() then
     --DP_CustomSounds:PlayCustomSound("WindowOpen")
     --GearScorePlus:Debug("Show settings frame")
-    AceConfigDialog:SelectGroup("DisenchanterPlus", "general_tab")
-    AceConfigRegistry:NotifyChange("DisenchanterPlus")
+    --AceConfigDialog:SelectGroup("DisenchanterPlus", "general_tab")
+    --AceConfigRegistry:NotifyChange("DisenchanterPlus")
     DisenchanterPlusSettingsFrame:Show()
     DP_DisenchantProcess:CancelAutoDisenchant(true)
     --AceConfigDialog:Open("DisenchanterPlus")

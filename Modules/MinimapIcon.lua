@@ -8,9 +8,6 @@ local DP_Settings = DP_ModuleLoader:ImportModule("DP_Settings")
 ---@type DP_SlashCommands
 local DP_SlashCommands = DP_ModuleLoader:ImportModule("DP_SlashCommands")
 
----@type DP_WelcomeWindow
-local DP_WelcomeWindow = DP_ModuleLoader:ImportModule("DP_WelcomeWindow")
-
 ---@type DP_CustomColors
 local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
 

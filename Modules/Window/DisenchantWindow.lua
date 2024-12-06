@@ -1,9 +1,6 @@
 ---@class DP_DisenchantWindow
 local DP_DisenchantWindow = DP_ModuleLoader:CreateModule("DP_DisenchantWindow")
 
----@type DP_CustomColors
-local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
-
 ---@type DP_CustomFunctions
 local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
 
@@ -609,9 +606,9 @@ end
 ---@param itemInfo table
 ---@param tradeskill table
 function DP_DisenchantWindow:PopulateItem(itemInfo, tradeskill)
-  --DisenchanterPlus:Dump(tradeskill)
+  DisenchanterPlus:Dump(itemInfo)
   if itemInfo ~= nil and not DP_CustomFunctions:TableIsEmpty(itemInfo) and not DP_CustomFunctions:TableIsEmpty(tradeskill) then
-    local canDisenchant = DP_Database:CheckSkillLevelForItem(tradeskill.Level, itemInfo.ItemLevel, itemInfo.ItemMinLevel)
+    local canDisenchant = DP_Database:CheckSkillLevelForItem(tradeskill.Level, itemInfo.ItemLevel, itemInfo.ItemMinLevel, itemInfo.ItemQuality)
     DisenchanterPlusBaseFrame.item:SetNormalTexture(itemInfo.ItemIcon or unknownSlot)
     DisenchanterPlusBaseFrame.item.text:SetText(itemInfo.ItemLink)
     DisenchanterPlusBaseFrame.yesButton:SetAttribute("target-bag", itemInfo.BagIndex)

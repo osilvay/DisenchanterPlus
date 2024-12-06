@@ -1,18 +1,6 @@
 ---@class DP_WelcomeWindow
 local DP_WelcomeWindow = DP_ModuleLoader:CreateModule("DP_WelcomeWindow")
 
----@type DP_CustomColors
-local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
-
----@type DP_CustomFunctions
-local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
-
----@type DP_CustomFrames
-local DP_CustomFrames = DP_ModuleLoader:ImportModule("DP_CustomFrames")
-
----@type DP_CustomSounds
-local DP_CustomSounds = DP_ModuleLoader:ImportModule("DP_CustomSounds")
-
 ---@type DP_WelcomeBody
 local DP_WelcomeBody = DP_ModuleLoader:ImportModule("DP_WelcomeBody")
 

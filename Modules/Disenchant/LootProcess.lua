@@ -4,12 +4,6 @@ local DP_LootProcess = DP_ModuleLoader:CreateModule("DP_LootProcess")
 ---@type DP_Database
 local DP_Database = DP_ModuleLoader:ImportModule("DP_Database")
 
----@type DP_CustomFunctions
-local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
-
----@type DP_CustomColors
-local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
-
 local MaxLootReadyCount = 0
 local LootingInProgress = false
 local allProfessionID = {}
@@ -53,7 +47,6 @@ function DP_LootProcess:LootReady()
       if itemID == nil then return end
 
       local lootIcon, lootName, lootQuantity, currencyID, lootQuality, _, _, _, _ = GetLootSlotInfo(slotIndex)
-      --local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = C_Item.GetItemInfo(lootLink)
 
       --DisenchanterPlus:Debug("itemID : " .. tostring(itemID))
       local enchantingItemType = DP_LootProcess:CheckEnchantingItemType(itemID)
@@ -208,6 +201,7 @@ function DP_LootProcess:SaveSourceItemDetails(itemID, essenceInfo)
   local sourceItemInfo = DP_Database:GetItemData(itemID)
   if sourceItemInfo == nil then
     local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, _, _, itemTexture, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
+
     sourceItemInfo = {
       ItemName = itemName,
       Quality = itemQuality,

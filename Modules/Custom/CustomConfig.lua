@@ -11,9 +11,6 @@ local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions");
 ---@type DP_CustomColors
 local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors");
 
----@type DP_CustomPopup
-local DP_CustomPopup = DP_ModuleLoader:ImportModule("DP_CustomPopup")
-
 ---Generate delete character dropdown config
 ---@param characterList table
 ---@param deleteCharacterFn function
@@ -180,7 +177,16 @@ end
 function DP_CustomConfig:CreateEntriesConfig(header, order, entries)
   local argEntries = {}
   local entryIndex = 1
-  for title, value in pairs(entries) do
+
+  local list = {}
+  for id, description in pairs(entries) do
+    table.insert(list, id)
+  end
+  table.sort(list, function(a, b) return a:upper() < b:upper() end)
+  for i = 1, #list do
+    --newResult[list[i]] = entries[list[i]]
+    local title = list[i]
+    local value = entries[list[i]]
     argEntries["entryIndex" .. entryIndex] = {
       type = "description",
       order = entryIndex,

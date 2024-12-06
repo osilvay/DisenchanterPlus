@@ -4,18 +4,6 @@ local DP_WelcomeHeader = DP_ModuleLoader:CreateModule("DP_WelcomeHeader")
 ---@type DP_SlashCommands
 local DP_SlashCommands = DP_ModuleLoader:ImportModule("DP_SlashCommands")
 
----@type DP_Settings
-local DP_Settings = DP_ModuleLoader:ImportModule("DP_Settings")
-
----@type DP_CustomColors
-local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
-
----@type DP_CustomFunctions
-local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
-
----@type DP_CustomFrames
-local DP_CustomFrames = DP_ModuleLoader:ImportModule("DP_CustomFrames")
-
 ---@type DP_CustomMedias
 local DP_CustomMedias = DP_ModuleLoader:ImportModule("DP_CustomMedias")
 

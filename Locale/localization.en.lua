@@ -131,6 +131,7 @@ L["Session items"]                                                = true
 L["Permanent items"]                                              = true
 L["Close window."]                                                = true
 L["Keybinding"]                                                   = true
+L["Keybindings"]                                                  = true
 L["Action |cffff3300%s|r is no longer assigned."]                 = true
 L["Keyboard configured correctly."]                               = true
 L["Enable use keybinding."]                                       = true

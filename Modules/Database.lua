@@ -4,27 +4,11 @@ local DP_Database = DP_ModuleLoader:CreateModule("DP_Database")
 ---@type DP_CustomFunctions
 local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
 
----@type DP_CustomColors
-local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
-
-local dusts = {}
-local essences = {}
-local shards = {}
-local crystals = {}
-local items = {}
-
 local armor, weapon, all
 local dust = "dust"
 local essence = "essence"
 local shard = "shard"
 local crystal = "crystal"
-local unkonwun = string.lower(UNKNOWN)
-
-
-
-
-
-
 
 -- vanilla
 local strange_dust = 10940
@@ -82,25 +66,70 @@ local mysterious_essence = 0
 local small_Ethereal_shard = 0
 local ethereal_shard = 0
 local sha_crystal = 0
+local disenchantData = {}
 
-local disenchantData = {
-  { 1,   5,   10,  "1-2x", strange_dust,  "1-2x", lesser_magic_essence,      nil,  nil,                    nil,  nil },
-  { 1,   11,  15,  "2-3x", strange_dust,  "1-2x", greater_magic_essence,     "1x", small_glimmering_shard, "1x", nil },
-  { 25,  16,  20,  "4-6x", strange_dust,  "1-2x", lesser_astral_essence,     "1x", small_glimmering_shard, "1x", nil },
-  { 50,  21,  25,  "1-2x", soul_dust,     "1-2x", greater_astral_essence,    "1x", large_glimmering_shard, "1x", nil },
-  { 75,  26,  30,  "2-5x", soul_dust,     "1-2x", lesser_mystic_essence,     "1x", small_glowing_shard,    "1x", nil },
-  { 100, 31,  35,  "1-2x", vision_dust,   "1-2x", greater_mystic_essence,    "1x", large_glowing_shard,    "1x", nil },
-  { 125, 36,  40,  "2-5x", vision_dust,   "1-2x", lesser_nether_essence,     "1x", small_radiant_shard,    "1x", nil },
-  { 150, 41,  45,  "1-2x", dream_dust,    "1-2x", greater_nether_essence,    "1x", large_radiant_shard,    "1x", nil },
-  { 175, 46,  50,  "2-5x", dream_dust,    "1-2x", lesser_eternal_essence,    "1x", small_brilliant_shard,  "1x", nil },
-  { 200, 51,  55,  "1-2x", illusion_dust, "1-2x", greater_eternal_essence,   "1x", large_brilliant_shard,  "1x", nil },
-  { 225, 55,  60,  "2-5x", illusion_dust, "1-3x", greater_eternal_essence,   "1x", large_brilliant_shard,  "1x", nexus_crystal },
-  { 225, 57,  63,  "1-3x", arcane_dust,   "1-3x", lesser_planar_essence,     "1x", small_prismatic_shard,  "1x", nil },
-  { 275, 64,  70,  "2-5x", arcane_dust,   "1-2x", greater_planar_essence,    "1x", large_prismatic_shard,  "1x", void_crystal },
-  { 325, 67,  72,  "2-3x", infinite_dust, "1-2x", lesser_cosmic_essence,     "1x", small_dream_shard,      "1x", nil },
-  { 350, 73,  80,  "4-7x", infinite_dust, "1-2x", greater_cosmic_essence,    "1x", dream_shard,            "1x", abyss_crystal },
-  { 425, 272, 305, "2-3x", hypnotic_dust, "1-2x", lesser_celestial_essence,  "1x", small_heavenly_shard,   "1x", nil },
-  { 450, 305, 999, "2-5x", hypnotic_dust, "1-2x", greater_celestial_essence, "1x", heavenly_shard,         "1x", maelstrom_crystal },
+local classicDisenchantData = {
+  { 5,   10,  "1-2x", strange_dust,  "1-2x", lesser_magic_essence,      nil,  nil,                    nil,  nil },
+  { 11,  15,  "2-3x", strange_dust,  "1-2x", greater_magic_essence,     "1x", small_glimmering_shard, "1x", nil },
+  { 16,  20,  "4-6x", strange_dust,  "1-2x", lesser_astral_essence,     "1x", small_glimmering_shard, "1x", nil },
+  { 21,  25,  "1-2x", soul_dust,     "1-2x", greater_astral_essence,    "1x", large_glimmering_shard, "1x", nil },
+  { 26,  30,  "2-5x", soul_dust,     "1-2x", lesser_mystic_essence,     "1x", small_glowing_shard,    "1x", nil },
+  { 31,  35,  "1-2x", vision_dust,   "1-2x", greater_mystic_essence,    "1x", large_glowing_shard,    "1x", nil },
+  { 36,  40,  "2-5x", vision_dust,   "1-2x", lesser_nether_essence,     "1x", small_radiant_shard,    "1x", nil },
+  { 41,  45,  "1-2x", dream_dust,    "1-2x", greater_nether_essence,    "1x", large_radiant_shard,    "1x", nil },
+  { 46,  50,  "2-5x", dream_dust,    "1-2x", lesser_eternal_essence,    "1x", small_brilliant_shard,  "1x", nil },
+  { 51,  55,  "1-2x", illusion_dust, "1-2x", greater_eternal_essence,   "1x", large_brilliant_shard,  "1x", nil },
+  { 55,  60,  "2-5x", illusion_dust, "1-3x", greater_eternal_essence,   "1x", large_brilliant_shard,  "1x", nexus_crystal },
+  { 57,  63,  "1-3x", arcane_dust,   "1-3x", lesser_planar_essence,     "1x", small_prismatic_shard,  "1x", nil },
+  { 64,  70,  "2-5x", arcane_dust,   "1-2x", greater_planar_essence,    "1x", large_prismatic_shard,  "1x", void_crystal },
+  { 67,  72,  "2-3x", infinite_dust, "1-2x", lesser_cosmic_essence,     "1x", small_dream_shard,      "1x", nil },
+  { 73,  80,  "4-7x", infinite_dust, "1-2x", greater_cosmic_essence,    "1x", dream_shard,            "1x", abyss_crystal },
+  { 272, 305, "2-3x", hypnotic_dust, "1-2x", lesser_celestial_essence,  "1x", small_heavenly_shard,   "1x", nil },
+  { 305, 999, "2-5x", hypnotic_dust, "1-2x", greater_celestial_essence, "1x", heavenly_shard,         "1x", maelstrom_crystal },
+}
+local cataclysmDisenchantData = {}
+
+local skillLevelData = {
+  UNCOMMON = {
+    { 1,   1,   20 },
+    { 25,  21,  25 },
+    { 50,  26,  30 },
+    { 75,  31,  35 },
+    { 100, 36,  40 },
+    { 125, 41,  45 },
+    { 150, 46,  50 },
+    { 175, 51,  55 },
+    { 200, 56,  60 },
+    { 225, 61,  99 },
+    { 275, 102, 120 },
+    { 325, 130, 150 },
+    { 350, 154, 182 },
+    { 425, 232, 318 },
+    { 475, 372, 437 }
+  },
+  RARE = {
+    { 25,  10,  25 },
+    { 50,  26,  30 },
+    { 75,  31,  35 },
+    { 100, 36,  40 },
+    { 125, 41,  45 },
+    { 150, 46,  50 },
+    { 175, 51,  55 },
+    { 200, 56,  60 },
+    { 225, 61,  97 },
+    { 275, 100, 115 },
+    { 325, 130, 200 },
+    { 450, 288, 346 },
+    { 525, 417, 424 },
+    { 550, 425, 463 }
+  },
+  EPIC = {
+    { 225, 61,  95 },
+    { 300, 100, 164 },
+    { 375, 200, 277 },
+    { 475, 300, 416 },
+    { 575, 420, 575 },
+  }
 }
 
 local enchantingItemType = {
@@ -163,18 +192,20 @@ end
 ---@param skillLevel number
 ---@param itemLevel number
 ---@param itemMinLevel number
+---@param itemQuality number
 ---@return boolean
-function DP_Database:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel)
+function DP_Database:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel, itemQuality)
   --DisenchanterPlus:Debug("skillLevel " .. tostring(skillLevel))
   --DisenchanterPlus:Debug("itemLevel " .. tostring(itemLevel))
   --DisenchanterPlus:Debug("itemMinLevel " .. tostring(itemMinLevel))
+  DisenchanterPlus:Debug("itemQuality " .. tostring(itemQuality))
   if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then return true end
 
   local levelToCheck = 0
   for _, currentData in pairs(disenchantData) do
-    local currentSkillLevel = currentData[1]
-    local currentMinItemLevel = currentData[2]
-    local currentMaxItemLevel = currentData[3]
+    local currentSkillLevel = 0
+    local currentMinItemLevel = currentData[1]
+    local currentMaxItemLevel = currentData[2]
     if itemLevel >= 272 then
       levelToCheck = itemLevel
     else
@@ -190,6 +221,12 @@ end
 ---Get expected disenchant data
 ---@return table
 function DP_Database:GetExpectedDisenchantData()
+  if DisenchanterPlus.IsClassic or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsHardcore then
+    disenchantData = classicDisenchantData
+  else
+    disenchantData = cataclysmDisenchantData
+  end
+
   local expectedPercents = {
     UNCOMMON = {
       Dust = {
@@ -245,17 +282,17 @@ function DP_Database:GetExpectedDisenchantData()
   local epicEquipment = {}
 
   for _, currentData in pairs(disenchantData) do
-    local tradeskillLevel = currentData[1]
-    local minItemLevel = currentData[2]
-    local maxItemLevel = currentData[3]
-    local dustText = currentData[4]
-    local dustData = currentData[5]
-    local essenceText = currentData[6]
-    local essenceData = currentData[7]
-    local shardText = currentData[8]
-    local shardData = currentData[9]
-    local crystalText = currentData[10]
-    local crystalData = currentData[11]
+    local tradeskillLevel = 0
+    local minItemLevel = currentData[1]
+    local maxItemLevel = currentData[2]
+    local dustText = currentData[3]
+    local dustData = currentData[4]
+    local essenceText = currentData[5]
+    local essenceData = currentData[6]
+    local shardText = currentData[7]
+    local shardData = currentData[8]
+    local crystalText = currentData[9]
+    local crystalData = currentData[10]
 
     -- process uncommon **********************************************************************
     local armorEntry = {
@@ -382,14 +419,14 @@ function DP_Database:GetNumEntries()
   --local unknownList = DisenchanterPlus.db.global.data.unknown or {}
 
   local result = {
-    [DisenchanterPlus:DP_i18n("Items")] = DP_CustomFunctions:TableLength(itemList),
-    [DisenchanterPlus:DP_i18n("Dusts")] = DP_CustomFunctions:TableLength(dustList),
-    [DisenchanterPlus:DP_i18n("Essences")] = DP_CustomFunctions:TableLength(essenceList),
-    [DisenchanterPlus:DP_i18n("Shards")] = DP_CustomFunctions:TableLength(shardList),
-    [DisenchanterPlus:DP_i18n("Crystals")] = DP_CustomFunctions:TableLength(crystalList),
+    ["1 - " .. DisenchanterPlus:DP_i18n("Items")] = DP_CustomFunctions:TableLength(itemList),
+    ["2 - " .. DisenchanterPlus:DP_i18n("Dusts")] = DP_CustomFunctions:TableLength(dustList),
+    ["3 - " .. DisenchanterPlus:DP_i18n("Essences")] = DP_CustomFunctions:TableLength(essenceList),
+    ["4 - " .. DisenchanterPlus:DP_i18n("Shards")] = DP_CustomFunctions:TableLength(shardList),
+    ["5 - " .. DisenchanterPlus:DP_i18n("Crystals")] = DP_CustomFunctions:TableLength(crystalList),
     --[UNKNOWN] = DP_CustomFunctions:TableLength(unknownList),
   }
-  result = DP_CustomFunctions:SortComplexTableByKey(result)
+  --result = DP_CustomFunctions:SortComplexTableByKey(result)
   return result
 end
 

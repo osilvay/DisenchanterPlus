@@ -8,20 +8,20 @@ local DP_SettingsDefaults = DP_ModuleLoader:ImportModule("DP_SettingsDefaults");
 local DP_ConfigGroups = DP_ModuleLoader:ImportModule("DP_ConfigGroups")
 
 
-DP_Settings.tabs.general = { ... }
+DP_Settings.tabs.keybindings = { ... }
 local optionsDefaults = DP_SettingsDefaults:Load()
 
 ---Config
 ---@param order? number
 ---@return table
-function DP_Settings.tabs.general:Initialize(order)
+function DP_Settings.tabs.keybindings:Initialize(order)
   return {
-    name = DisenchanterPlus:DP_i18n("General"),
+    name = DisenchanterPlus:DP_i18n("Keybindings"),
     order = order,
     type = "group",
     args = {
-      general_header = DP_ConfigGroups:Get("general", "header", 1),
-      general = DP_ConfigGroups:Get("general", "config", 1.1),
+      keybindings_header = DP_ConfigGroups:Get("keybindings", "header", 1),
+      keybindings = DP_ConfigGroups:Get("keybindings", "config", 1.1),
     },
   }
 end

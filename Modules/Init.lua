@@ -4,9 +4,6 @@ local DP_Init = DP_ModuleLoader:CreateModule("DP_Init")
 ---@type DP_Settings
 local DP_Settings = DP_ModuleLoader:ImportModule("DP_Settings")
 
----@type DP_CustomFunctions
-local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
-
 ---@type DP_SlashCommands
 local DP_SlashCommands = DP_ModuleLoader:ImportModule("DP_SlashCommands")
 
