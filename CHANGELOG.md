@@ -1,6 +1,7 @@
 ## **Version 1.0.7-alpha1**
 
 - Settings panel redone.
+- Disenchanting tables redone.
 - Code cleanup.
 - Bug fixes.
 

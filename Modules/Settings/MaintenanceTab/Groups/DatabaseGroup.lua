@@ -27,7 +27,6 @@ function DP_DatabaseGroup:Config()
     inline = true,
     name = "",
     args = {
-      --[[
       executeUpdateDb = {
         type = "execute",
         order = 1,
@@ -55,7 +54,6 @@ function DP_DatabaseGroup:Config()
             end)
         end,
       },
-      ]]
       cleanUpDb = {
         type = "execute",
         order = 3,

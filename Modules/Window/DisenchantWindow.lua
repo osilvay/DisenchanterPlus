@@ -659,16 +659,14 @@ function DP_DisenchantWindow:PopulateItem(itemInfo, tradeskill)
 end
 
 function DP_DisenchantWindow:DisableButtons()
-  --local disabledTexture = DisenchanterPlusBaseFrame.yesButton:CreateTexture(nil, nil, "UIPanelButtonDisabledTexture")
-  --DisenchanterPlusBaseFrame.yesButton:SetDisabledTexture(disabledTexture)
+  if not DisenchanterPlusBaseFrame then return end
   DisenchanterPlusBaseFrame.yesButton:SetEnabled(false)
   DisenchanterPlusBaseFrame.noButton:SetEnabled(false)
   DisenchanterPlusBaseFrame.ignoreButton:SetEnabled(false)
 end
 
 function DP_DisenchantWindow:EnableButtons()
-  --local disabledTexture = DisenchanterPlusBaseFrame.yesButton:CreateTexture(nil, nil, "UIPanelButtonDisabledTexture")
-  --DisenchanterPlusBaseFrame.yesButton:SetDisabledTexture(disabledTexture)
+  if not DisenchanterPlusBaseFrame then return end
   DisenchanterPlusBaseFrame.yesButton:SetEnabled(true)
   DisenchanterPlusBaseFrame.noButton:SetEnabled(true)
   DisenchanterPlusBaseFrame.ignoreButton:SetEnabled(true)

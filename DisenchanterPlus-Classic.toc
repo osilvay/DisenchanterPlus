@@ -20,7 +20,6 @@ Modules\Init.lua
 Modules\MinimapIcon.lua
 Modules\SlashCommands.lua
 Modules\VersionCheck.lua
-Modules\Database.lua
 
 Modules\Events\DisenchanterPlusEvents.lua
 
@@ -58,6 +57,10 @@ Modules\Disenchant\DisenchantProcess.lua
 Modules\Disenchant\LootProcess.lua
 
 Modules\Tooltip\EnchantingTooltip.lua
+
+Modules\Database.lua
+Modules\Database\CataclysmDisenchantTable.lua
+Modules\Database\ClassicDisenchantTable.lua
 
 # Main
 DisenchanterPlus.lua

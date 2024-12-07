@@ -360,7 +360,7 @@ function DP_DisenchantProcess:ItemInBag(bagIndex, itemLinkToSearch, sessionIgnor
         --DisenchanterPlus:Dump(sessionIgnoredItems)
         --DisenchanterPlus:Debug(containerInfo.hyperlink)
         --DisenchanterPlus:Debug(itemLink)
-        DisenchanterPlus:Debug("itemQuality = " .. tostring(itemQuality) .. ", itemID = " .. tostring(containerInfo.itemID) .. ", texture = " .. itemTexture)
+        --DisenchanterPlus:Debug("itemQuality = " .. tostring(itemQuality) .. ", itemID = " .. tostring(containerInfo.itemID) .. ", texture = " .. itemTexture)
         numItemsInBag = numItemsInBag + 1
         if result == nil then
           result = {

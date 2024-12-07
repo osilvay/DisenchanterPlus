@@ -39,7 +39,7 @@ function DP_EnchantingTooltip:ShowTooltip(itemInfo)
   --DisenchanterPlus:Debug("ShowTooltip [" .. tostring(itemID) .. "]")
 
   local _, itemType, _, _, _, _, _ = C_Item.GetItemInfoInstant(itemID)
-  --LogBook:Debug(string.format("itemQuality = %s - itemType = %s", tostring(itemQuality), tostring(itemType)))
+  --DisenchanterPlus:Debug(string.format("itemQuality = %s - itemType = %s", tostring(itemQuality), tostring(itemType)))
 
   if itemType == DisenchanterPlus:DP_i18n("Armor") or itemType == DisenchanterPlus:DP_i18n("Weapon") then
     isItem = true
@@ -191,9 +191,9 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
   if essencesData == nil then return {} end
 
   local result = {}
-  --LogBook:Debug(string.format("%s, %s", tostring(itemLevel), tostring(itemMinLevel)))
+  --DisenchanterPlus:Debug(string.format("%s, %s", tostring(itemLevel), tostring(itemMinLevel)))
   for _, currentData in pairs(essencesData) do
-    --LogBook:Debug(string.format("%s, %s = %s - %s", tostring(itemLevel), tostring(itemMinLevel), tostring(currentData.MinILevel), tostring(currentData.MaxILevel)))
+    --DisenchanterPlus:Debug(string.format("%s, %s = %s - %s", tostring(itemLevel), tostring(itemMinLevel), tostring(currentData.MinILevel), tostring(currentData.MaxILevel)))
     if itemMinLevel == 0 then itemMinLevel = itemLevel end
     local levelToCheck = 0
 
@@ -207,7 +207,7 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
     if levelToCheck >= currentData.MinILevel and levelToCheck <= currentData.MaxILevel then
       for essenceItemID, currentEssenceData in pairs(currentData.ItemIDs) do
         local essenceItemName, essenceItemLink, essenceItemQuality, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(essenceItemID)
-        --LogBook:Debug(string.format("%s = %s", essenceItemID, essenceItemLink))
+        --DisenchanterPlus:Debug(string.format("%s = %s", essenceItemID, essenceItemLink))
         local essenceToAdd = {
           ItemID = essenceItemID,
           ItemName = essenceItemName,
