@@ -101,7 +101,6 @@ function DP_ClassicDisenchantTable:GenerateDisenchantTable()
   local epicEquipment = {}
 
   for _, currentData in pairs(classicDisenchantData) do
-    local tradeskillLevel = 0
     local minItemLevel = currentData[1]
     local maxItemLevel = currentData[2]
     local dustText = currentData[3]
@@ -115,13 +114,11 @@ function DP_ClassicDisenchantTable:GenerateDisenchantTable()
 
     -- process uncommon **********************************************************************
     local armorEntry = {
-      TradeskillLevel = tradeskillLevel,
       MinILevel = minItemLevel,
       MaxILevel = maxItemLevel,
       ItemIDs = {}
     }
     local weaponEntry = {
-      TradeskillLevel = tradeskillLevel,
       MinILevel = minItemLevel,
       MaxILevel = maxItemLevel,
       ItemIDs = {}
@@ -172,7 +169,6 @@ function DP_ClassicDisenchantTable:GenerateDisenchantTable()
 
     -- process rare **********************************************************************
     local rareEntry = {
-      TradeskillLevel = tradeskillLevel,
       MinILevel = minItemLevel,
       MaxILevel = maxItemLevel,
       ItemIDs = {}
@@ -193,7 +189,6 @@ function DP_ClassicDisenchantTable:GenerateDisenchantTable()
 
     -- process epic **********************************************************************
     local epicEntry = {
-      TradeskillLevel = tradeskillLevel,
       MinILevel = minItemLevel,
       MaxILevel = maxItemLevel,
       ItemIDs = {}

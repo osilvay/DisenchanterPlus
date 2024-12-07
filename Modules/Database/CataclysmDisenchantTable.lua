@@ -127,7 +127,6 @@ function DP_CataclysmDisenchantTable:Initialize()
         { 200, 284, nil, nil, nil, nil, nil,                                                    nil,    DisenchanterPlus.EnchantingItems.abyss_crystal,     "1x" },
         { 285, 359, nil, nil, nil, nil, nil,                                                    nil,    DisenchanterPlus.EnchantingItems.maelstrom_crystal, "1x" },
         { 360, 999, nil, nil, nil, nil, nil,                                                    nil,    DisenchanterPlus.EnchantingItems.maelstrom_crystal, "1-2x" },
-
       }
     }
   }
@@ -235,7 +234,6 @@ function DP_CataclysmDisenchantTable:GenerateDisenchantTable()
   -- armors
   local armorData = cataclysmDisenchantData.UNCOMMON[armor] or {}
   for _, currentArmorData in pairs(armorData) do
-    local tradeskillLevel = 0
     local minItemLevel = currentArmorData[1]
     local maxItemLevel = currentArmorData[2]
     local dustText = currentArmorData[3]
@@ -248,7 +246,6 @@ function DP_CataclysmDisenchantTable:GenerateDisenchantTable()
     local crystalData = currentArmorData[10]
 
     local armorEntry = {
-      TradeskillLevel = tradeskillLevel,
       MinILevel = minItemLevel,
       MaxILevel = maxItemLevel,
       ItemIDs = {}
@@ -283,7 +280,6 @@ function DP_CataclysmDisenchantTable:GenerateDisenchantTable()
   -- weapons
   local weaponData = cataclysmDisenchantData.UNCOMMON[weapon] or {}
   for _, currentWeaponData in pairs(weaponData) do
-    local tradeskillLevel = 0
     local minItemLevel = currentWeaponData[1]
     local maxItemLevel = currentWeaponData[2]
     local dustText = currentWeaponData[3]
@@ -296,7 +292,6 @@ function DP_CataclysmDisenchantTable:GenerateDisenchantTable()
     local crystalData = currentWeaponData[10]
 
     local weaponEntry = {
-      TradeskillLevel = tradeskillLevel,
       MinILevel = minItemLevel,
       MaxILevel = maxItemLevel,
       ItemIDs = {}
@@ -332,7 +327,6 @@ function DP_CataclysmDisenchantTable:GenerateDisenchantTable()
   -- process rare **************************************************************************
   local rareData = cataclysmDisenchantData.RARE[all] or {}
   for _, currentWeaponData in pairs(rareData) do
-    local tradeskillLevel = 0
     local minItemLevel = currentWeaponData[1]
     local maxItemLevel = currentWeaponData[2]
     local shardText = currentWeaponData[7]
@@ -341,7 +335,6 @@ function DP_CataclysmDisenchantTable:GenerateDisenchantTable()
     local crystalData = currentWeaponData[10]
 
     local rareEntry = {
-      TradeskillLevel = tradeskillLevel,
       MinILevel = minItemLevel,
       MaxILevel = maxItemLevel,
       ItemIDs = {}
@@ -361,11 +354,9 @@ function DP_CataclysmDisenchantTable:GenerateDisenchantTable()
     table.insert(rareEquipment, rareEntry)
   end
 
-
   -- process epic **************************************************************************
   local epicData = cataclysmDisenchantData.EPIC[all] or {}
   for _, currentWeaponData in pairs(epicData) do
-    local tradeskillLevel = 0
     local minItemLevel = currentWeaponData[1]
     local maxItemLevel = currentWeaponData[2]
     local shardText = currentWeaponData[7]
@@ -374,7 +365,6 @@ function DP_CataclysmDisenchantTable:GenerateDisenchantTable()
     local crystalData = currentWeaponData[10]
 
     local epicEntry = {
-      TradeskillLevel = tradeskillLevel,
       MinILevel = minItemLevel,
       MaxILevel = maxItemLevel,
       ItemIDs = {}
