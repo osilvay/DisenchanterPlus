@@ -7,11 +7,6 @@ local armor = L["Armor"]
 local weapon = L["Weapon"]
 local all = L["All"]
 
-local dust = "dust"
-local essence = "essence"
-local shard = "shard"
-local crystal = "crystal"
-
 local classicDisenchantData = {}
 local expectedPercents = {}
 
@@ -80,6 +75,7 @@ function DP_ClassicDisenchantTable:Initialize()
 end
 
 ---Check kill level for item
+---@return boolean
 function DP_ClassicDisenchantTable:CheckSkillLevelForItem()
   return true
 end
@@ -91,11 +87,13 @@ function DP_ClassicDisenchantTable:GetDisenchantTable()
 end
 
 ---Get expected percents
+---@return table
 function DP_ClassicDisenchantTable:GetExpectedPercents()
   return expectedPercents
 end
 
 ---Generate disenchant table
+---@return table
 function DP_ClassicDisenchantTable:GenerateDisenchantTable()
   local uncommonArmors = {}
   local uncommonWeapons = {}

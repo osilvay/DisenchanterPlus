@@ -7,11 +7,6 @@ local armor = L["Armor"]
 local weapon = L["Weapon"]
 local all = L["All"]
 
-local dust = "dust"
-local essence = "essence"
-local shard = "shard"
-local crystal = "crystal"
-
 local cataclysmDisenchantData = {}
 local expectedPercents = {}
 
@@ -215,14 +210,200 @@ function DP_CataclysmDisenchantTable:CheckSkillLevelForItem(skillLevel, itemLeve
   return false
 end
 
+---Get disenchant table
+---@return table
 function DP_CataclysmDisenchantTable:GetDisenchantTable()
   return cataclysmDisenchantData
 end
 
+---Get expected percents
+---@return table
 function DP_CataclysmDisenchantTable:GetExpectedPercents()
   return expectedPercents
 end
 
+---Generate disenchant table
+---@return table
 function DP_CataclysmDisenchantTable:GenerateDisenchantTable()
-  return {}
+  local uncommonArmors = {}
+  local uncommonWeapons = {}
+  local rareEquipment = {}
+  local epicEquipment = {}
+
+  -- process uncommon **********************************************************************
+
+  -- armors
+  local armorData = cataclysmDisenchantData.UNCOMMON[armor] or {}
+  for _, currentArmorData in pairs(armorData) do
+    local tradeskillLevel = 0
+    local minItemLevel = currentArmorData[1]
+    local maxItemLevel = currentArmorData[2]
+    local dustText = currentArmorData[3]
+    local dustData = currentArmorData[4]
+    local essenceText = currentArmorData[5]
+    local essenceData = currentArmorData[6]
+    local shardText = currentArmorData[7]
+    local shardData = currentArmorData[8]
+    local crystalText = currentArmorData[9]
+    local crystalData = currentArmorData[10]
+
+    local armorEntry = {
+      TradeskillLevel = tradeskillLevel,
+      MinILevel = minItemLevel,
+      MaxILevel = maxItemLevel,
+      ItemIDs = {}
+    }
+    if dustData ~= nil then
+      armorEntry.ItemIDs[dustData] = {
+        Percent = expectedPercents.UNCOMMON.Dust[armor],
+        QuantityText = dustText
+      }
+    end
+    if essenceData ~= nil then
+      armorEntry.ItemIDs[essenceData] = {
+        Percent = expectedPercents.UNCOMMON.Essence[armor],
+        QuantityText = essenceText
+      }
+    end
+    if shardData ~= nil then
+      armorEntry.ItemIDs[shardData] = {
+        Percent = expectedPercents.UNCOMMON.Shard[armor],
+        QuantityText = shardText
+      }
+    end
+    if crystalData ~= nil then
+      armorEntry.ItemIDs[crystalData] = {
+        Percent = expectedPercents.UNCOMMON.Crystal[armor],
+        QuantityText = crystalText
+      }
+    end
+    table.insert(uncommonArmors, armorEntry)
+  end
+
+  -- weapons
+  local weaponData = cataclysmDisenchantData.UNCOMMON[weapon] or {}
+  for _, currentWeaponData in pairs(weaponData) do
+    local tradeskillLevel = 0
+    local minItemLevel = currentWeaponData[1]
+    local maxItemLevel = currentWeaponData[2]
+    local dustText = currentWeaponData[3]
+    local dustData = currentWeaponData[4]
+    local essenceText = currentWeaponData[5]
+    local essenceData = currentWeaponData[6]
+    local shardText = currentWeaponData[7]
+    local shardData = currentWeaponData[8]
+    local crystalText = currentWeaponData[9]
+    local crystalData = currentWeaponData[10]
+
+    local weaponEntry = {
+      TradeskillLevel = tradeskillLevel,
+      MinILevel = minItemLevel,
+      MaxILevel = maxItemLevel,
+      ItemIDs = {}
+    }
+
+    if dustData ~= nil then
+      weaponEntry.ItemIDs[dustData] = {
+        Percent = expectedPercents.UNCOMMON.Dust[weapon],
+        QuantityText = dustText
+      }
+    end
+    if essenceData ~= nil then
+      weaponEntry.ItemIDs[essenceData] = {
+        Percent = expectedPercents.UNCOMMON.Essence[weapon],
+        QuantityText = essenceText
+      }
+    end
+    if shardData ~= nil then
+      weaponEntry.ItemIDs[shardData] = {
+        Percent = expectedPercents.UNCOMMON.Shard[weapon],
+        QuantityText = shardText
+      }
+    end
+    if crystalData ~= nil then
+      weaponEntry.ItemIDs[crystalData] = {
+        Percent = expectedPercents.UNCOMMON.Crystal[weapon],
+        QuantityText = crystalText
+      }
+    end
+    table.insert(uncommonWeapons, weaponEntry)
+  end
+
+  -- process rare **************************************************************************
+  local rareData = cataclysmDisenchantData.RARE[all] or {}
+  for _, currentWeaponData in pairs(rareData) do
+    local tradeskillLevel = 0
+    local minItemLevel = currentWeaponData[1]
+    local maxItemLevel = currentWeaponData[2]
+    local shardText = currentWeaponData[7]
+    local shardData = currentWeaponData[8]
+    local crystalText = currentWeaponData[9]
+    local crystalData = currentWeaponData[10]
+
+    local rareEntry = {
+      TradeskillLevel = tradeskillLevel,
+      MinILevel = minItemLevel,
+      MaxILevel = maxItemLevel,
+      ItemIDs = {}
+    }
+    if shardData ~= nil then
+      rareEntry.ItemIDs[shardData] = {
+        Percent = expectedPercents.RARE.Shard[all],
+        QuantityText = shardText
+      }
+    end
+    if crystalData ~= nil then
+      rareEntry.ItemIDs[crystalData] = {
+        Percent = expectedPercents.RARE.Crystal[all],
+        QuantityText = crystalText
+      }
+    end
+    table.insert(rareEquipment, rareEntry)
+  end
+
+
+  -- process epic **************************************************************************
+  local epicData = cataclysmDisenchantData.EPIC[all] or {}
+  for _, currentWeaponData in pairs(epicData) do
+    local tradeskillLevel = 0
+    local minItemLevel = currentWeaponData[1]
+    local maxItemLevel = currentWeaponData[2]
+    local shardText = currentWeaponData[7]
+    local shardData = currentWeaponData[8]
+    local crystalText = currentWeaponData[9]
+    local crystalData = currentWeaponData[10]
+
+    local epicEntry = {
+      TradeskillLevel = tradeskillLevel,
+      MinILevel = minItemLevel,
+      MaxILevel = maxItemLevel,
+      ItemIDs = {}
+    }
+    if shardData ~= nil then
+      epicEntry.ItemIDs[shardData] = {
+        Percent = expectedPercents.EPIC.Shard[all],
+        QuantityText = shardText
+      }
+    end
+    if crystalData ~= nil then
+      epicEntry.ItemIDs[crystalData] = {
+        Percent = expectedPercents.EPIC.Crystal[all],
+        QuantityText = crystalText
+      }
+    end
+    table.insert(epicEquipment, epicEntry)
+  end
+
+  return {
+    UNCOMMON = {
+      [armor] = uncommonArmors,
+      [weapon] = uncommonWeapons
+    },
+    RARE = {
+      [all] = rareEquipment
+    },
+    EPIC = {
+      [all] = epicEquipment
+    }
+  }
 end
