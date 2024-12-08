@@ -1,3 +1,7 @@
+## **Version 1.0.7.2**
+
+- Fixed disenchant table for Classic Era
+
 ## **Version 1.0.7.1**
 
 - Fixed disenchant table for Cataclysm
