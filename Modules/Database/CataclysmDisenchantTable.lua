@@ -72,9 +72,9 @@ function DP_CataclysmDisenchantTable:Initialize()
         { 80,  99,  "2-3x", DisenchanterPlus.EnchantingItems.arcane_dust,   "2-3x", DisenchanterPlus.EnchantingItems.lesser_planar_essence,     "1x", DisenchanterPlus.EnchantingItems.small_prismatic_shard,  nil, nil },
         { 100, 120, "2-5x", DisenchanterPlus.EnchantingItems.arcane_dust,   "1-2x", DisenchanterPlus.EnchantingItems.greater_planar_essence,    "1x", DisenchanterPlus.EnchantingItems.large_prismatic_shard,  nil, nil },
         { 130, 151, "2-3x", DisenchanterPlus.EnchantingItems.infinite_dust, "1-2x", DisenchanterPlus.EnchantingItems.lesser_cosmic_essence,     "1x", DisenchanterPlus.EnchantingItems.small_dream_shard,      nil, nil },
-        { 152, 200, "4-7x", DisenchanterPlus.EnchantingItems.infinite_dust, "1-2x", DisenchanterPlus.EnchantingItems.greater_cosmic_essence,    "1x", DisenchanterPlus.EnchantingItems.dream_shard,            nil, nil },
+        { 152, 232, "4-7x", DisenchanterPlus.EnchantingItems.infinite_dust, "1-2x", DisenchanterPlus.EnchantingItems.greater_cosmic_essence,    "1x", DisenchanterPlus.EnchantingItems.dream_shard,            nil, nil },
         { 272, 305, "2-3x", DisenchanterPlus.EnchantingItems.hypnotic_dust, "1-3x", DisenchanterPlus.EnchantingItems.lesser_celestial_essence,  "1x", DisenchanterPlus.EnchantingItems.small_heavenly_shard,   nil, nil },
-        { 305, 333, "2-5x", DisenchanterPlus.EnchantingItems.hypnotic_dust, "1-2x", DisenchanterPlus.EnchantingItems.greater_celestial_essence, "1x", DisenchanterPlus.EnchantingItems.heavenly_shard,         nil, nil },
+        { 306, 333, "2-5x", DisenchanterPlus.EnchantingItems.hypnotic_dust, "1-2x", DisenchanterPlus.EnchantingItems.greater_celestial_essence, "1x", DisenchanterPlus.EnchantingItems.heavenly_shard,         nil, nil },
       },
       [weapon] = {
         { 6,   15,  "1-2x", DisenchanterPlus.EnchantingItems.strange_dust,  "1-2x", DisenchanterPlus.EnchantingItems.lesser_magic_essence,      nil,  nil,                                                     nil, nil },
@@ -91,9 +91,9 @@ function DP_CataclysmDisenchantTable:Initialize()
         { 80,  99,  "2-3x", DisenchanterPlus.EnchantingItems.arcane_dust,   "2-3x", DisenchanterPlus.EnchantingItems.lesser_planar_essence,     "1x", DisenchanterPlus.EnchantingItems.small_prismatic_shard,  nil, nil },
         { 100, 120, "2-5x", DisenchanterPlus.EnchantingItems.arcane_dust,   "1-2x", DisenchanterPlus.EnchantingItems.greater_planar_essence,    "1x", DisenchanterPlus.EnchantingItems.large_prismatic_shard,  nil, nil },
         { 130, 151, "2-3x", DisenchanterPlus.EnchantingItems.infinite_dust, "1-2x", DisenchanterPlus.EnchantingItems.lesser_cosmic_essence,     "1x", DisenchanterPlus.EnchantingItems.small_dream_shard,      nil, nil },
-        { 152, 200, "4-7x", DisenchanterPlus.EnchantingItems.infinite_dust, "1-2x", DisenchanterPlus.EnchantingItems.greater_cosmic_essence,    "1x", DisenchanterPlus.EnchantingItems.dream_shard,            nil, nil },
-        { 306, 306, "1-4x", DisenchanterPlus.EnchantingItems.hypnotic_dust, "1-4x", DisenchanterPlus.EnchantingItems.lesser_celestial_essence,  "1x", DisenchanterPlus.EnchantingItems.small_heavenly_shard,   nil, nil },
-        { 307, 333, "2-5x", DisenchanterPlus.EnchantingItems.hypnotic_dust, "1-4x", DisenchanterPlus.EnchantingItems.greater_celestial_essence, "1x", DisenchanterPlus.EnchantingItems.heavenly_shard,         nil, nil },
+        { 152, 232, "4-7x", DisenchanterPlus.EnchantingItems.infinite_dust, "1-2x", DisenchanterPlus.EnchantingItems.greater_cosmic_essence,    "1x", DisenchanterPlus.EnchantingItems.dream_shard,            nil, nil },
+        { 272, 305, "1-4x", DisenchanterPlus.EnchantingItems.hypnotic_dust, "1-4x", DisenchanterPlus.EnchantingItems.lesser_celestial_essence,  "1x", DisenchanterPlus.EnchantingItems.small_heavenly_shard,   nil, nil },
+        { 306, 333, "2-5x", DisenchanterPlus.EnchantingItems.hypnotic_dust, "1-4x", DisenchanterPlus.EnchantingItems.greater_celestial_essence, "1x", DisenchanterPlus.EnchantingItems.heavenly_shard,         nil, nil },
       }
     },
     RARE = {
@@ -126,7 +126,7 @@ function DP_CataclysmDisenchantTable:Initialize()
         { 185, 199, nil, nil, nil, nil, nil,    nil,                                                    "1-2x", DisenchanterPlus.EnchantingItems.abyss_crystal },
         { 200, 284, nil, nil, nil, nil, nil,    nil,                                                    "1x",   DisenchanterPlus.EnchantingItems.abyss_crystal },
         { 285, 359, nil, nil, nil, nil, nil,    nil,                                                    "1x",   DisenchanterPlus.EnchantingItems.maelstrom_crystal },
-        { 360, 999, nil, nil, nil, nil, nil,    nil,                                                    "1-2x", DisenchanterPlus.EnchantingItems.maelstrom_crystal },
+        { 360, 416, nil, nil, nil, nil, nil,    nil,                                                    "1-2x", DisenchanterPlus.EnchantingItems.maelstrom_crystal },
       }
     }
   }
