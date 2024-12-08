@@ -1,4 +1,4 @@
-## **Version 1.0.7-alpha1**
+## **Version 1.0.7**
 
 - Settings panel redone.
 - Fixed a bug in Cata with disenchanting tables (Road-block issue).
@@ -6,9 +6,11 @@
 - Code cleanup.
 - Bug fixes.
 
-## **Version 1.0.6**
+## **Version 1.0.7-alpha1**
 
+- Settings panel redone.
 - Fixed a bug that the "Press Key to Show" option for tooltip disenchant information doesn't seem to do anything. (Road-block issue)
+- Code cleanup.
 
 ## **Version 1.0.6**
 
