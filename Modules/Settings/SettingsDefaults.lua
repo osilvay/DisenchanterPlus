@@ -53,6 +53,7 @@ function DP_SettingsDefaults:Load()
         },
         onlySoulbound = false,
         showItemQuality = true,
+        auctionatorIntegration = false
       },
     },
   }

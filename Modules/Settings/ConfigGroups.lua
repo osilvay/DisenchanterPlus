@@ -19,6 +19,9 @@ local DP_KeybindingsGroup = DP_ModuleLoader:ImportModule("DP_KeybindingsGroup")
 ---@type DP_DisenchantGroup
 local DP_DisenchantGroup = DP_ModuleLoader:ImportModule("DP_DisenchantGroup")
 
+---@type DP_IntegrationGroup
+local DP_IntegrationGroup = DP_ModuleLoader:ImportModule("DP_IntegrationGroup")
+
 ---Get
 ---@param key string
 ---@param method string
@@ -27,6 +30,8 @@ local DP_DisenchantGroup = DP_ModuleLoader:ImportModule("DP_DisenchantGroup")
 function DP_ConfigGroups:Get(key, method, order)
   if key == "advanced" then
     return DP_ConfigGroups:Method(DP_AdvancedGroup, method, order)
+  elseif key == "integration" then
+    return DP_ConfigGroups:Method(DP_IntegrationGroup, method, order)
   elseif key == "general" then
     return DP_ConfigGroups:Method(DP_GeneralGroup, method, order)
   elseif key == "database" then

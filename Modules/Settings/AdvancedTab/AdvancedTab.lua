@@ -19,8 +19,10 @@ function DP_Settings.tabs.advanced:Initialize(order)
     order = order,
     type = "group",
     args = {
-      changelog_header = DP_ConfigGroups:Get("advanced", "header"),
-      changelog = DP_ConfigGroups:Get("advanced", "config"),
+      advanced_header = DP_ConfigGroups:Get("advanced", "header", 1),
+      advanced = DP_ConfigGroups:Get("advanced", "config", 1.1),
+      integration_header = DP_ConfigGroups:Get("integration", "header", 2),
+      integration = DP_ConfigGroups:Get("integration", "config", 2.1),
     },
   }
 end

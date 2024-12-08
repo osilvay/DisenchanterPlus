@@ -1,3 +1,7 @@
+## **Version 1.0.8.0**
+
+- Integration with Auctionator
+
 ## **Version 1.0.7.2**
 
 - Fixed disenchant table for Classic Era

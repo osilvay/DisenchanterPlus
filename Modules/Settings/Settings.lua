@@ -74,7 +74,6 @@ DP_Settings._CreateSettingsTable = function()
   local advanced_tab = DP_Settings.tabs.advanced:Initialize(10)
   local maintenance_tab = DP_Settings.tabs.maintenance:Initialize(11)
 
-
   return {
     name = "DisenchanterPlus",
     handler = DisenchanterPlus,

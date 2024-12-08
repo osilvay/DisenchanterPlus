@@ -146,3 +146,7 @@ L["Close window until next iteration."]                           = "Cerrar la v
 L["Show item qualities"]                                          = "Mostrar calidades de objetos"
 L["Toggle showing item qualities in disenchanting window."]       = "Habilita mostrar las calidades de objetos que se van a desencantar en la ventana de desencantado."
 L["Qualities"]                                                    = "Calidades"
+L["Integration"]                                                  = "Integración"
+L["Auctionator integration"]                                      = "Integración con Auctionator"
+L["Enable integration with Auctionator addon."]                   = "Activar la integración con el addon Auctionator."
+L["Auction"]                                                      = "Subasta"

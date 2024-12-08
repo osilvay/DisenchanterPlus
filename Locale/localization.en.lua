@@ -146,3 +146,7 @@ L["Close window until next iteration."]                           = true
 L["Show item qualities"]                                          = true
 L["Show item qualities in disenchanting window."]                 = true
 L["Qualities"]                                                    = true
+L["Integration"]                                                  = true
+L["Auctionator integration"]                                      = true
+L["Enable integration with Auctionator addon."]                   = true
+L["Auction"]                                                      = true

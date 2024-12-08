@@ -1,6 +1,6 @@
 ## Interface: 40401
-## Title: |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v1.0.7.2|r
-## Version: 1.0.7.2
+## Title: |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v1.0.8.0|r
+## Version: 1.0.8.0
 ## Notes: Disenchanter tool for wow cata classic
 ## Author: osilvay
 ## SavedVariables: DisenchanterPlusDB
@@ -30,6 +30,7 @@ Modules\Settings\GeneralTab\GeneralTab.lua
 Modules\Settings\GeneralTab\Groups\GeneralGroup.lua
 Modules\Settings\AdvancedTab\AdvancedTab.lua
 Modules\Settings\AdvancedTab\Groups\AdvancedGroup.lua
+Modules\Settings\AdvancedTab\Groups\IntegrationGroup.lua
 Modules\Settings\MaintenanceTab\MaintenanceTab.lua
 Modules\Settings\MaintenanceTab\Groups\DatabaseGroup.lua
 Modules\Settings\DisenchantTab\DisenchantTab.lua

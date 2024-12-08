@@ -168,6 +168,9 @@ function DP_EnchantingTooltip:GetExpectedItemData(itemID)
         local leftTextLine = string.format(" + |T%d:0|t %s |cff6191f1%s|r", itemIcon, itemLink, quantity or 0)
         local rightTextLine = string.format("%s", percentageText) .. " |cfff1b131%|r"
         GameTooltip:AddDoubleLine(leftTextLine, rightTextLine)
+        if DisenchanterPlus.db.char.general.auctionatorIntegration and currentExpecteItem.AuctionatorString ~= nil then
+          GameTooltip:AddDoubleLine("   |cffa19171" .. DisenchanterPlus:DP_i18n("Auction") .. "|r", "|cffaaaaaa" .. currentExpecteItem.AuctionatorString .. "|r")
+        end
         expectedIndex = expectedIndex + 1
       end
     end
@@ -178,7 +181,7 @@ end
 ---@param itemID number
 ---@return table
 function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
-  local _, _, itemQuality, itemLevel, itemMinLevel, itemType, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
+  local _, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
   local essencesData = {}
 
   if itemQuality == 2 then
@@ -210,6 +213,16 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
       for essenceItemID, currentEssenceData in pairs(currentData.ItemIDs) do
         local essenceItemName, essenceItemLink, essenceItemQuality, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(essenceItemID)
         --DisenchanterPlus:Debug(string.format("essenceItemID = %s = essenceItemLink = %s", essenceItemID, essenceItemLink))
+
+        local auctionatorPrice
+        local auctionatorString
+        if DisenchanterPlus.db.char.general.auctionatorIntegration and Auctionator then
+          local dbKey = Auctionator.Utilities.BasicDBKeyFromLink(essenceItemLink)
+          local auctionPrice = Auctionator.Database:GetFirstPrice({ dbKey })
+          auctionatorPrice = auctionPrice
+          auctionatorString = Auctionator.Utilities.CreatePaddedMoneyString(auctionPrice)
+        end
+
         local essenceToAdd = {
           ItemID = essenceItemID,
           ItemName = essenceItemName,
@@ -217,6 +230,8 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
           ItemQuality = essenceItemQuality,
           Percent = currentEssenceData.Percent,
           QuantityText = currentEssenceData.QuantityText,
+          AuctionatorPrice = auctionatorPrice,
+          AuctionatorString = auctionatorString
         }
         table.insert(result, essenceToAdd)
       end
