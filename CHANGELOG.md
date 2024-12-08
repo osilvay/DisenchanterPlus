@@ -1,3 +1,7 @@
+## **Version 1.0.7.1**
+
+- Fixed disenchant table for Cataclysm
+
 ## **Version 1.0.7**
 
 - Settings panel redone.
