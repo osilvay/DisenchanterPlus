@@ -1,7 +1,8 @@
 ## **Version 1.0.7-alpha1**
 
 - Settings panel redone.
-- Disenchanting tables redone.
+- Fixed a bug in Cata with disenchanting tables (Road-block issue).
+- Fixed a bug when entering in combat and main frame has not been initialized.
 - Code cleanup.
 - Bug fixes.
 

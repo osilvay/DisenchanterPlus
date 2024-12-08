@@ -191,23 +191,15 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
   if essencesData == nil then return {} end
 
   local result = {}
-  --DisenchanterPlus:Debug(string.format("%s, %s", tostring(itemLevel), tostring(itemMinLevel)))
+  --DisenchanterPlus:Debug(string.format("itemLevel = %s, itemMinLevel = %s", tostring(itemLevel), tostring(itemMinLevel)))
+  --DisenchanterPlus:Debug(string.format("itemLevel = %s", tostring(itemLevel)))
   for _, currentData in pairs(essencesData) do
-    --DisenchanterPlus:Debug(string.format("%s, %s = %s - %s", tostring(itemLevel), tostring(itemMinLevel), tostring(currentData.MinILevel), tostring(currentData.MaxILevel)))
-    if itemMinLevel == 0 then itemMinLevel = itemLevel end
-    local levelToCheck = 0
-
-    -- for cata
-    if itemLevel >= 272 then
-      levelToCheck = itemLevel
-    else
-      levelToCheck = itemMinLevel
-    end
-
-    if levelToCheck >= currentData.MinILevel and levelToCheck <= currentData.MaxILevel then
+    --DisenchanterPlus:Debug(string.format("MinILevel = %s, MaxILevel = %s", tostring(currentData.MinILevel), tostring(currentData.MaxILevel)))
+    if itemLevel >= currentData.MinILevel and itemLevel <= currentData.MaxILevel then
+      --DisenchanterPlus:Dump(currentData.ItemIDs)
       for essenceItemID, currentEssenceData in pairs(currentData.ItemIDs) do
         local essenceItemName, essenceItemLink, essenceItemQuality, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(essenceItemID)
-        --DisenchanterPlus:Debug(string.format("%s = %s", essenceItemID, essenceItemLink))
+        --DisenchanterPlus:Debug(string.format("essenceItemID = %s = essenceItemLink = %s", essenceItemID, essenceItemLink))
         local essenceToAdd = {
           ItemID = essenceItemID,
           ItemName = essenceItemName,
