@@ -169,7 +169,7 @@ function DP_EnchantingTooltip:GetExpectedItemData(itemID)
         local rightTextLine = string.format("%s", percentageText) .. " |cfff1b131%|r"
         GameTooltip:AddDoubleLine(leftTextLine, rightTextLine)
         if DisenchanterPlus.db.char.general.auctionatorIntegration and currentExpecteItem.AuctionatorString ~= nil then
-          GameTooltip:AddDoubleLine("   |cffa19171" .. DisenchanterPlus:DP_i18n("Auction") .. "|r", "|cffaaaaaa" .. currentExpecteItem.AuctionatorString .. "|r")
+          GameTooltip:AddDoubleLine("       |cffa19171" .. DisenchanterPlus:DP_i18n("Auction") .. "|r", "|cffaaaaaa" .. currentExpecteItem.AuctionatorString .. "|r")
         end
         expectedIndex = expectedIndex + 1
       end
@@ -202,7 +202,7 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
     local levelToCheck
     if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
       -- classic_era
-      levelToCheck = itemMinLevel
+      levelToCheck = (itemMinLevel > 0) and itemMinLevel or itemLevel
     elseif DisenchanterPlus.IsCataclysm then
       -- cataclysm
       levelToCheck = itemLevel
@@ -216,11 +216,12 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
 
         local auctionatorPrice
         local auctionatorString
-        if DisenchanterPlus.db.char.general.auctionatorIntegration and Auctionator then
+        if DisenchanterPlus.db.char.general.auctionatorIntegration and Auctionator and essenceItemLink ~= nil then
           local dbKey = Auctionator.Utilities.BasicDBKeyFromLink(essenceItemLink)
-          local auctionPrice = Auctionator.Database:GetFirstPrice({ dbKey })
-          auctionatorPrice = auctionPrice
-          auctionatorString = Auctionator.Utilities.CreatePaddedMoneyString(auctionPrice)
+          if dbKey ~= nil then
+            auctionatorPrice = Auctionator.Database:GetFirstPrice({ dbKey })
+            auctionatorString = Auctionator.Utilities.CreatePaddedMoneyString(auctionatorPrice)
+          end
         end
 
         local essenceToAdd = {
