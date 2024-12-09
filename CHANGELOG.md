@@ -1,6 +1,6 @@
 ## **Version 1.0.8.0**
 
-- Integration with Auctionator
+- Integration with Auctionator. Auction prices are displayed in the tooltip if installed. Configurable.
 
 ## **Version 1.0.7.2**
 
