@@ -215,12 +215,14 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
         --DisenchanterPlus:Debug(string.format("essenceItemID = %s = essenceItemLink = %s", essenceItemID, essenceItemLink))
 
         local auctionatorPrice
-        local auctionatorString
+        local auctionatorString = "|cffcc1100" .. DisenchanterPlus:DP_i18n("No data") .. "|r"
         if DisenchanterPlus.db.char.general.auctionatorIntegration and Auctionator and essenceItemLink ~= nil then
           local dbKey = Auctionator.Utilities.BasicDBKeyFromLink(essenceItemLink)
           if dbKey ~= nil then
             auctionatorPrice = Auctionator.Database:GetFirstPrice({ dbKey })
-            auctionatorString = Auctionator.Utilities.CreatePaddedMoneyString(auctionatorPrice)
+            if auctionatorPrice then
+              auctionatorString = Auctionator.Utilities.CreatePaddedMoneyString(auctionatorPrice)
+            end
           end
         end
 

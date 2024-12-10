@@ -2,12 +2,14 @@
 
 ## Overview
 
-**Disenchanter Plus** Tool that keeps track of materials obtained by disenchanting items and that disenchants items that we have in our inventory.
+**Disenchanter Plus** Tool that keeps track of materials obtained by disenchanting items and disenchants items in your inventory.
 
 ## Features
 
-- **Tracking:** Track items obtained from disenchant items.
-- **Auto-Disenchant:** Disenchant items from inventory.
+- **Tracking:** Track essences obtained from disenchant items.
+- **Expected materials:** Shows expected materials from disenchant.
+- **Auto disenchant:** Disenchant items from inventory.
+- **Auctionator integration:** Shows last auction prices in tooltip.
 
 ## Slash Commands
 

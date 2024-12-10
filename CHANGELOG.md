@@ -1,3 +1,7 @@
+## **Version 1.0.8.1**
+
+- Fixed a bug when an item does not had auction price.
+
 ## **Version 1.0.8.0**
 
 - Integration with Auctionator. Auction prices are displayed in the tooltip if installed. Configurable.
