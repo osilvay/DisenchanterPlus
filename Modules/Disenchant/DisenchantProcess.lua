@@ -201,9 +201,11 @@ end
 
 ---Process loot closed
 function DP_DisenchantProcess:LootClosed()
-  C_Timer.After(1, function()
-    DP_DisenchantProcess:StartAutoDisenchant(true)
-  end)
+  if DP_DisenchantProcess:ProcessRunning() then
+    C_Timer.After(0.5, function()
+      DP_DisenchantProcess:StartAutoDisenchant(true)
+    end)
+  end
 end
 
 ---Process bag update

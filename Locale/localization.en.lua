@@ -150,3 +150,5 @@ L["Integration"]                                                  = true
 L["Auctionator integration"]                                      = true
 L["Enable integration with Auctionator addon."]                   = true
 L["Auction"]                                                      = true
+L["Stopped"]                                                      = true
+L["Running"]                                                      = true

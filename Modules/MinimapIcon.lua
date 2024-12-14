@@ -68,7 +68,10 @@ function _DP_MinimapIcon:CreateDataBrokerObject()
       end
     end,
     OnTooltipShow = function(tooltip)
-      tooltip:AddLine(DisenchanterPlus:GetAddonColoredName())
+      local status = DP_DisenchantProcess:ProcessRunning() and
+          "|cff1cff00" .. DisenchanterPlus:DP_i18n("Running") .. "|r" or
+          "|cffff033d" .. DisenchanterPlus:DP_i18n("Stopped") .. "|r "
+      tooltip:AddDoubleLine(DisenchanterPlus:GetAddonColoredName(), status)
       tooltip:AddLine(DP_CustomColors:Colorize(DP_CustomColors:CustomColors("HIGHLIGHTED"), DisenchanterPlus:DP_i18n("Left Click")) .. ": " .. DP_CustomColors:Colorize(DP_CustomColors:CustomColors("TEXT_VALUE"), DisenchanterPlus:DP_i18n("Open main window")));
       tooltip:AddLine(DP_CustomColors:Colorize(DP_CustomColors:CustomColors("HIGHLIGHTED"), DisenchanterPlus:DP_i18n("Right Click")) .. ": " .. DP_CustomColors:Colorize(DP_CustomColors:CustomColors("TEXT_VALUE"), DisenchanterPlus:DP_i18n("Open settings window")));
       tooltip:AddLine(DP_CustomColors:Colorize(DP_CustomColors:CustomColors("HIGHLIGHTED"), DisenchanterPlus:DP_i18n("Shift + Left Click")) .. ": " .. DP_CustomColors:Colorize(DP_CustomColors:CustomColors("TEXT_VALUE"), DisenchanterPlus:DP_i18n("Pause auto disenchant")));

@@ -155,7 +155,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   -- settings button ******************************************************************************************
   local settingsButton = CreateFrame("Button", "AutoDisenchant_SettingsButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
   settingsButton:SetSize(32, 22)
-  settingsButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -45, -10)
+  settingsButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -10, -10)
   settingsButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(DisenchanterPlus:DP_i18n("Opens settings window."), nil, nil, nil, nil, true)
@@ -184,6 +184,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
 
   settingsButton:Hide()
 
+  --[[
   -- close button ******************************************************************************************
   local closeButton = CreateFrame("Button", "AutoDisenchant_CloseButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
   closeButton:SetSize(32, 22)
@@ -216,11 +217,12 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
 
   DisenchanterPlusBaseFrame.closeButton = closeButton
   closeButton:Show()
+  ]]
 
   -- pause button ******************************************************************************************
   local pauseButton = CreateFrame("Button", "AutoDisenchant_PauseButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
   pauseButton:SetSize(32, 22)
-  pauseButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -80, -10)
+  pauseButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -45, -10)
   pauseButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(DisenchanterPlus:DP_i18n("Pause the disenchantment process."), nil, nil, nil, nil, true)
@@ -234,7 +236,8 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   end)
   pauseButton:SetScript("OnClick", function(current)
     DP_CustomSounds:PlayCustomSound("ChatScrollButton")
-    --DP_DisenchantWindow:CloseWindow()
+    if InCombatLockdown() or UnitAffectingCombat("player") then return end
+    DP_DisenchantWindow:CloseWindow()
     DisenchanterPlusBaseFrame.pauseButton:Hide()
     DisenchanterPlusBaseFrame.playButton:Show()
     DP_DisenchantProcess:PauseDisenchantProcess()
@@ -255,7 +258,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   -- play button ******************************************************************************************
   local playButton = CreateFrame("Button", "AutoDisenchant_PlayButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
   playButton:SetSize(32, 22)
-  playButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -80, -10)
+  playButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -45, -10)
   playButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(DisenchanterPlus:DP_i18n("Starts the disenchantment process."), nil, nil, nil, nil, true)
@@ -269,13 +272,12 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   end)
   playButton:SetScript("OnClick", function(current)
     DP_CustomSounds:PlayCustomSound("ChatScrollButton")
-    --DP_DisenchantWindow:CloseWindow()
+    if InCombatLockdown() or UnitAffectingCombat("player") then return end
+    DP_DisenchantWindow:CloseWindow()
     DisenchanterPlusBaseFrame.pauseButton:Show()
     DisenchanterPlusBaseFrame.playButton:Hide()
-    C_Timer.After(0.5, function()
-      DP_DisenchantProcess:StartsDisenchantProcess()
-      DP_MinimapIcon:UpdateIcon(DP_CustomMedias:GetMediaFile("disenchanterplus_running"))
-    end)
+    DP_DisenchantProcess:StartsDisenchantProcess()
+    DP_MinimapIcon:UpdateIcon(DP_CustomMedias:GetMediaFile("disenchanterplus_running"))
   end)
   DisenchanterPlusBaseFrame.playButton = playButton
 
@@ -684,13 +686,15 @@ end
 ---@return integer|nil
 function DP_DisenchantWindow:GetItemToDisenchant()
   local itemName, itemLink, itemIcon
-  local bagIndex = tonumber(DisenchanterPlusBaseFrame.yesButton:GetAttribute("target-bag")) or nil
-  local slot = tonumber(DisenchanterPlusBaseFrame.yesButton:GetAttribute("target-slot")) or nil
-  if bagIndex ~= nil and slot ~= nil and tonumber(bagIndex) and tonumber(slot) then
-    local iBagIndex = math.floor(bagIndex)
-    local iSlot = math.floor(slot)
-    local itemID = C_Container.GetContainerItemID(iBagIndex, iSlot);
-    itemName, itemLink, _, _, _, _, _, _, _, itemIcon, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
+  if DisenchanterPlusBaseFrame ~= nil then
+    local bagIndex = tonumber(DisenchanterPlusBaseFrame.yesButton:GetAttribute("target-bag")) or nil
+    local slot = tonumber(DisenchanterPlusBaseFrame.yesButton:GetAttribute("target-slot")) or nil
+    if bagIndex ~= nil and slot ~= nil and tonumber(bagIndex) and tonumber(slot) then
+      local iBagIndex = math.floor(bagIndex)
+      local iSlot = math.floor(slot)
+      local itemID = C_Container.GetContainerItemID(iBagIndex, iSlot);
+      itemName, itemLink, _, _, _, _, _, _, _, itemIcon, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
+    end
   end
   return itemName, itemLink, itemIcon
 end

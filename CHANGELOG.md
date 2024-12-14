@@ -1,3 +1,8 @@
+## **Version 1.0.8.2-alpha1**
+
+- Fixed a bug with combat lockdown and looting items.
+- Fixed a bug when entering in combat.
+
 ## **Version 1.0.8.1**
 
 - Fixed a bug when an item does not had auction price.

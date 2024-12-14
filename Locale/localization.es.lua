@@ -150,3 +150,5 @@ L["Integration"]                                                  = "Integració
 L["Auctionator integration"]                                      = "Integración con Auctionator"
 L["Enable integration with Auctionator addon."]                   = "Activar la integración con el addon Auctionator."
 L["Auction"]                                                      = "Subasta"
+L["Stopped"]                                                      = "Parado"
+L["Running"]                                                      = "Corriendo"
