@@ -1,4 +1,4 @@
-## **Version 1.0.8.2-alpha1**
+## **Version 1.0.8.2**
 
 - Fixed a bug with combat lockdown and looting items.
 - Fixed a bug when entering in combat.
