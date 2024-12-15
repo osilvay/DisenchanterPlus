@@ -5,4 +5,5 @@ ignore:
   - Patches
   - Releases
   - .gitignore
+  - .version
   - DisenchanterPlus.toc

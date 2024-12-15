@@ -1,0 +1,10 @@
+.vscode
+.gitignore
+.version
+.git
+Doc
+Releases
+packager.bat
+packagerExclusions.lst
+pkgmeta.yaml
+*.zip
