@@ -1,3 +1,10 @@
+## **Version 1.0.8.3**
+
+- Fixed a bug with items that could not be disenchanted. They have now been added to the ignore list.
+- Fixed a bug when manually disenchanting an item with disenchant option disabled in settings frame (Road-block issue).
+- Fixed a bug when starting / stopping disenchanting process from main window.
+- Fixed a bug with spell casting events. They would not start properly when they failed or were interrupted.
+
 ## **Version 1.0.8.2**
 
 - Fixed a bug with combat lockdown and looting items.

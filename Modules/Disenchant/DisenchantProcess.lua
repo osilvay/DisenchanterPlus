@@ -15,10 +15,16 @@ local disenchantSpellID = 13262
 local disenchanting = false
 local itemToDisenchant = false
 local totalItemsInBagsToDisenchant = 0
+local autoDisenchantStatus = false
 
 function DP_DisenchantProcess:Initialize()
   C_Timer.After(3, function()
     DP_DisenchantGroup:SaveSessionIgnoreList({})
+
+    if DisenchanterPlus.db.char.general.autoDisenchantEnabled then
+      DP_DisenchantProcess:SetAutoDisenchantStatus(true)
+    end
+
     DP_DisenchantProcess:StartAutoDisenchant(false)
     DP_DisenchantGroup:CreatePermanentIgnoreListItems()
   end)
@@ -30,7 +36,7 @@ function DP_DisenchantProcess:AddSessionIgnoredItem(itemID)
   --DisenchanterPlus:Dump(sessionIgnoredItems)
   local sessionIgnoredList = DP_DisenchantGroup:GetSessionIgnoreList() or {}
   if not DP_CustomFunctions:TableHasKey(sessionIgnoredList, tostring(itemID)) then
-    sessionIgnoredList[itemID] = ""
+    sessionIgnoredList[tostring(itemID)] = ""
     DP_DisenchantGroup:CreateSessionIgnoreListItems(sessionIgnoredList)
     DP_DisenchantWindow:CloseWindow()
     itemToDisenchant = false
@@ -70,7 +76,7 @@ function DP_DisenchantProcess:AddPermanentIgnoredItem(itemID)
   --DisenchanterPlus:Debug("AddPermanentIgnoredItem : " .. tostring(itemID))
   local permanentIgnoreList = DP_DisenchantGroup:GetPermanentIgnoreList() or {}
   if not DP_CustomFunctions:TableHasKey(permanentIgnoreList, tostring(itemID)) then
-    permanentIgnoreList[itemID] = ""
+    permanentIgnoreList[tostring(itemID)] = ""
     DP_DisenchantGroup:SavePermanentIgnoreList(permanentIgnoreList)
     DP_DisenchantGroup:CreatePermanentIgnoreListItems()
     DP_DisenchantWindow:CloseWindow()
@@ -99,7 +105,7 @@ function DP_DisenchantProcess:UnitSpellCastStart(unitTarget, castGUID, spellID)
   --DisenchanterPlus:Debug(string.format("UnitSpellCastStart : unitTarget = %s, castGUID = %s, spellID = %d", unitTarget, castGUID, spellID))
   if unitTarget == "player" and spellID == disenchantSpellID then
     if not disenchanting then disenchanting = true end
-    local itemName, itemLink, itemIcon = DP_DisenchantWindow:GetItemToDisenchant()
+    local _, itemLink, itemIcon, itemID = DP_DisenchantWindow:GetItemToDisenchant()
     if itemLink ~= nil and itemIcon ~= nil then
       DisenchanterPlus:Info(string.format("%s |T%d:0|t %s", DisenchanterPlus:DP_i18n("Disenchanting"), itemIcon, itemLink))
     end
@@ -109,9 +115,10 @@ function DP_DisenchantProcess:UnitSpellCastStart(unitTarget, castGUID, spellID)
 end
 
 ---Starts autoDisenchant
----@param silent? boolean
+---@param silent boolean
 function DP_DisenchantProcess:StartAutoDisenchant(silent)
   --if not DisenchanterPlus.db.char.general.autoDisenchantEnabled then return end
+  --DisenchanterPlus:Debug("Start auto disenchant : " .. tostring(silent))
   local autoDisenchantDbTimeout = DisenchanterPlus.db.char.general.autoDisenchantDbTimeout
   if autoDisenchantDbTimeoutTicker == nil and DisenchanterPlus.db.char.general.autoDisenchantEnabled then
     if not silent then
@@ -128,6 +135,7 @@ end
 ---Starts autoDisenchant
 ---@param silent? boolean
 function DP_DisenchantProcess:CancelAutoDisenchant(silent)
+  --DisenchanterPlus:Debug("Cancel auto disenchant : " .. tostring(silent))
   if autoDisenchantDbTimeoutTicker ~= nil then
     if silent == nil then silent = false end
     if not silent then
@@ -142,6 +150,7 @@ end
 
 ---Pause disenchant process
 function DP_DisenchantProcess:PauseDisenchantProcess()
+  DP_DisenchantProcess:SetAutoDisenchantStatus(false)
   DP_DisenchantProcess:CancelAutoDisenchant(false)
 end
 
@@ -156,16 +165,8 @@ end
 function DP_DisenchantProcess:StartsDisenchantProcess()
   disenchanting = false
   itemToDisenchant = false
+  DP_DisenchantProcess:SetAutoDisenchantStatus(true)
   DP_DisenchantProcess:StartAutoDisenchant(false)
-end
-
----Checks if autodisenchant is enabled
----@return boolean
-function DP_DisenchantProcess:AutoDisenchantEnabled()
-  if autoDisenchantDbTimeoutTicker ~= nil then
-    return true
-  end
-  return false
 end
 
 ---Process spell cast stop
@@ -180,11 +181,27 @@ end
 ---@param castGUID string
 ---@param spellID number
 function DP_DisenchantProcess:UnitSpellCastFailed(unitTarget, castGUID, spellID)
-  disenchanting = false
-  itemToDisenchant = false
-  C_Timer.After(1, function()
-    DP_DisenchantProcess:StartAutoDisenchant(true)
-  end)
+  if unitTarget == "player" and spellID == disenchantSpellID then
+    if not disenchanting then disenchanting = true end
+    local _, itemLink, itemIcon, itemID = DP_DisenchantWindow:GetItemToDisenchant()
+    if itemLink ~= nil and itemIcon ~= nil then
+      DisenchanterPlus:Print(string.format(DisenchanterPlus:DP_i18n("|cfffc8686Error!|r |T%d:0|t%s Can not be disenchanted. Added to ignored list."), itemIcon, itemLink))
+    end
+    disenchanting = false
+    itemToDisenchant = false
+    DP_DisenchantWindow:CloseWindow()
+
+    if itemID then
+      DP_DisenchantProcess:AddPermanentIgnoredItem(itemID)
+    end
+
+    C_Timer.After(0.5, function()
+      --print("UnitSpellCastFailed")
+      if DP_DisenchantProcess:GetAutoDisenchantStatus() then
+        DP_DisenchantProcess:StartAutoDisenchant(true)
+      end
+    end)
+  end
 end
 
 ---Process spell cast failed
@@ -194,18 +211,24 @@ end
 function DP_DisenchantProcess:UnitSpellCastInterrupted(unitTarget, castGUID, spellID)
   disenchanting = false
   itemToDisenchant = false
-  C_Timer.After(1, function()
-    DP_DisenchantProcess:StartAutoDisenchant(true)
+
+  C_Timer.After(0.5, function()
+    --print("UnitSpellCastInterrupted")
+    if DP_DisenchantProcess:GetAutoDisenchantStatus() then
+      DP_DisenchantProcess:StartAutoDisenchant(true)
+    end
   end)
 end
 
 ---Process loot closed
 function DP_DisenchantProcess:LootClosed()
-  if DP_DisenchantProcess:ProcessRunning() then
-    C_Timer.After(0.5, function()
+  --DisenchanterPlus:Debug("Process running : " .. tostring(DP_DisenchantProcess:IsProcessRunning()))
+  C_Timer.After(0.5, function()
+    --print("LootClosed")
+    if DP_DisenchantProcess:GetAutoDisenchantStatus() then
       DP_DisenchantProcess:StartAutoDisenchant(true)
-    end)
-  end
+    end
+  end)
 end
 
 ---Process bag update
@@ -424,9 +447,23 @@ function DP_DisenchantProcess:CheckTradeskill()
   return nil
 end
 
-function DP_DisenchantProcess:ProcessRunning()
+---Is process running
+---@return boolean
+function DP_DisenchantProcess:IsProcessRunning()
   if autoDisenchantDbTimeoutTicker ~= nil then
     return true
   end
   return false
+end
+
+---Set auto disenchant paused
+---@param status boolean
+function DP_DisenchantProcess:SetAutoDisenchantStatus(status)
+  autoDisenchantStatus = status
+end
+
+---Get auto disenchant paused
+---@return boolean
+function DP_DisenchantProcess:GetAutoDisenchantStatus()
+  return autoDisenchantStatus
 end

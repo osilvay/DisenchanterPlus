@@ -61,7 +61,7 @@ function DP_DisenchantGroup:Config(order)
           else
             C_Timer.After(0.1, function()
               DP_DisenchantProcess:CancelAutoDisenchant(false)
-              DP_MinimapIcon:UpdateIcon(DP_CustomMedias:GetMediaFile("disenchanterplus_paused"))
+              DP_MinimapIcon:UpdateIcon(DP_CustomMedias:GetMediaFile("disenchanterplus_disabled"))
             end)
           end
         end,

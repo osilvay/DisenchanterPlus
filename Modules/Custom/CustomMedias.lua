@@ -58,6 +58,7 @@ disenchanterPlusMedias = {
   ["disenchanterplus_a"] = "Interface/AddOns/DisenchanterPlus/Images/Menus/disenchanterplus",
   ["disenchanterplus_paused"] = "Interface/AddOns/DisenchanterPlus/Images/Menus/disenchanterplus_paused",
   ["disenchanterplus_running"] = "Interface/AddOns/DisenchanterPlus/Images/Menus/disenchanterplus_running",
+  ["disenchanterplus_disabled"] = "Interface/AddOns/DisenchanterPlus/Images/Menus/disenchanterplus_disabled",
   ["Alliance_icon"] = "Interface/AddOns/DisenchanterPlus/Images/Factions/icon_alliance",
   ["Horde_icon"] = "Interface/AddOns/DisenchanterPlus/Images/Factions/icon_horde",
   ["alliance_flag"] = "Interface/AddOns/DisenchanterPlus/Images/Factions/flag_alliance",
