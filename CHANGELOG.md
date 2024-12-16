@@ -1,5 +1,6 @@
 ## **Version 1.0.8.4**
 
+- Minor changes in main window.
 - Fixed an error with items that have been disenchanted and reappear.
 - Fixed an error wuth tooltips in main window.
 
