@@ -195,7 +195,7 @@ function DP_DisenchantProcess:UnitSpellCastFailed(unitTarget, castGUID, spellID)
       DP_DisenchantProcess:AddPermanentIgnoredItem(itemID)
     end
 
-    C_Timer.After(0.5, function()
+    C_Timer.After(1, function()
       --print("UnitSpellCastFailed")
       if DP_DisenchantProcess:GetAutoDisenchantStatus() then
         DP_DisenchantProcess:StartAutoDisenchant(true)
@@ -212,7 +212,7 @@ function DP_DisenchantProcess:UnitSpellCastInterrupted(unitTarget, castGUID, spe
   disenchanting = false
   itemToDisenchant = false
 
-  C_Timer.After(0.5, function()
+  C_Timer.After(1, function()
     --print("UnitSpellCastInterrupted")
     if DP_DisenchantProcess:GetAutoDisenchantStatus() then
       DP_DisenchantProcess:StartAutoDisenchant(true)
@@ -223,7 +223,7 @@ end
 ---Process loot closed
 function DP_DisenchantProcess:LootClosed()
   --DisenchanterPlus:Debug("Process running : " .. tostring(DP_DisenchantProcess:IsProcessRunning()))
-  C_Timer.After(0.5, function()
+  C_Timer.After(1, function()
     --print("LootClosed")
     if DP_DisenchantProcess:GetAutoDisenchantStatus() then
       DP_DisenchantProcess:StartAutoDisenchant(true)

@@ -1,3 +1,8 @@
+## **Version 1.0.8.4**
+
+- Fixed an error with items that have been disenchanted and reappear.
+- Fixed an error wuth tooltips in main window.
+
 ## **Version 1.0.8.3**
 
 - Fixed a bug with items that could not be disenchanted. They have now been added to the ignore list.

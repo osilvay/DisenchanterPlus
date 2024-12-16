@@ -128,13 +128,13 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   itemButton:SetWidth(48)
   itemButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-    local bagIndex = tonumber(DisenchanterPlusBaseFrame.yesButton:GetAttribute("target-bag")) or nil
-    local slot = tonumber(DisenchanterPlusBaseFrame.yesButton:GetAttribute("target-slot")) or nil
-    if bagIndex ~= nil and slot ~= nil and tonumber(bagIndex) and tonumber(slot) then
-      local iBagIndex = math.floor(bagIndex)
-      local iSlot = math.floor(slot)
-      local containerInfo = C_Container.GetContainerItemInfo(iBagIndex, iSlot)
-      GameTooltip:SetHyperlink(containerInfo["hyperlink"])
+    local bagIndex = tonumber(DisenchanterPlusBaseFrame.yesButton:GetAttribute("target-bag"))
+    local slot = tonumber(DisenchanterPlusBaseFrame.yesButton:GetAttribute("target-slot"))
+    if (bagIndex and slot) then
+      local containerInfo = C_Container.GetContainerItemInfo(bagIndex, slot)
+      if containerInfo and containerInfo.hyperlink then
+        GameTooltip:SetHyperlink(containerInfo.hyperlink)
+      end
     end
     GameTooltip:Show()
   end)
@@ -689,10 +689,8 @@ function DP_DisenchantWindow:GetItemToDisenchant()
   if DisenchanterPlusBaseFrame ~= nil then
     local bagIndex = tonumber(DisenchanterPlusBaseFrame.yesButton:GetAttribute("target-bag")) or nil
     local slot = tonumber(DisenchanterPlusBaseFrame.yesButton:GetAttribute("target-slot")) or nil
-    if bagIndex ~= nil and slot ~= nil and tonumber(bagIndex) and tonumber(slot) then
-      local iBagIndex = math.floor(bagIndex)
-      local iSlot = math.floor(slot)
-      itemID = C_Container.GetContainerItemID(iBagIndex, iSlot);
+    if bagIndex ~= nil and slot ~= nil then
+      itemID = C_Container.GetContainerItemID(bagIndex, slot);
       itemName, itemLink, _, _, _, _, _, _, _, itemIcon, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
     end
   end
