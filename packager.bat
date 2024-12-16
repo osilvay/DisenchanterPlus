@@ -15,7 +15,8 @@ set "ClassicFilename=DisenchanterPlus-v%Build%-classic.zip"
 rem 7z a -tzip DisenchanterPlus.zip *.txt -x!temp.*
 rem F:\PROYECTOS\PERSONAL\World of Warcraft\_classic_era_\Interface\AddOns\DisenchanterPlus\
 
-del "%Directory%*.zip"
+del "%Directory%Releases\%ClassicFilename%.zip"
+del "%Directory%Releases\%CataFilename%.zip"
 
-7z a -x!DisenchanterPlus-Classic.toc -x@packagerExclusions.lst -xr@packagerExclusions.lst -tzip %CataFilename% "%Directory%*" -aoa
-7z a -x!DisenchanterPlus-Cata.toc -x@packagerExclusions.lst -xr@packagerExclusions.lst -tzip %ClassicFilename% "%Directory%*" -aoa
+7z a -x!DisenchanterPlus-Cata.toc -x@packagerExclusions.lst -xr@packagerExclusions.lst -tzip ".\Releases\%ClassicFilename%" "%Directory%*" -aoa
+7z a -x!DisenchanterPlus-Classic.toc -x@packagerExclusions.lst -xr@packagerExclusions.lst -tzip ".\Releases\%CataFilename%" "%Directory%*" -aoa

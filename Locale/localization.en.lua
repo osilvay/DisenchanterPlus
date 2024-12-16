@@ -153,3 +153,4 @@ L["Auction"]                                                                    
 L["Stopped"]                                                                       = true
 L["Running"]                                                                       = true
 L["|cfffc8686Error!|r |T%d:0|t%s Can not be disenchanted. Added to ignored list."] = true
+L["Proceed"]                                                                       = true

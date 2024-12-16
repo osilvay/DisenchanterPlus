@@ -153,3 +153,4 @@ L["Auction"]                                                                    
 L["Stopped"]                                                                       = "Parado"
 L["Running"]                                                                       = "Corriendo"
 L["|cfffc8686Error!|r |T%d:0|t%s Can not be disenchanted. Added to ignored list."] = "|cfffc8686Error!|r |T%d:0|t%s No puede ser desencantado. Se ha añadido a la lista de ignorados."
+L["Proceed"]                                                                       = "Proceder"
