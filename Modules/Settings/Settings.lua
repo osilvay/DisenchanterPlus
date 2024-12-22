@@ -13,6 +13,9 @@ local DP_DisenchantProcess = DP_ModuleLoader:ImportModule("DP_DisenchantProcess"
 ---@type DP_DisenchantGroup
 local DP_DisenchantGroup = DP_ModuleLoader:ImportModule("DP_DisenchantGroup");
 
+---@type DP_EnchantProcess
+local DP_EnchantProcess = DP_ModuleLoader:ImportModule("DP_EnchantProcess");
+
 -- Forward declaration
 DP_Settings.tabs = { ... }
 
@@ -55,6 +58,9 @@ function DP_Settings:DrawSettingsFrame()
     if DP_CustomPopup:IsOpened() then
       DP_CustomPopup:CancelPopup()
     end
+    if DP_EnchantProcess:IsCraftingWindowOpen() then
+      DP_EnchantProcess:OpenEnchantWindow()
+    end
     C_Timer.After(1, function()
       DP_DisenchantProcess:StartAutoDisenchant(true)
     end)
@@ -68,9 +74,10 @@ end
 ---@return table
 DP_Settings._CreateSettingsTable = function()
   local general_tab = DP_Settings.tabs.general:Initialize(2)
-  local disenchant_tab = DP_Settings.tabs.disenchant:Initialize(3)
-  local tooltips_tab = DP_Settings.tabs.tooltips:Initialize(4)
-  local keybindings_tab = DP_Settings.tabs.keybindings:Initialize(5)
+  local enchant_tab = DP_Settings.tabs.enchant:Initialize(3)
+  local disenchant_tab = DP_Settings.tabs.disenchant:Initialize(4)
+  local tooltips_tab = DP_Settings.tabs.tooltips:Initialize(5)
+  local keybindings_tab = DP_Settings.tabs.keybindings:Initialize(6)
   local advanced_tab = DP_Settings.tabs.advanced:Initialize(10)
   local maintenance_tab = DP_Settings.tabs.maintenance:Initialize(11)
 
@@ -81,6 +88,7 @@ DP_Settings._CreateSettingsTable = function()
     childGroups = "tree",
     args = {
       general_tab = general_tab,
+      enchant_tab = enchant_tab,
       disenchant_tab = disenchant_tab,
       tooltips_tab = tooltips_tab,
       keybindings_tab = keybindings_tab,

@@ -10,11 +10,16 @@ local DP_DisenchantGroup = DP_ModuleLoader:ImportModule("DP_DisenchantGroup")
 ---@type DP_DisenchantWindow
 local DP_DisenchantWindow = DP_ModuleLoader:ImportModule("DP_DisenchantWindow")
 
+---@type DP_TradeskillCheck
+local DP_TradeskillCheck = DP_ModuleLoader:ImportModule("DP_TradeskillCheck")
+
+---@type DP_BagsCheck
+local DP_BagsCheck = DP_ModuleLoader:ImportModule("DP_BagsCheck")
+
 local autoDisenchantDbTimeoutTicker = nil
 local disenchantSpellID = 13262
 local disenchanting = false
 local itemToDisenchant = false
-local totalItemsInBagsToDisenchant = 0
 local autoDisenchantStatus = false
 
 function DP_DisenchantProcess:Initialize()
@@ -235,7 +240,7 @@ end
 function DP_DisenchantProcess:BagUpdate(bagIndex)
   if bagIndex < 0 or bagIndex > 4 then return end
   if DP_DisenchantWindow:IsWindowOpened() then
-    local numItemsLeft = DP_DisenchantProcess:ItemsInBags()
+    local numItemsLeft = DP_BagsCheck:ItemsInBags()
     DP_DisenchantWindow:UpdateItemsLeft(numItemsLeft)
   end
 end
@@ -277,9 +282,9 @@ function DP_DisenchantProcess:OpenDisenchantWindow()
 
   --local tradeskill = DP_DisenchantProcess:CheckTradeskill()
   --if tradeskill == nil then return end
-  local tradeskill = DP_DisenchantProcess:CheckTradeskill() or {}
+  local tradeskill = DP_TradeskillCheck:GetTradeSkill() or {}
   DP_DisenchantWindow:OpenWindow({}, tradeskill)
-  DP_DisenchantWindow:UpdateItemsLeft(totalItemsInBagsToDisenchant)
+  DP_DisenchantWindow:UpdateItemsLeft(DP_BagsCheck:GetTotalItemsInBagsToDisenchant())
 end
 
 ---Scan for items
@@ -297,154 +302,20 @@ function DP_DisenchantProcess:ScanForItems()
   --DisenchanterPlus:Debug("Has tradeskill ?" .. tostring(disenchantIsKnown))
   if not disenchantIsKnown then return end
 
-  local tradeskill = DP_DisenchantProcess:CheckTradeskill()
+  local tradeskill = DP_TradeskillCheck:GetTradeSkill() or {}
   --DisenchanterPlus:Debug("Has tradeskill : " .. tostring(tradeskill))
 
   if tradeskill == nil then return end
 
-  local itemInfoFromBag = DP_DisenchantProcess:GetItemFromBag()
-
+  local itemInfoFromBag = DP_BagsCheck:GetItemFromBag()
   --DisenchanterPlus:Debug(DP_DisenchantWindow:ItemToDisenchant())
   --DisenchanterPlus:Dump(itemInfoFromBag)
 
   if itemInfoFromBag ~= nil and DP_DisenchantWindow:ItemToDisenchant() == nil then
     itemToDisenchant = true
     DP_DisenchantWindow:OpenWindow(itemInfoFromBag, tradeskill)
-    DP_DisenchantWindow:UpdateItemsLeft(totalItemsInBagsToDisenchant)
+    DP_DisenchantWindow:UpdateItemsLeft(DP_BagsCheck:GetTotalItemsInBagsToDisenchant())
   end
-end
-
----Items in bags
----@param itemLink? string
----@return table|nil items
-function DP_DisenchantProcess:GetItemFromBag(itemLink)
-  local result
-  local itemsInBagsToDisenchant = 0
-  local sessionIgnoredList = DP_DisenchantGroup:GetSessionIgnoreList() or {}
-  local permanentIgnoredList = DP_DisenchantGroup:GetPermanentIgnoreList() or {}
-
-  for bagIndex = 0, 4 do
-    --DisenchanterPlus:Debug("Bag : " .. tostring(bagIndex))
-    local itemInBag, numItemsInBag = DP_DisenchantProcess:ItemInBag(bagIndex, itemLink, sessionIgnoredList, permanentIgnoredList)
-    if itemInBag ~= nil then
-      --DisenchanterPlus:Debug(itemInBag.ItemName)
-      if result == nil then result = itemInBag end
-    end
-    itemsInBagsToDisenchant = itemsInBagsToDisenchant + numItemsInBag
-  end
-  totalItemsInBagsToDisenchant = itemsInBagsToDisenchant
-  return result
-end
-
-function DP_DisenchantProcess:ItemsInBags()
-  local itemsInBagsToDisenchant = 0
-  local sessionIgnoredList = DP_DisenchantGroup:GetSessionIgnoreList() or {}
-  local permanentIgnoredList = DP_DisenchantGroup:GetPermanentIgnoreList() or {}
-  for bagIndex = 0, 4 do
-    --DisenchanterPlus:Debug("Bag : " .. tostring(bagIndex))
-    local _, numItemsInBag = DP_DisenchantProcess:ItemInBag(bagIndex, nil, sessionIgnoredList, permanentIgnoredList)
-    itemsInBagsToDisenchant = itemsInBagsToDisenchant + numItemsInBag
-  end
-  return itemsInBagsToDisenchant
-end
-
----Items in bag index
----@param bagIndex number
----@param itemLinkToSearch? string
----@param sessionIgnoredList table
----@param permanentIgnoredList table
----@return table|nil
----@return number
-function DP_DisenchantProcess:ItemInBag(bagIndex, itemLinkToSearch, sessionIgnoredList, permanentIgnoredList)
-  local numSlots = C_Container.GetContainerNumSlots(bagIndex)
-  local numItemsInBag = 0
-  local result
-
-  --DisenchanterPlus:Debug(string.format("Slot %d = %d slots", bagIndex or "nil", numSlots or "nil"))
-  local itemQualities = DisenchanterPlus.db.char.general.itemQuality or {}
-  local itemQualityList = {}
-
-  for k, itemQualityValue in pairs(itemQualities) do
-    if itemQualityValue then
-      table.insert(itemQualityList, k)
-    end
-  end
-
-  for slot = 1, numSlots do
-    local containerInfo = C_Container.GetContainerItemInfo(bagIndex, slot)
-
-    if containerInfo ~= nil and containerInfo.itemID ~= nil then
-      local itemName, _, itemQuality, itemLevel, itemMinLevel, itemType, _, _, _, itemTexture, _, _, _, _, _, _, _ = C_Item.GetItemInfo(containerInfo.itemID)
-      local isBound = containerInfo.isBound
-
-      if (itemType == DisenchanterPlus:DP_i18n("Armor") or itemType == DisenchanterPlus:DP_i18n("Weapon")) and
-          not DP_CustomFunctions:TableHasKey(sessionIgnoredList, tostring(containerInfo.itemID)) and
-          not DP_CustomFunctions:TableHasKey(permanentIgnoredList, tostring(containerInfo.itemID)) and
-          DP_CustomFunctions:TableHasValue(itemQualityList, tostring(itemQuality)) and
-          ((DisenchanterPlus.db.char.general.onlySoulbound and isBound) or not DisenchanterPlus.db.char.general.onlySoulbound) then
-        --DisenchanterPlus:Dump(sessionIgnoredItems)
-        --DisenchanterPlus:Debug(containerInfo.hyperlink)
-        --DisenchanterPlus:Debug(itemLink)
-        --DisenchanterPlus:Debug("itemQuality = " .. tostring(itemQuality) .. ", itemID = " .. tostring(containerInfo.itemID) .. ", texture = " .. itemTexture)
-        numItemsInBag = numItemsInBag + 1
-        if result == nil then
-          result = {
-            ItemID = tostring(containerInfo.itemID),
-            ItemName = itemName,
-            ItemIcon = itemTexture,
-            ItemLink = containerInfo.hyperlink,
-            ItemQuality = itemQuality,
-            ItemLevel = itemLevel,
-            ItemMinLevel = itemMinLevel,
-            Slot = slot,
-            BagIndex = bagIndex,
-            SpellID = disenchantSpellID
-          }
-        end
-      end
-    end
-  end
-  return result, numItemsInBag
-end
-
----Check for emchanting tradeskill
----@return table|nil
-function DP_DisenchantProcess:CheckTradeskill()
-  if DisenchanterPlus.IsClassic or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsHardcore then
-    for skillIndex = 1, GetNumSkillLines() do
-      local skillName, isHeader, isExpanded, skillRank, numTempPoints, skillModifier,
-      skillMaxRank, isAbandonable, stepCost, rankCost, minLevel, skillCostType,
-      skillDescription = GetSkillLineInfo(skillIndex)
-      if not isHeader then
-        --print(string.format("Skill: %s - %s", skillName, skillRank))
-        if skillName == DisenchanterPlus:DP_i18n("Enchanting") then
-          return {
-            Name = skillName,
-            Icon = 136244,
-            Level = skillRank
-          }
-        end
-      end
-    end
-  else
-    local profList = {}
-    local prof1, prof2, _, _, _, _ = GetProfessions();
-    table.insert(profList, prof1)
-    table.insert(profList, prof2)
-    --DisenchanterPlus:Dump(profList)
-
-    for _, prof in pairs(profList) do
-      local tradeskillName, tradeskillIcon, tradeskillLevel, _, _, _, _, _, _, _ = GetProfessionInfo(prof)
-      if tradeskillName == DisenchanterPlus:DP_i18n("Enchanting") then
-        return {
-          Name = tradeskillName,
-          Icon = tradeskillIcon,
-          Level = tradeskillLevel
-        }
-      end
-    end
-  end
-  return nil
 end
 
 ---Is process running

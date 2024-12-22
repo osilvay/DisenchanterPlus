@@ -17,6 +17,9 @@ local DP_CustomMedias = DP_ModuleLoader:ImportModule("DP_CustomMedias")
 ---@type DP_DisenchantProcess
 local DP_DisenchantProcess = DP_ModuleLoader:ImportModule("DP_DisenchantProcess")
 
+---@type DP_EnchantProcess
+local DP_EnchantProcess = DP_ModuleLoader:ImportModule("DP_EnchantProcess")
+
 ---@type DP_DisenchantWindow
 local DP_DisenchantWindow = DP_ModuleLoader:ImportModule("DP_DisenchantWindow")
 
@@ -65,6 +68,8 @@ function _DP_MinimapIcon:CreateDataBrokerObject()
           DP_SlashCommands:CloseAllFrames()
           DP_Settings:OpenSettingsFrame()
         end
+      elseif button == "MiddleButton" then
+        DP_EnchantProcess:OpenEnchantWindow()
       end
     end,
     OnTooltipShow = function(tooltip)
@@ -78,13 +83,13 @@ function _DP_MinimapIcon:CreateDataBrokerObject()
       end
       tooltip:AddDoubleLine(DisenchanterPlus:GetAddonColoredName(), status)
 
-
       tooltip:AddLine(DP_CustomColors:Colorize(DP_CustomColors:CustomColors("HIGHLIGHTED"), DisenchanterPlus:DP_i18n("Left Click")) .. ": " .. DP_CustomColors:Colorize(DP_CustomColors:CustomColors("TEXT_VALUE"), DisenchanterPlus:DP_i18n("Open main window")));
       tooltip:AddLine(DP_CustomColors:Colorize(DP_CustomColors:CustomColors("HIGHLIGHTED"), DisenchanterPlus:DP_i18n("Right Click")) .. ": " .. DP_CustomColors:Colorize(DP_CustomColors:CustomColors("TEXT_VALUE"), DisenchanterPlus:DP_i18n("Open settings window")));
       if DisenchanterPlus.db.char.general.autoDisenchantEnabled then
         tooltip:AddLine(DP_CustomColors:Colorize(DP_CustomColors:CustomColors("HIGHLIGHTED"), DisenchanterPlus:DP_i18n("Shift + Left Click")) .. ": " .. DP_CustomColors:Colorize(DP_CustomColors:CustomColors("TEXT_VALUE"), DisenchanterPlus:DP_i18n("Starts auto disenchant")));
         tooltip:AddLine(DP_CustomColors:Colorize(DP_CustomColors:CustomColors("HIGHLIGHTED"), DisenchanterPlus:DP_i18n("Shift + Right Click")) .. ": " .. DP_CustomColors:Colorize(DP_CustomColors:CustomColors("TEXT_VALUE"), DisenchanterPlus:DP_i18n("Pause auto disenchant")));
       end
+      tooltip:AddLine(string.format("|cffe1e1e1Enchanter|r |c%sPlus|r", DisenchanterPlus:GetAddonColor()))
     end,
   }
 

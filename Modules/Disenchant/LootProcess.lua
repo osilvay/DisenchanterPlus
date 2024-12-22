@@ -4,28 +4,17 @@ local DP_LootProcess = DP_ModuleLoader:CreateModule("DP_LootProcess")
 ---@type DP_Database
 local DP_Database = DP_ModuleLoader:ImportModule("DP_Database")
 
+---@type DP_TradeskillCheck
+local DP_TradeskillCheck = DP_ModuleLoader:ImportModule("DP_TradeskillCheck")
+
 local MaxLootReadyCount = 0
 local LootingInProgress = false
-local allProfessionID = {}
 local IsTradeSkill = false
 local TradeSkillInfo = {}
 local ItemLockedInfo = {}
 local IsItemLocked = false
-local CopperPerSilver = 100
-local SilverPerGold = 100
-local dust = "dust"
-local essence = "essence"
-local shard = "shard"
-local crystal = "crystal"
-local unkonwun = string.lower(UNKNOWN)
 
 function DP_LootProcess:Initialize()
-  allProfessionID = {
-    Enchanting = {
-      spellID = { 13262, 7411, 7412, 7413, 13920, 28029, 51313, 74258 },
-      professionName = DisenchanterPlus:DP_i18n("Enchanting")
-    },
-  }
 end
 
 ---loot ready
@@ -115,32 +104,17 @@ end
 ---@param spellID number
 function DP_LootProcess:UnitSpellCastSucceeded(unitTarget, castGUID, spellID)
   if unitTarget == "player" then
-    local proffesionName = DP_LootProcess:FindProfessionBySpellId(spellID)
+    local tradeSkillName = DP_TradeskillCheck:FindTradeSkillBySpellID(spellID)
     --DisenchanterPlus:Debug(proffesionName .. " : " .. spellID)
-    if proffesionName ~= "" then
+    if tradeSkillName then
       IsTradeSkill = true
       TradeSkillInfo = {
-        Name = proffesionName,
+        Name = tradeSkillName,
         SpellID = spellID
       }
       --DisenchanterPlus:Dump(TradeSkillInfo)
     end
   end
-end
-
----Find proffesion by spellId
----@param spellID number
----@return string profession
-function DP_LootProcess:FindProfessionBySpellId(spellID)
-  for profession, professionInfo in pairs(allProfessionID) do
-    for _, professionID in pairs(professionInfo.spellID) do
-      if spellID == professionID then
-        return profession
-      end
-    end
-  end
-  --DisenchanterPlus:Debug("Profession with spellID = " .. spellID .. " not found.")
-  return ""
 end
 
 ---Save enchanting item details

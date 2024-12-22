@@ -10,6 +10,9 @@ local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
 ---@type DP_DisenchantWindow
 local DP_DisenchantWindow = DP_ModuleLoader:ImportModule("DP_DisenchantWindow")
 
+---@type DP_EnchantWindow
+local DP_EnchantWindow = DP_ModuleLoader:ImportModule("DP_EnchantWindow")
+
 local L = LibStub("AceLocale-3.0"):GetLocale("DisenchanterPlus")
 
 DisenchanterPlus.DEBUG_CRITICAL = "|cff00f2e6[CRITICAL]|r"
@@ -18,7 +21,7 @@ DisenchanterPlus.DEBUG_INFO = "|cff00bc32[INFO]|r"
 DisenchanterPlus.DEBUG_DEVELOP = "|cff7c83ff[DEVELOP]|r"
 DisenchanterPlus.DEBUG_SPAM = "|cffff8484[SPAM]|r"
 local AddonColor = "ffed6bff"
-local AddonVersion = "1.0.8.4"
+local AddonVersion = "1.1.0.0"
 
 BINDING_NAME_DISENCHANTER_PLUS_ACCEPT_DISENCHANT = L["Accept disenchant"]
 BINDING_NAME_DISENCHANTER_PLUS_CANCEL_DISENCHANT = L["Cancel disenchant"]
@@ -167,4 +170,10 @@ function DisenchanterPlus:RunKeybindIgnoreDisenchant()
   if not DisenchanterPlus.started then return end
   --DisenchanterPlus:Debug("Run ignore disenchant")
   DP_DisenchantWindow:RunKeybindIgnoreDisenchant()
+end
+
+function DisenchanterPlus:RunKeybindConfirmEnchant()
+  if not DisenchanterPlus.started then return end
+  --DisenchanterPlus:Debug("Run ignore disenchant")
+  --DP_EnchantWindow:RunKeybindConfirmEnchant()
 end

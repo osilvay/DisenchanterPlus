@@ -10,6 +10,9 @@ local DP_CataclysmDisenchantTable = DP_ModuleLoader:ImportModule("DP_CataclysmDi
 ---@type DP_ClassicDisenchantTable
 local DP_ClassicDisenchantTable = DP_ModuleLoader:ImportModule("DP_ClassicDisenchantTable")
 
+---@type DP_EnchantPatterns
+local DP_EnchantPatterns = DP_ModuleLoader:ImportModule("DP_EnchantPatterns")
+
 local dust = "dust"
 local essence = "essence"
 local shard = "shard"
@@ -128,6 +131,7 @@ function DP_Database:Initialize()
     -- cataclysm
     DP_CataclysmDisenchantTable:Initialize()
   end
+  DP_EnchantPatterns:Initialize()
 end
 
 ---Check skill level for item

@@ -64,6 +64,19 @@ function DP_CustomColors:CustomQualityColors(quality_index)
   return customQualityColors[quality_index]
 end
 
+---Custom quality colors
+---@param craft_type string
+---@return string color
+function DP_CustomColors:CraftTypeColors(craft_type)
+  local craftTypeColors = {
+    ["optimal"] = "ffff8040",
+    ["medium"]  = "ffffff00",
+    ["easy"]    = "ff40c040",
+    ["trivial"] = "ff808080",
+  };
+  return craftTypeColors[craft_type]
+end
+
 ---Custom class colors
 ---@param color_index string
 ---@return string colorized_string

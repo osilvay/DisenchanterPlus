@@ -8,6 +8,9 @@ local DP_LootProcess = DP_ModuleLoader:ImportModule("DP_LootProcess")
 ---@type DP_DisenchantProcess
 local DP_DisenchantProcess = DP_ModuleLoader:ImportModule("DP_DisenchantProcess")
 
+---@type DP_EnchantProcess
+local DP_EnchantProcess = DP_ModuleLoader:ImportModule("DP_EnchantProcess")
+
 function DP_DisenchanterPlusEvents:Initialize()
   DisenchanterPlus:RegisterEvent("UNIT_SPELLCAST_SENT", _DP_DisenchanterPlusEvents.UnitSpellCastSent)
   DisenchanterPlus:RegisterEvent("UNIT_SPELLCAST_START", _DP_DisenchanterPlusEvents.UnitSpellCastStart)
@@ -21,6 +24,8 @@ function DP_DisenchanterPlusEvents:Initialize()
   DisenchanterPlus:RegisterEvent("ITEM_LOCKED", _DP_DisenchanterPlusEvents.ItemLocked)
   DisenchanterPlus:RegisterEvent("PLAYER_REGEN_DISABLED", _DP_DisenchanterPlusEvents.PlayerRegenDisabled)
   DisenchanterPlus:RegisterEvent("PLAYER_REGEN_ENABLED", _DP_DisenchanterPlusEvents.PlayerRegenEnabled)
+  DisenchanterPlus:RegisterEvent("CRAFT_SHOW", _DP_DisenchanterPlusEvents.CraftShow)
+  DisenchanterPlus:RegisterEvent("CRAFT_CLOSE", _DP_DisenchanterPlusEvents.CraftClose)
 
   DP_LootProcess:Initialize()
   DP_DisenchantProcess:Initialize()
@@ -40,6 +45,7 @@ end
 
 function _DP_DisenchanterPlusEvents.UnitSpellCastSucceeded(_, unitTarget, castGUID, spellID)
   DP_LootProcess:UnitSpellCastSucceeded(unitTarget, castGUID, spellID)
+  DP_EnchantProcess:UnitSpellCastSucceeded(unitTarget, castGUID, spellID)
 end
 
 function _DP_DisenchanterPlusEvents.UnitSpellCastFailed(_, unitTarget, castGUID, spellID)
@@ -73,4 +79,12 @@ end
 
 function _DP_DisenchanterPlusEvents.PlayerRegenEnabled(_)
   DP_DisenchantProcess:PlayerRegenEnabled()
+end
+
+function _DP_DisenchanterPlusEvents.CraftShow(_)
+  DP_EnchantProcess:CraftShow()
+end
+
+function _DP_DisenchanterPlusEvents.CraftClose(_)
+  DP_EnchantProcess:CraftClose()
 end

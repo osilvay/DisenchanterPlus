@@ -7,12 +7,14 @@ local disenchanterPlusMedias
 disenchanterPlusIcons = {
   ["accept"]        = "Interface/AddOns/DisenchanterPlus/Images/Icons/accept",
   ["accept_a"]      = "Interface/AddOns/DisenchanterPlus/Images/Icons/accept_a",
+  ["accept_c"]      = "Interface/AddOns/DisenchanterPlus/Images/Icons/accept_c",
   ["back"]          = "Interface/AddOns/DisenchanterPlus/Images/Icons/back",
   ["back_a"]        = "Interface/AddOns/DisenchanterPlus/Images/Icons/back_a",
   ["cleanup"]       = "Interface/AddOns/DisenchanterPlus/Images/Icons/cleanup",
   ["cleanup_a"]     = "Interface/AddOns/DisenchanterPlus/Images/Icons/cleanup_a",
   ["close"]         = "Interface/AddOns/DisenchanterPlus/Images/Icons/close",
   ["close_a"]       = "Interface/AddOns/DisenchanterPlus/Images/Icons/close_a",
+  ["close_c"]       = "Interface/AddOns/DisenchanterPlus/Images/Icons/close_c",
   ["cancel"]        = "Interface/AddOns/DisenchanterPlus/Images/Icons/cancel",
   ["cancel_a"]      = "Interface/AddOns/DisenchanterPlus/Images/Icons/cancel_a",
   ["cancel1"]       = "Interface/AddOns/DisenchanterPlus/Images/Icons/cancel1",
@@ -51,6 +53,9 @@ disenchanterPlusIcons = {
   ["clean_list1_a"] = "Interface/AddOns/DisenchanterPlus/Images/Icons/clean_list1_a",
   ["clean_list2"]   = "Interface/AddOns/DisenchanterPlus/Images/Icons/clean_list2",
   ["clean_list2_a"] = "Interface/AddOns/DisenchanterPlus/Images/Icons/clean_list2_a",
+  ["wand"]          = "Interface/AddOns/DisenchanterPlus/Images/Icons/wand",
+  ["wand_a"]        = "Interface/AddOns/DisenchanterPlus/Images/Icons/wand_a",
+
 }
 
 disenchanterPlusMedias = {

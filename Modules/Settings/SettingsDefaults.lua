@@ -47,13 +47,30 @@ function DP_SettingsDefaults:Load()
           xOffset = 0,
           yOffset = 200
         },
+        enchantFrameOffset = {
+          xOffset = 0,
+          yOffset = 200
+        },
         permanentIgnoredItems = {
         },
         sessionIgnoredItems = {
         },
         onlySoulbound = false,
         showItemQuality = true,
-        auctionatorIntegration = false
+        auctionatorIntegration = false,
+        enchantEnabled = true,
+        filterWithoutMaterials = false,
+        enchantItemQuality = {
+          ["2"] = true,
+          ["3"] = true,
+          ["4"] = true,
+        },
+        enchantCraftType = {
+          ["1"] = true,
+          ["2"] = true,
+          ["3"] = true,
+          ["4"] = true,
+        }
       },
     },
   }

@@ -22,6 +22,9 @@ local DP_DisenchantGroup = DP_ModuleLoader:ImportModule("DP_DisenchantGroup")
 ---@type DP_IntegrationGroup
 local DP_IntegrationGroup = DP_ModuleLoader:ImportModule("DP_IntegrationGroup")
 
+---@type DP_EnchantGroup
+local DP_EnchantGroup = DP_ModuleLoader:ImportModule("DP_EnchantGroup")
+
 ---Get
 ---@param key string
 ---@param method string
@@ -42,6 +45,8 @@ function DP_ConfigGroups:Get(key, method, order)
     return DP_ConfigGroups:Method(DP_DisenchantGroup, method, order)
   elseif key == "keybindings" then
     return DP_ConfigGroups:Method(DP_KeybindingsGroup, method, order)
+  elseif key == "enchant" then
+    return DP_ConfigGroups:Method(DP_EnchantGroup, method, order)
   end
   return {}
 end

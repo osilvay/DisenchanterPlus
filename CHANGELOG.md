@@ -1,3 +1,8 @@
+## **Version 1.1.0.0**
+
+- Added enchanting functionality. You can now select an enchantment, an item, and enchant it continuously.
+- Bug fixes.
+
 ## **Version 1.0.8.4**
 
 - Minor changes in main window.

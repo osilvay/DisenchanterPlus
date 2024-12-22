@@ -71,7 +71,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   -- base frame ******************************************************************************************
   DisenchanterPlusBaseFrame = CreateFrame("Frame", "DisenchanterPlus_AutoDisenchant", UIParent, BackdropTemplateMixin and "BackdropTemplate")
   DisenchanterPlusBaseFrame:SetPoint("CENTER", UIParent, "CENTER", xOffset, yOffset)
-  DisenchanterPlusBaseFrame:SetFrameStrata("MEDIUM")
+  DisenchanterPlusBaseFrame:SetFrameStrata("DIALOG")
   DisenchanterPlusBaseFrame:SetFrameLevel(0)
   DisenchanterPlusBaseFrame:SetSize(424, 190)
   DisenchanterPlusBaseFrame:SetMovable(true)
@@ -83,9 +83,9 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   DisenchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, textFrameBgColorAlpha)
 
   -- texts
-  local titleText = DisenchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  local titleText = DisenchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
   titleText:SetTextColor(1, 1, 1)
-  titleText:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, 20, -20)
+  titleText:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, 20, -10)
   titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchanting"))
   DisenchanterPlusBaseFrame.titleText = titleText
 
@@ -358,7 +358,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
       keybind = " |cffeeeeff" .. DisenchanterPlus.db.char.general.acceptDisenchant .. "|r"
     end
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Proceed with disenchantment.") .. keybind, nil, nil, nil, nil, true)
+    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Proceed with the enchantment.") .. keybind, nil, nil, nil, nil, true)
     yesButton.text:SetTextColor(1, 1, 1)
     yesButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:14:14|t " .. DisenchanterPlus:DP_i18n("Proceed"))
   end)

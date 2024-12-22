@@ -22,6 +22,9 @@ local DP_EnchantingTooltip = DP_ModuleLoader:ImportModule("DP_EnchantingTooltip"
 ---@type DP_Database
 local DP_Database = DP_ModuleLoader:ImportModule("DP_Database")
 
+---@type DP_EnchantProcess
+local DP_EnchantProcess = DP_ModuleLoader:ImportModule("DP_EnchantProcess")
+
 function DP_Init:Initialize()
   DP_MinimapIcon:Initialize()
   DP_SlashCommands.RegisterSlashCommands()
@@ -33,5 +36,8 @@ function DP_Init:Initialize()
   C_Timer.After(3, function()
     DisenchanterPlus:Print(string.format("%s %s", DisenchanterPlus:DP_i18n("Initialized"), DisenchanterPlus:GetAddonColoredVersion()))
     DisenchanterPlus.started = true
+  end)
+  C_Timer.After(3, function()
+    DP_EnchantProcess:Initialize()
   end)
 end
