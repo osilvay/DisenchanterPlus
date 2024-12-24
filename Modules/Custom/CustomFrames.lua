@@ -95,3 +95,90 @@ function DP_CustomFrames:DisableTab(tabObject)
   tabObject.text:SetTextColor(0.5, 0.5, 0.5)
   tabObject.tabStatusTexture:SetTexture(tabInactivetexture)
 end
+
+---Draw custom button
+---@param buttonIndex string
+---@param name string
+---@param parent table
+---@param icon string
+---@param tooltipText string
+---@param x number
+---@param y number
+---@param testFn function
+---@param onClickFn function
+function DP_CustomFrames:DrawCustomCleanButton(buttonIndex, name, parent, icon, iconDisabled, tooltipText, x, y, testFn, onClickFn)
+  if not parent then return end
+  if not parent.customButtons then
+    parent.customButtons = {}
+  end
+
+  local customButton = CreateFrame("Button", name, parent, BackdropTemplateMixin and "BackdropTemplate")
+  customButton.buttonIndex = buttonIndex
+  customButton:SetSize(32, 22)
+  customButton:SetPoint("TOPRIGHT", parent, x, y)
+  customButton:SetScript("OnEnter", function(current)
+    GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
+    GameTooltip:SetText(tooltipText, nil, nil, nil, nil, true)
+    local textString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\" .. iconDisabled .. ":16:16|t "
+    if testFn() then
+      textString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\" .. icon .. ":16:16|t "
+    end
+    current.text:SetText(textString)
+    current:SetAlpha(0.8)
+  end)
+  customButton:SetScript("OnLeave", function(current)
+    GameTooltip:Hide()
+    local textString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\" .. iconDisabled .. ":16:16|t "
+    if testFn() then
+      textString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\" .. icon .. ":16:16|t "
+    end
+    current.text:SetText(textString)
+    current:SetAlpha(0.6)
+  end)
+  customButton:SetScript("OnClick", function(current)
+    onClickFn(buttonIndex, name, parent, icon, iconDisabled, testFn)
+  end)
+  customButton:SetBackdrop({
+    bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+    tile = true,
+    edgeSize = 2,
+    insets = { left = 1, right = 1, top = 1, bottom = 1 },
+  })
+  customButton:SetBackdropColor(0, 0, 0, 0)
+  customButton:SetAlpha(0.6)
+
+  local buttonText = customButton:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  local buttonString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\" .. iconDisabled .. ":16:16|t "
+  if testFn() then
+    buttonString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\" .. icon .. ":16:16|t "
+  end
+
+  buttonText:SetPoint("CENTER", customButton, 2, 0)
+  buttonText:SetJustifyH("CENTER")
+  buttonText:SetText(buttonString)
+  customButton.text = buttonText
+
+  parent.customButtons[name] = customButton
+  customButton:Show()
+end
+
+---Redraw craft button
+---@param buttonIndex string
+---@param name string
+---@param parent table
+---@param icon string
+---@param iconDisabled string
+---@param testFn function
+function DP_CustomFrames:RedrawCustomCleanButton(buttonIndex, name, parent, icon, iconDisabled, testFn)
+  if not parent then return end
+  local customButton = parent.customButtons[name]
+  if customButton then
+    local buttonString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\" .. iconDisabled .. ":16:16|t "
+    if testFn() then
+      buttonString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\" .. icon .. ":16:16|t "
+    end
+    customButton.text:SetText(buttonString)
+    C_Timer.After(0.1, function()
+    end)
+  end
+end

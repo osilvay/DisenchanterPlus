@@ -104,5 +104,6 @@ end
 ---Get tradeSkill lines
 ---@return table
 function DP_EnchantProcess:GetTradeSkillLines()
+  DP_EnchantProcess:PopulateTradeSkillLines()
   return TradeSkillLines
 end

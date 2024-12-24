@@ -136,10 +136,11 @@ function DP_BagsCheck:GetItemsInBags(equipLocation)
         if (itemType == DisenchanterPlus:DP_i18n("Armor") or itemType == DisenchanterPlus:DP_i18n("Weapon")) and
             DP_CustomFunctions:TableHasValue(itemQualityList, tostring(itemQuality)) then
           --DisenchanterPlus:Debug(equipLocation .. " = " .. itemEquipLoc)
+          local itemString, realItemName = containerInfo.hyperlink:match("|H(.*)|h%[(.*)%]|h")
           if not equipLocation or equipLocation == itemEquipLoc then
             numItemsInBag = numItemsInBag + 1
             itemsInBags[tostring(containerInfo.itemID)] = {
-              ItemName = itemName,
+              ItemName = realItemName,
               ItemIcon = itemTexture,
               ItemLink = containerInfo.hyperlink,
               ItemQuality = itemQuality,

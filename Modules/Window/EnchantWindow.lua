@@ -75,6 +75,7 @@ local enchantSelected            = nil
 local lastEnchantCurrent         = nil
 local itemSelected               = nil
 local lastItemCurrent            = nil
+local enchanting                 = false
 
 function DP_EnchantWindow:CreateEnchantWindow()
   local xOffset = DisenchanterPlus.db.char.general.enchantFrameOffset.xOffset
@@ -209,6 +210,17 @@ function DP_EnchantWindow:CreateEnchantWindow()
     yesButton.text:SetTextColor(0.6, 0.6, 0.6)
     yesButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\wand_a:14:14|t " .. DisenchanterPlus:DP_i18n("Enchant"))
   end)
+  yesButton:SetScript("PreClick", function(current)
+    if not enchanting then
+      DP_EnchantWindow:DisableEnchantButton()
+      C_Timer.After(5, function()
+        DP_EnchantWindow:EnableEnchantButton()
+        DP_EnchantWindow:PopulateEnchantList()
+        enchanting = false
+      end)
+      enchanting = true
+    end
+  end)
   EnchanterPlusBaseFrame.yesButton = yesButton
 
   local yesText = yesButton:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -217,6 +229,37 @@ function DP_EnchantWindow:CreateEnchantWindow()
   yesText:SetText(yesString)
   yesText:SetTextColor(0.6, 0.6, 0.6)
   yesButton.text = yesText
+
+  -- craft buttons ******************************************************************************************
+  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftTrivialButton", "trivial", DisenchanterPlus:DP_i18n("Trivial"), "4", -80, -10)
+  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftTrivialButton", "easy", DisenchanterPlus:DP_i18n("Easy"), "3", -105, -10)
+  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftTrivialButton", "medium", DisenchanterPlus:DP_i18n("Medium"), "2", -130, -10)
+  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftTrivialButton", "optimal", DisenchanterPlus:DP_i18n("Optimal"), "1", -155, -10)
+
+  -- custom buttons
+  DP_CustomFrames:DrawCustomCleanButton("5", "EnchantWindow_ShowWithMatsButton", EnchanterPlusBaseFrame, "eye", "eye_off",
+    DisenchanterPlus:DP_i18n("Filter without materials"), -180, -10,
+    function()
+      if DisenchanterPlus.db.char.general.filterWithoutMaterials == nil or DisenchanterPlus.db.char.general.filterWithoutMaterials == false then
+        return false
+      else
+        return true
+      end
+    end,
+    function(buttonIndex, name, parent, icon, iconDisabled, testFn)
+      if DisenchanterPlus.db.char.general.filterWithoutMaterials == nil or DisenchanterPlus.db.char.general.filterWithoutMaterials == false then
+        DisenchanterPlus.db.char.general.filterWithoutMaterials = true
+      else
+        DisenchanterPlus.db.char.general.filterWithoutMaterials = false
+      end
+      DP_CustomFrames:RedrawCustomCleanButton(buttonIndex, name, parent, icon, iconDisabled, testFn)
+      enchantSelected = nil
+      lastEnchantCurrent = nil
+      itemSelected = nil
+      lastItemCurrent = nil
+      DP_EnchantWindow:DisableEnchantButton()
+      DP_EnchantWindow:PopulateEnchantList()
+    end)
 
   -- tab1 ******************************************************************************************
   local tab1Button = DP_CustomFrames:CreateTab(EnchanterPlusBaseFrame, "EnchantWindow_Tab1", 1, DisenchanterPlus:DP_i18n("Enchant list"), true, 290, 24)
@@ -421,6 +464,8 @@ function DP_EnchantWindow.PopulateEnchantList()
             lastEnchantCurrent = current
             if lineInfo.NumAvailable and lineInfo.NumAvailable > 0 then
               current.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept_c:24:24|t")
+              itemSelected    = nil
+              lastItemCurrent = nil
               DP_EnchantWindow:PopulateItemList(EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID].enchant)
             else
               current.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\close_c:24:24|t")
@@ -724,8 +769,8 @@ function DP_EnchantWindow:CheckReadyToEnchant()
   local enchant = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID].enchant
   local itemName = EnchanterPlusBaseFrame.tabScrollContentFrame2.line[lastItemCurrent.lineID].itemName
 
-  local macro = "/cast %s\n/use %s\n/click StaticPopup1Button1\n"
-  EnchanterPlusBaseFrame.yesButton:SetAttribute("macrotext", string.format(macro, enchant, itemName))
+  local macro = string.format("/cast %s\n/use %s\n/click StaticPopup1Button1\n", enchant, itemName)
+  EnchanterPlusBaseFrame.yesButton:SetAttribute("macrotext", macro)
 
   C_Timer.After(0.2, function()
     DP_EnchantWindow:EnableEnchantButton()
@@ -752,5 +797,109 @@ end
 function DP_EnchantWindow:UpdateKeybindings()
   if DisenchanterPlus.db.char.general.confirmEnchant ~= nil then
     SetBindingClick(DisenchanterPlus.db.char.general.confirmEnchant, "EnchantWindow_YesButton", "LeftButton")
+  end
+end
+
+---Draw craft button
+---@param name string
+---@param icon string
+---@param tooltipText string
+---@param craftIndex string
+---@param x number
+---@param y number
+function DP_EnchantWindow:DrawCraftButton(name, icon, tooltipText, craftIndex, x, y)
+  if not EnchanterPlusBaseFrame.craftButton then
+    EnchanterPlusBaseFrame.craftButton = {}
+  end
+
+  local craftButton = CreateFrame("Button", name, EnchanterPlusBaseFrame, BackdropTemplateMixin and "BackdropTemplate")
+  craftButton.craftIndex = craftIndex
+  craftButton:SetSize(32, 22)
+  craftButton:SetPoint("TOPRIGHT", EnchanterPlusBaseFrame, x, y)
+  craftButton:SetScript("OnEnter", function(current)
+    GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
+    GameTooltip:SetText(tooltipText, nil, nil, nil, nil, true)
+    current.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\CraftTypes\\" .. icon .. "_fill:16:16|t ") --.. DisenchanterPlus:DP_i18n("Settings")
+    current:SetAlpha(0.8)
+  end)
+  craftButton:SetScript("OnLeave", function(current)
+    GameTooltip:Hide()
+    local craftString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\CraftTypes\\" .. icon .. ":16:16|t "
+    if DP_EnchantWindow:CheckCraftTypeStatus(current.craftIndex) then
+      craftString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\CraftTypes\\" .. icon .. "_fill:16:16|t "
+    end
+    current.text:SetText(craftString)
+    current:SetAlpha(0.6)
+  end)
+  craftButton:SetScript("OnClick", function(current)
+    DP_EnchantWindow:ClickCraftTypeButton(craftIndex, icon)
+  end)
+  craftButton:SetBackdrop({
+    bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+    tile = true,
+    edgeSize = 2,
+    insets = { left = 1, right = 1, top = 1, bottom = 1 },
+  })
+  craftButton:SetBackdropColor(0, 0, 0, 0)
+  craftButton:SetAlpha(0.6)
+
+  local craftText = craftButton:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  local craftString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\CraftTypes\\" .. icon .. ":16:16|t "
+  if DP_EnchantWindow:CheckCraftTypeStatus(craftIndex) then
+    craftString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\CraftTypes\\" .. icon .. "_fill:16:16|t "
+  end
+
+  craftText:SetPoint("CENTER", craftButton, 2, 0)
+  craftText:SetJustifyH("CENTER")
+  craftText:SetText(craftString)
+  craftButton.text = craftText
+
+  EnchanterPlusBaseFrame.craftButton[craftIndex] = craftButton
+  craftButton:Show()
+end
+
+---Chceck craft type
+---@param craftIndex string
+---@return boolean
+function DP_EnchantWindow:CheckCraftTypeStatus(craftIndex)
+  if DisenchanterPlus.db.char.general.enchantCraftType[craftIndex] == nil or DisenchanterPlus.db.char.general.enchantCraftType[craftIndex] == true then
+    return true
+  else
+    return false
+  end
+end
+
+---Click craft button
+---@param craftIndex string
+---@param icon string
+function DP_EnchantWindow:ClickCraftTypeButton(craftIndex, icon)
+  if DP_EnchantWindow:CheckCraftTypeStatus(craftIndex) then
+    DisenchanterPlus.db.char.general.enchantCraftType[craftIndex] = false
+  else
+    DisenchanterPlus.db.char.general.enchantCraftType[craftIndex] = true
+  end
+  DP_CustomSounds:PlayCustomSound("ChatScrollButton")
+  DP_EnchantWindow:RedrawCraftButton(craftIndex, icon)
+end
+
+---Redraw craft button
+---@param craftIndex string
+---@param icon string
+function DP_EnchantWindow:RedrawCraftButton(craftIndex, icon)
+  local craftButton = EnchanterPlusBaseFrame.craftButton[craftIndex]
+  if craftButton then
+    local craftString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\CraftTypes\\" .. icon .. ":16:16|t "
+    if DP_EnchantWindow:CheckCraftTypeStatus(craftIndex) then
+      craftString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\CraftTypes\\" .. icon .. "_fill:16:16|t "
+    end
+    craftButton.text:SetText(craftString)
+    C_Timer.After(0.1, function()
+      enchantSelected = nil
+      lastEnchantCurrent = nil
+      itemSelected = nil
+      lastItemCurrent = nil
+      DP_EnchantWindow:DisableEnchantButton()
+      DP_EnchantWindow:PopulateEnchantList()
+    end)
   end
 end
