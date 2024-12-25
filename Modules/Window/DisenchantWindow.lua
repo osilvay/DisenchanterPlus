@@ -71,7 +71,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   -- base frame ******************************************************************************************
   DisenchanterPlusBaseFrame = CreateFrame("Frame", "DisenchanterPlus_AutoDisenchant", UIParent, BackdropTemplateMixin and "BackdropTemplate")
   DisenchanterPlusBaseFrame:SetPoint("CENTER", UIParent, "CENTER", xOffset, yOffset)
-  DisenchanterPlusBaseFrame:SetFrameStrata("DIALOG")
+  DisenchanterPlusBaseFrame:SetFrameStrata("MEDIUM")
   DisenchanterPlusBaseFrame:SetFrameLevel(0)
   DisenchanterPlusBaseFrame:SetSize(424, 190)
   DisenchanterPlusBaseFrame:SetMovable(true)

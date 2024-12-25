@@ -187,7 +187,7 @@ L["enchant gloves"]                                                             
 L["enchant shield"]                                                                = "encantar escudo"
 L["Enchant"]                                                                       = "Encantar"
 L["Common"]                                                                        = "Común"
-L["Item enchanter"]                                                                = "Encantando de objetos"
+L["Item enchanter"]                                                                = "Encantado de objetos"
 L["Enchant list"]                                                                  = "Lista de encantamientos"
 L["Item list"]                                                                     = "Lista de objetos"
 L["Select"]                                                                        = "Seleccionar"
