@@ -1,6 +1,7 @@
-## **Version 1.1.0.0**
+## **Version 1.0.9.0**
 
-- Added enchanting functionality. You can now select an enchantment, an item, and enchant it continuously.
+- Added enchanting functionality. You can now select an enchantment, an item, and enchant it continuously without popups.
+- Fixed a bug with some events and sending items to the permanently ignore list (Road-block issue).
 - Bug fixes.
 
 ## **Version 1.0.8.4**

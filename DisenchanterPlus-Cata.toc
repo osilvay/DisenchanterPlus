@@ -39,8 +39,11 @@ Modules\Settings\KeybindingsTab\KeybindingsTab.lua
 Modules\Settings\KeybindingsTab\Groups\KeybindingsGroup.lua
 Modules\Settings\TooltipsTab\TooltipsTab.lua
 Modules\Settings\TooltipsTab\Groups\TooltipsGroup.lua
+Modules\Settings\EnchantTab\EnchantTab.lua
+Modules\Settings\EnchantTab\Groups\EnchantGroup.lua
 
 Modules\Window\DisenchantWindow.lua
+Modules\Window\EnchantWindow.lua
 Modules\Window\IgnoredWindow.lua
 Modules\Window\WelcomeWindow.lua
 Modules\Window\Tables\WelcomeHeader.lua
@@ -57,11 +60,18 @@ Modules\Custom\CustomMedias.lua
 Modules\Disenchant\DisenchantProcess.lua
 Modules\Disenchant\LootProcess.lua
 
+Modules\Enchant\EnchantProcess.lua
+
 Modules\Tooltip\EnchantingTooltip.lua
+
+Modules\Tradeskill\TradeskillCheck.lua
+
+Modules\Bags\BagsCheck.lua
 
 Modules\Database.lua
 Modules\Database\CataclysmDisenchantTable.lua
 Modules\Database\ClassicDisenchantTable.lua
+Modules\Database\EnchantPatterns.lua
 
 # Main
 DisenchanterPlus.lua

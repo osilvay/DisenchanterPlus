@@ -114,7 +114,7 @@ function DP_KeybindingsGroup:Config(order)
         type = "keybinding",
         order = 5,
         name = DisenchanterPlus:DP_i18n("Confirm enchant"),
-        desc = DisenchanterPlus:DP_i18n("Confirm enchant."),
+        desc = DisenchanterPlus:DP_i18n("Confirm enchant in selected item."),
         width = "full",
         disabled = function() return not DisenchanterPlus.db.char.general.keybindingEnabled end,
         get = function(info)

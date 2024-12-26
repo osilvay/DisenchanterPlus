@@ -86,7 +86,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   local titleText = DisenchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
   titleText:SetTextColor(1, 1, 1)
   titleText:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, 20, -10)
-  titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchanting"))
+  titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchant"))
   DisenchanterPlusBaseFrame.titleText = titleText
 
   local itemLeftText = DisenchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -101,6 +101,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   footText:SetText("")
   DisenchanterPlusBaseFrame.footText = footText
 
+  --[[
   local qualitiesText = DisenchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
   qualitiesText:SetTextColor(1, 1, 1)
   qualitiesText:SetAlpha(0.5)
@@ -116,8 +117,13 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
     GameTooltip:Hide()
     current:SetAlpha(0.5)
   end)
-
+  ]]
   DisenchanterPlusBaseFrame.qualitiesText = qualitiesText
+
+  -- qualities
+  DP_DisenchantWindow:DrawQualityButton("DienchantWindow_UncommonButton", "uncommon", DisenchanterPlus:DP_i18n("Uncommon"), "2", -115, -10)
+  DP_DisenchantWindow:DrawQualityButton("DienchantWindow_RareButton", "rare", DisenchanterPlus:DP_i18n("Rare"), "3", -140, -10)
+  DP_DisenchantWindow:DrawQualityButton("DienchantWindow_EpicButton", "epic", DisenchanterPlus:DP_i18n("Epic"), "4", -165, -10)
 
   -- item ******************************************************************************************
   local itemButton = CreateFrame("Button", "AutoDisenchant_ItemFrame", DisenchanterPlusBaseFrame)
@@ -546,7 +552,7 @@ function DP_DisenchantWindow:OpenWindow(bagItems, tradeskill)
 
       DisenchanterPlusBaseFrame.ignoreButton:Show()
       windowOpened = true
-      DP_DisenchantWindow:RedrawQualities()
+      --DP_DisenchantWindow:RedrawQualities()
     end)
   end
 
@@ -714,6 +720,7 @@ function DP_DisenchantWindow:RunKeybindIgnoreDisenchant()
   end
 end
 
+--[[
 function DP_DisenchantWindow:RedrawQualities()
   if DisenchanterPlus.db.char.general.showItemQuality then
     local qualities = DisenchanterPlus.db.char.general.itemQuality
@@ -739,18 +746,22 @@ function DP_DisenchantWindow:RedrawQualitiesTooltip()
   if qualities["4"] == nil or qualities["4"] then tooltipString = tooltipString .. " |cffa335ee" .. string.lower(DisenchanterPlus:DP_i18n("Epic")) .. "|r" end
   return tooltipString
 end
+]]
 
+---Update keybindings
 function DP_DisenchantWindow:UpdateKeybindings()
   if DisenchanterPlus.db.char.general.acceptDisenchant ~= nil then
     SetBindingClick(DisenchanterPlus.db.char.general.acceptDisenchant, "AutoDisenchant_YesButton", "LeftButton")
   end
 end
 
+---Close ignore window
 function DP_DisenchantWindow:CloseIgnoreWindow()
   local normalTexture = DisenchanterPlusBaseFrame.clearPermanentButton:CreateTexture(nil, nil, "UIPanelButtonUpTexture")
   DisenchanterPlusBaseFrame.clearPermanentButton:SetNormalTexture(normalTexture)
 end
 
+---Open ignore window
 function DP_DisenchantWindow:OpenIgnoreWindow()
   if DP_IgnoredWindow:IsWindowOpened() then
     DP_CustomSounds:PlayCustomSound("WindowClose")
@@ -760,5 +771,103 @@ function DP_DisenchantWindow:OpenIgnoreWindow()
     local highlightTexture = DisenchanterPlusBaseFrame.clearPermanentButton:CreateTexture(nil, nil, "UIPanelButtonHighlightTexture")
     DisenchanterPlusBaseFrame.clearPermanentButton:SetNormalTexture(highlightTexture)
     DP_IgnoredWindow:OpenWindow()
+  end
+end
+
+---Draw craft button
+---@param name string
+---@param icon string
+---@param tooltipText string
+---@param qualityIndex string
+---@param x number
+---@param y number
+function DP_DisenchantWindow:DrawQualityButton(name, icon, tooltipText, qualityIndex, x, y)
+  if not DisenchanterPlusBaseFrame.qualityButtons then
+    DisenchanterPlusBaseFrame.qualityButtons = {}
+  end
+
+  local qualityButton = CreateFrame("Button", name, DisenchanterPlusBaseFrame, BackdropTemplateMixin and "BackdropTemplate")
+  qualityButton.qualityIndex = qualityIndex
+  qualityButton:SetSize(32, 22)
+  qualityButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, x, y)
+  qualityButton:SetScript("OnEnter", function(current)
+    GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
+    GameTooltip:SetText(tooltipText, nil, nil, nil, nil, true)
+    current.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\" .. icon .. "_fill:16:16|t ") --.. DisenchanterPlus:DP_i18n("Settings")
+    current:SetAlpha(0.8)
+  end)
+  qualityButton:SetScript("OnLeave", function(current)
+    GameTooltip:Hide()
+    local qualityString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\" .. icon .. ":16:16|t "
+    if DP_DisenchantWindow:CheckQualityButtonStatus(current.qualityIndex) then
+      qualityString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\" .. icon .. "_fill:16:16|t "
+    end
+    current.text:SetText(qualityString)
+    current:SetAlpha(0.6)
+  end)
+  qualityButton:SetScript("OnClick", function(current)
+    DP_DisenchantWindow:ClickQualityButton(qualityIndex, icon)
+  end)
+  qualityButton:SetBackdrop({
+    bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+    tile = true,
+    edgeSize = 2,
+    insets = { left = 1, right = 1, top = 1, bottom = 1 },
+  })
+  qualityButton:SetBackdropColor(0, 0, 0, 0)
+  qualityButton:SetAlpha(0.6)
+
+  local craftText = qualityButton:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  local qualityString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\" .. icon .. ":16:16|t "
+  if DP_DisenchantWindow:CheckQualityButtonStatus(qualityIndex) then
+    qualityString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\" .. icon .. "_fill:16:16|t "
+  end
+
+  craftText:SetPoint("CENTER", qualityButton, 2, 0)
+  craftText:SetJustifyH("CENTER")
+  craftText:SetText(qualityString)
+  qualityButton.text = craftText
+
+  DisenchanterPlusBaseFrame.qualityButtons[qualityIndex] = qualityButton
+  qualityButton:Show()
+end
+
+---Chceck craft type
+---@param qualityIndex string
+---@return boolean
+function DP_DisenchantWindow:CheckQualityButtonStatus(qualityIndex)
+  if DisenchanterPlus.db.char.general.itemQuality[qualityIndex] == nil or DisenchanterPlus.db.char.general.itemQuality[qualityIndex] == true then
+    return true
+  else
+    return false
+  end
+end
+
+---Click craft button
+---@param qualityIndex string
+---@param icon string
+function DP_DisenchantWindow:ClickQualityButton(qualityIndex, icon)
+  if DP_DisenchantWindow:CheckQualityButtonStatus(qualityIndex) then
+    DisenchanterPlus.db.char.general.itemQuality[qualityIndex] = false
+  else
+    DisenchanterPlus.db.char.general.itemQuality[qualityIndex] = true
+  end
+  DP_CustomSounds:PlayCustomSound("ChatScrollButton")
+  DP_DisenchantWindow:RedrawQualityButton(qualityIndex, icon)
+end
+
+---Redraw craft button
+---@param qualityIndex string
+---@param icon string
+function DP_DisenchantWindow:RedrawQualityButton(qualityIndex, icon)
+  local craftButton = DisenchanterPlusBaseFrame.qualityButtons[qualityIndex]
+  if craftButton then
+    local qualityString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\" .. icon .. ":16:16|t "
+    if DP_DisenchantWindow:CheckQualityButtonStatus(qualityIndex) then
+      qualityString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\" .. icon .. "_fill:16:16|t "
+    end
+    craftButton.text:SetText(qualityString)
+    C_Timer.After(0.1, function()
+    end)
   end
 end

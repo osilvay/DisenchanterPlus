@@ -21,6 +21,7 @@ local disenchantSpellID = 13262
 local disenchanting = false
 local itemToDisenchant = false
 local autoDisenchantStatus = false
+local disenchantCastGUID = nil
 
 function DP_DisenchantProcess:Initialize()
   C_Timer.After(3, function()
@@ -100,6 +101,9 @@ end
 ---@param spellID number
 function DP_DisenchantProcess:UnitSpellCastSent(unit, target, castGUID, spellID)
   --DisenchanterPlus:Debug(string.format("UnitSpellCastStart : unitTarget = %s, castGUID = %s, spellID = %d", unitTarget, castGUID, spellID))
+  if unit == "player" and spellID == disenchantSpellID then
+    disenchantCastGUID = castGUID
+  end
 end
 
 ---Process spell cast succeded
@@ -187,6 +191,7 @@ end
 ---@param spellID number
 function DP_DisenchantProcess:UnitSpellCastFailed(unitTarget, castGUID, spellID)
   if unitTarget == "player" and spellID == disenchantSpellID then
+    if castGUID and (castGUID ~= disenchantCastGUID) then return end -- < this is the addition
     if not disenchanting then disenchanting = true end
     local _, itemLink, itemIcon, itemID = DP_DisenchantWindow:GetItemToDisenchant()
     if itemLink ~= nil and itemIcon ~= nil then

@@ -93,7 +93,7 @@ L["Are you sure you want to purge entire database?"]                            
 L["Maintenance"]                                                                   = true
 L["Stats"]                                                                         = true
 L["Available commands"]                                                            = true
-L["Auto disenchanting"]                                                            = true
+L["Auto disenchant"]                                                               = true
 L["Items left"]                                                                    = true
 L["Opens settings window."]                                                        = true
 L["Settings"]                                                                      = true
@@ -197,3 +197,7 @@ L["You don't have any materials for that enchantment."]                         
 L["There are no items for this enchantment."]                                      = true
 L["Select an enchantment from the left list."]                                     = true
 L["Select an item from the right list."]                                           = true
+L["Confirm enchant"]                                                               = true
+L["Confirm enchant in selected item."]                                             = true
+L["Middle Click"]                                                                  = true
+L["Open enchant window"]                                                           = true

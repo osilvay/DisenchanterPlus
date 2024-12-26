@@ -125,7 +125,9 @@ function DP_DisenchantGroup:Config(order)
         end,
         set = function(info, entry, value)
           DisenchanterPlus.db.char.general[info[#info]][entry] = value
-          DP_DisenchantWindow:RedrawQualities()
+          DP_DisenchantWindow:RedrawQualityButton("2", "uncommon")
+          DP_DisenchantWindow:RedrawQualityButton("3", "rare")
+          DP_DisenchantWindow:RedrawQualityButton("4", "epic")
         end,
       },
       clearSessionIgnoredItems = {
