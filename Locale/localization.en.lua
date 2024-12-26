@@ -201,3 +201,10 @@ L["Confirm enchant"]                                                            
 L["Confirm enchant in selected item."]                                             = true
 L["Middle Click"]                                                                  = true
 L["Open enchant window"]                                                           = true
+L["lesser magic wand"]                                                             = true
+L["greater magic wand"]                                                            = true
+L["lesser mystic wand"]                                                            = true
+L["greater mystic wand"]                                                           = true
+L["enchanted thorium bar"]                                                         = true
+L["enchanted leather"]                                                             = true
+L["smoking heart of the mountain"]                                                 = true

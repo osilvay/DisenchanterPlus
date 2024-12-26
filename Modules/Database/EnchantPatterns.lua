@@ -4,7 +4,7 @@ local DP_EnchantPatterns = DP_ModuleLoader:CreateModule("DP_EnchantPatterns")
 local L = LibStub("AceLocale-3.0"):GetLocale("DisenchanterPlus")
 
 local EquipLocationsForEnchantTypes = {}
-local EnchantTypeExclusions = {}
+local EnchantExclusions = {}
 
 function DP_EnchantPatterns:Initialize()
   EquipLocationsForEnchantTypes[DisenchanterPlus:DP_i18n("enchant bracer")] = {
@@ -32,10 +32,10 @@ function DP_EnchantPatterns:Initialize()
     "INVTYPE_SHIELD"
   }
 
-  EnchantTypeExclusions = {
+  EnchantExclusions = {
     DisenchanterPlus:DP_i18n("runed copper rod"),
-    DisenchanterPlus:DP_i18n("runed silver Rod"),
-    DisenchanterPlus:DP_i18n("runed golden Rod"),
+    DisenchanterPlus:DP_i18n("runed silver rod"),
+    DisenchanterPlus:DP_i18n("runed golden rod"),
     DisenchanterPlus:DP_i18n("runed truesilver rod"),
     DisenchanterPlus:DP_i18n("runed arcanite rod"),
     DisenchanterPlus:DP_i18n("minor wizard oil"),
@@ -45,13 +45,19 @@ function DP_EnchantPatterns:Initialize()
     DisenchanterPlus:DP_i18n("wizard oil"),
     DisenchanterPlus:DP_i18n("brilliant mana oil"),
     DisenchanterPlus:DP_i18n("brilliant wizard oil"),
+    DisenchanterPlus:DP_i18n("lesser magic wand"),
+    DisenchanterPlus:DP_i18n("greater magic wand"),
   }
 end
 
-function DP_EnchantPatterns:GetEnchantTypeExclusions()
-  return EnchantTypeExclusions
+---Get encant exclusions
+---@return table
+function DP_EnchantPatterns:GetEnchantExclusions()
+  return EnchantExclusions
 end
 
+---Get equip location for enchant types
+---@return table
 function DP_EnchantPatterns:GetEquipLocationsForEnchantTypes()
   return EquipLocationsForEnchantTypes
 end

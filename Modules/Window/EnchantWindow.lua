@@ -95,6 +95,14 @@ function DP_EnchantWindow:CreateEnchantWindow()
   EnchanterPlusBaseFrame:SetBackdrop(DEFAULT_DIALOG_BACKDROP)
   EnchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, textFrameBgColorAlpha)
 
+  -- title background
+  local titleBackground = CreateFrame("Frame", "EnchantWindow_BaseFrameTitleBackground", EnchanterPlusBaseFrame, BackdropTemplateMixin and "BackdropTemplate")
+  titleBackground:SetPoint("TOPLEFT", EnchanterPlusBaseFrame, "TOPLEFT", 0, 0)
+  titleBackground:SetSize(624, 32)
+  titleBackground:SetBackdrop(CUSTOM_DIALOG_BACKDROP)
+  titleBackground:SetBackdropColor(1, 1, 1, 1)
+  titleBackground:SetFrameStrata("LOW")
+
   -- texts
   local titleText = EnchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
   titleText:SetTextColor(1, 1, 1)
@@ -259,6 +267,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
       lastItemCurrent = nil
       DP_EnchantWindow:DisableEnchantButton()
       DP_EnchantWindow:PopulateEnchantList()
+      DP_EnchantWindow:PopulateItemList()
     end)
 
   -- tab1 ******************************************************************************************
@@ -340,9 +349,9 @@ function DP_EnchantWindow:CloseWindow()
     EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID]:SetBackdropColor(1, 1, 1, 0)
     enchantSelected = nil
     lastEnchantCurrent = nil
-    DP_EnchantWindow:PopulateItemList()
     itemSelected = nil
     lastItemCurrent = nil
+    DP_EnchantWindow:PopulateItemList()
   end
 
   DP_EnchantWindow:DisableEnchantButton()
@@ -401,18 +410,20 @@ function DP_EnchantWindow.PopulateEnchantList()
   end
 
   -- filter exclusions
-  local enchantTypeExclusions = DP_EnchantPatterns:GetEnchantTypeExclusions()
+  local enchantExclusions = DP_EnchantPatterns:GetEnchantExclusions()
 
   -- draw
   if numLinesInEnchantContainer > 0 then
     for i = 1, numLinesInEnchantContainer, 1 do
       enchantContainerLines[tostring(i)]:Hide()
+      enchantContainerLines[tostring(i)].acceptEnchantButton.text:SetTextColor(1, 1, 1, 0.1)
+      enchantContainerLines[tostring(i)].acceptEnchantButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept_a:24:24|t")
     end
   end
 
   for _, lineInfo in pairs(tradeSkillLines) do
     local filterByCraftType = DP_CustomFunctions:TableHasValue(craftTypesList, lineInfo.CraftType)
-    local filtarByExclusion = not DP_CustomFunctions:TableHasValue(enchantTypeExclusions, string.lower(lineInfo.CraftName))
+    local filtarByExclusion = not DP_CustomFunctions:TableHasValue(enchantExclusions, string.lower(lineInfo.CraftName))
     local filterByNumAvailable = (not DisenchanterPlus.db.char.general.filterWithoutMaterials or
       (DisenchanterPlus.db.char.general.filterWithoutMaterials and (lineInfo.NumAvailable and lineInfo.NumAvailable > 0))) and true or false
 
@@ -462,7 +473,7 @@ function DP_EnchantWindow.PopulateEnchantList()
             EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]:SetBackdropColor(1, 1, 1, 0.6)
             enchantSelected = current.lineID
             lastEnchantCurrent = current
-            if lineInfo.NumAvailable and lineInfo.NumAvailable > 0 then
+            if current.numAvailable and current.numAvailable > 0 then
               current.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept_c:24:24|t")
               itemSelected    = nil
               lastItemCurrent = nil
@@ -536,6 +547,7 @@ function DP_EnchantWindow.PopulateEnchantList()
       else
         local enchantLineFrame = enchantContainerLines[tostring(itemNum)]
         enchantLineFrame.enchantCorrect = false
+        enchantLineFrame.enchant = lineInfo.CraftName
 
         local acceptEnchantButton = enchantLineFrame.acceptEnchantButton
         acceptEnchantButton.lineID = itemNum
