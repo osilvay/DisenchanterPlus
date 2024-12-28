@@ -202,8 +202,8 @@ L["enchanted thorium bar"]                                                      
 L["enchanted leather"]                                                             = true
 L["smoking heart of the mountain"]                                                 = true
 L["runed copper rod"]                                                              = true
-L["runed silver Rod"]                                                              = true
-L["runed golden Rod"]                                                              = true
+L["runed silver rod"]                                                              = true
+L["runed golden rod"]                                                              = true
 L["runed truesilver rod"]                                                          = true
 L["runed arcanite rod"]                                                            = true
 L["minor wizard oil"]                                                              = true
