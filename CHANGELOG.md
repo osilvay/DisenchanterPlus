@@ -1,4 +1,8 @@
-## **Version 1.0.9.0**
+## **Version 1.0.9.0-alpha2**
+
+- Corrections for the German language.
+
+## **Version 1.0.9.0-alpha1**
 
 - Added enchanting functionality. You can now select an enchantment, an item, and enchant it continuously without popups (not tested in cataclysm yet).
 - Added strings for pending translations (de, fr and it)
