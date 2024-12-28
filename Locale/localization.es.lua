@@ -1,11 +1,12 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("DisenchanterPlus", "esES", false)
 if not L then return end
 
+L["Addon"]                                                                         = "Extensión"
+
 L["Delete character data"]                                                         = "Borrar datos de personaje"
 L["Are you sure you want to delete this character?"]                               = "¿Estás seguro de que quieres borrar este personaje?"
 L["This operation can not be undone..."]                                           = "Esta operación no se puede deshacer..."
 L["Memory usage"]                                                                  = "Uso de memoria"
-L["Addon"]                                                                         = "Extensión"
 L["Disabled"]                                                                      = "Deshabilitado"
 L["Enabled"]                                                                       = "Activado"
 L["Entries"]                                                                       = "Entradas"
