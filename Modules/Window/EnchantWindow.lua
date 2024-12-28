@@ -678,6 +678,7 @@ end
 ---@return table|nil
 function DP_EnchantWindow:GetEquipLocationFromEnchant(enchant)
   local equipoLocations = DP_EnchantPatterns:GetEquipLocationsForEnchantTypes()
+  --DisenchanterPlus:Dump(equipoLocations)
   for pattern, equipLocation in pairs(equipoLocations) do
     local search = string.find(string.lower(enchant), pattern)
     if search then

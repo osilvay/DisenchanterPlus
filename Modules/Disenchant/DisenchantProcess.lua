@@ -24,7 +24,7 @@ local autoDisenchantStatus = false
 local disenchantCastGUID = nil
 
 function DP_DisenchantProcess:Initialize()
-  C_Timer.After(3, function()
+  C_Timer.After(1, function()
     DP_DisenchantGroup:SaveSessionIgnoreList({})
 
     if DisenchanterPlus.db.char.general.autoDisenchantEnabled then

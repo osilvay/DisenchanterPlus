@@ -132,7 +132,8 @@ function DP_BagsCheck:GetItemsInBags(equipLocation)
       local containerInfo = C_Container.GetContainerItemInfo(bagIndex, slot)
 
       if containerInfo ~= nil and containerInfo.itemID ~= nil then
-        local itemName, _, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, _, itemEquipLoc, itemTexture, _, _, _, _, _, _, _ = C_Item.GetItemInfo(containerInfo.itemID)
+        local _, _, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, _, itemEquipLoc, itemTexture, _, _, _, _, _, _, _ = C_Item.GetItemInfo(containerInfo.itemID)
+
         if (itemType == DisenchanterPlus:DP_i18n("Armor") or itemType == DisenchanterPlus:DP_i18n("Weapon")) and
             DP_CustomFunctions:TableHasValue(itemQualityList, tostring(itemQuality)) then
           --DisenchanterPlus:Debug(equipLocation .. " = " .. itemEquipLoc)

@@ -24,9 +24,16 @@ function DP_DisenchanterPlusEvents:Initialize()
   DisenchanterPlus:RegisterEvent("ITEM_LOCKED", _DP_DisenchanterPlusEvents.ItemLocked)
   DisenchanterPlus:RegisterEvent("PLAYER_REGEN_DISABLED", _DP_DisenchanterPlusEvents.PlayerRegenDisabled)
   DisenchanterPlus:RegisterEvent("PLAYER_REGEN_ENABLED", _DP_DisenchanterPlusEvents.PlayerRegenEnabled)
-  DisenchanterPlus:RegisterEvent("CRAFT_SHOW", _DP_DisenchanterPlusEvents.CraftShow)
-  DisenchanterPlus:RegisterEvent("CRAFT_CLOSE", _DP_DisenchanterPlusEvents.CraftClose)
 
+  if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
+    -- classic_era
+    DisenchanterPlus:RegisterEvent("CRAFT_SHOW", _DP_DisenchanterPlusEvents.CraftShow)
+    DisenchanterPlus:RegisterEvent("CRAFT_CLOSE", _DP_DisenchanterPlusEvents.CraftClose)
+  elseif DisenchanterPlus.IsCataclysm then
+    -- cataclysm
+    DisenchanterPlus:RegisterEvent("TRADE_SKILL_SHOW", _DP_DisenchanterPlusEvents.CraftShow)
+    DisenchanterPlus:RegisterEvent("TRADE_SKILL_CLOSE", _DP_DisenchanterPlusEvents.CraftClose)
+  end
   DP_LootProcess:Initialize()
   DP_DisenchantProcess:Initialize()
 end

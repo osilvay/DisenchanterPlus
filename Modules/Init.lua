@@ -33,11 +33,11 @@ function DP_Init:Initialize()
   DP_Database:Initialize()
   DP_EnchantingTooltip:Initialize()
   DP_DisenchanterPlusEvents:Initialize()
-  C_Timer.After(3, function()
+  C_Timer.After(1, function()
     DisenchanterPlus:Print(string.format("%s %s", DisenchanterPlus:DP_i18n("Initialized"), DisenchanterPlus:GetAddonColoredVersion()))
     DisenchanterPlus.started = true
   end)
-  C_Timer.After(3, function()
+  C_Timer.After(1, function()
     DP_EnchantProcess:Initialize()
   end)
 end
