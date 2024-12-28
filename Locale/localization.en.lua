@@ -155,37 +155,16 @@ L["Stopped"]                                                                    
 L["Running"]                                                                       = true
 L["|cfffc8686Error!|r |T%d:0|t%s Can not be disenchanted. Added to ignored list."] = true
 L["Proceed"]                                                                       = true
-L["runed copper rod"]                                                              = true
-L["runed silver Rod"]                                                              = true
-L["runed golden Rod"]                                                              = true
-L["runed truesilver rod"]                                                          = true
-L["runed arcanite rod"]                                                            = true
-L["minor wizard oil"]                                                              = true
-L["minor mana oil"]                                                                = true
-L["lesser wizard oil"]                                                             = true
-L["lesser mana oil"]                                                               = true
-L["wizard oil"]                                                                    = true
-L["brilliant mana oil"]                                                            = true
-L["brilliant wizard oil"]                                                          = true
 L["Enable enchant items."]                                                         = true
 L["Filter without materials"]                                                      = true
 L["Filter enchants without materials."]                                            = true
 L["Craft types"]                                                                   = true
 L["Only these types of crafting."]                                                 = true
-L["Item qualities"]                                                                = true
 L["Only enchant these item qualities."]                                            = true
 L["Optimal"]                                                                       = true
 L["Medium"]                                                                        = true
 L["Easy"]                                                                          = true
 L["Trivial"]                                                                       = true
-L["enchant bracer"]                                                                = true
-L["enchant cloak"]                                                                 = true
-L["enchant weapon"]                                                                = true
-L["enchant 2h weapon"]                                                             = true
-L["enchant chest"]                                                                 = true
-L["enchant boots"]                                                                 = true
-L["enchant gloves"]                                                                = true
-L["enchant shield"]                                                                = true
 L["Enchant"]                                                                       = true
 L["Common"]                                                                        = true
 L["Item enchanter"]                                                                = true
@@ -201,6 +180,20 @@ L["Confirm enchant"]                                                            
 L["Confirm enchant in selected item."]                                             = true
 L["Middle Click"]                                                                  = true
 L["Open enchant window"]                                                           = true
+L["Reagents"]                                                                      = true
+L["Refresh enchants"]                                                              = true
+
+-- suffixes for enchantments
+L["enchant bracer"]                                                                = true
+L["enchant cloak"]                                                                 = true
+L["enchant weapon"]                                                                = true
+L["enchant 2h weapon"]                                                             = true
+L["enchant chest"]                                                                 = true
+L["enchant boots"]                                                                 = true
+L["enchant gloves"]                                                                = true
+L["enchant shield"]                                                                = true
+
+-- item exclusions
 L["lesser magic wand"]                                                             = true
 L["greater magic wand"]                                                            = true
 L["lesser mystic wand"]                                                            = true
@@ -208,5 +201,15 @@ L["greater mystic wand"]                                                        
 L["enchanted thorium bar"]                                                         = true
 L["enchanted leather"]                                                             = true
 L["smoking heart of the mountain"]                                                 = true
-L["Reagents"]                                                                      = true
-L["Refresh enchants"]                                                              = true
+L["runed copper rod"]                                                              = true
+L["runed silver Rod"]                                                              = true
+L["runed golden Rod"]                                                              = true
+L["runed truesilver rod"]                                                          = true
+L["runed arcanite rod"]                                                            = true
+L["minor wizard oil"]                                                              = true
+L["minor mana oil"]                                                                = true
+L["lesser wizard oil"]                                                             = true
+L["lesser mana oil"]                                                               = true
+L["wizard oil"]                                                                    = true
+L["brilliant mana oil"]                                                            = true
+L["brilliant wizard oil"]                                                          = true
