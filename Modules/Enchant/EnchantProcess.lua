@@ -51,11 +51,17 @@ function DP_EnchantProcess:IsCraftingWindowOpen()
   return IsCraftingWindowOpen
 end
 
+---Set crafting window open
+---@param status boolean
+function DP_EnchantProcess:SetCraftingWindowOpen(status)
+  IsCraftingWindowOpen = status
+end
+
 ---Craft show event
 function DP_EnchantProcess:CraftShow()
   if IsTradeSkillKnown and TradeSkillInfo and not IsCraftingWindowOpen then
     --DisenchanterPlus:Info("Opening |cffffcc00" .. TradeSkillInfo.Name .. "|r")
-    IsCraftingWindowOpen = true
+    DP_EnchantProcess:SetCraftingWindowOpen(true)
     DP_EnchantProcess:PopulateTradeSkillLines()
     --DP_EnchantProcess:PopulateItemsInBags()
     C_Timer.After(0.1, function()
@@ -70,7 +76,7 @@ end
 function DP_EnchantProcess:CraftClose()
   if IsTradeSkillKnown and TradeSkillInfo and IsCraftingWindowOpen then
     --DisenchanterPlus:Info("Closing |cffffcc00" .. TradeSkillInfo.Name .. "|r")
-    IsCraftingWindowOpen = false
+    DP_EnchantProcess:SetCraftingWindowOpen(false)
     C_Timer.After(0.1, function()
       DP_EnchantProcess:CloseEnchantWindow()
     end)
@@ -83,7 +89,7 @@ function DP_EnchantProcess:OpenEnchantWindow()
   if not DP_EnchantWindow:IsWindowOpened() then
     DP_EnchantWindow:OpenWindow()
   end
-  DP_EnchantWindow.PopulateEnchantList()
+  DP_EnchantWindow:PopulateEnchantList()
 end
 
 ---Close enchant window

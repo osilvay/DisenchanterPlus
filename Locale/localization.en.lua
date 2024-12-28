@@ -208,3 +208,5 @@ L["greater mystic wand"]                                                        
 L["enchanted thorium bar"]                                                         = true
 L["enchanted leather"]                                                             = true
 L["smoking heart of the mountain"]                                                 = true
+L["Reagents"]                                                                      = true
+L["Refresh enchants"]                                                              = true

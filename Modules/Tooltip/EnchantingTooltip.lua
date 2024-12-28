@@ -321,7 +321,7 @@ function DP_EnchantingTooltip:ProcessEnchantingItem(itemID)
         currentPercent = currentPercent + tonumber(percentage)
 
         local percentageText = string.format("|cfff1f1f1%s|r", percentage or "0")
-        local leftTextLine = string.format(" + |T%d:0|t %s |cff91c1f1x|r|cff6191f1%d|r", itemIcon or "", itemLink or "", items or 0)
+        local leftTextLine = string.format(" + |T%d:0|t %s |cff91c1f1x|r |cff6191f1%d|r", itemIcon or "", itemLink or "", items or 0)
         local rightTextLine = string.format("%s", percentageText) .. " |cfff1b131%|r"
         GameTooltip:AddDoubleLine(leftTextLine, rightTextLine)
         index = index + 1

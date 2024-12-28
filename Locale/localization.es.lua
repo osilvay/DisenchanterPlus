@@ -207,3 +207,5 @@ L["greater mystic wand"]                                                        
 L["enchanted thorium bar"]                                                         = "lingote de torio encantado"
 L["enchanted leather"]                                                             = "cuero encantado"
 L["smoking heart of the mountain"]                                                 = "corazón de la montaña humeante"
+L["Reagents"]                                                                      = "Reactivos"
+L["Refresh enchants"]                                                              = "Recargar encantamientos"

@@ -55,19 +55,20 @@ disenchanterPlusIcons = {
   ["clean_list2_a"] = "Interface/AddOns/DisenchanterPlus/Images/Icons/clean_list2_a",
   ["wand"]          = "Interface/AddOns/DisenchanterPlus/Images/Icons/wand",
   ["wand_a"]        = "Interface/AddOns/DisenchanterPlus/Images/Icons/wand_a",
-
+  ["refresh"]       = "Interface/AddOns/DisenchanterPlus/Images/Icons/wand",
+  ["refresh_a"]     = "Interface/AddOns/DisenchanterPlus/Images/Icons/wand_a",
 }
 
 disenchanterPlusMedias = {
-  ["disenchanterplus"] = "Interface/AddOns/DisenchanterPlus/Images/Menus/disenchanterplus",
-  ["disenchanterplus_a"] = "Interface/AddOns/DisenchanterPlus/Images/Menus/disenchanterplus",
-  ["disenchanterplus_paused"] = "Interface/AddOns/DisenchanterPlus/Images/Menus/disenchanterplus_paused",
-  ["disenchanterplus_running"] = "Interface/AddOns/DisenchanterPlus/Images/Menus/disenchanterplus_running",
+  ["disenchanterplus"]          = "Interface/AddOns/DisenchanterPlus/Images/Menus/disenchanterplus",
+  ["disenchanterplus_a"]        = "Interface/AddOns/DisenchanterPlus/Images/Menus/disenchanterplus",
+  ["disenchanterplus_paused"]   = "Interface/AddOns/DisenchanterPlus/Images/Menus/disenchanterplus_paused",
+  ["disenchanterplus_running"]  = "Interface/AddOns/DisenchanterPlus/Images/Menus/disenchanterplus_running",
   ["disenchanterplus_disabled"] = "Interface/AddOns/DisenchanterPlus/Images/Menus/disenchanterplus_disabled",
-  ["Alliance_icon"] = "Interface/AddOns/DisenchanterPlus/Images/Factions/icon_alliance",
-  ["Horde_icon"] = "Interface/AddOns/DisenchanterPlus/Images/Factions/icon_horde",
-  ["alliance_flag"] = "Interface/AddOns/DisenchanterPlus/Images/Factions/flag_alliance",
-  ["horde_flag"] = "Interface/AddOns/DisenchanterPlus/Images/Factions/flag_horde",
+  ["Alliance_icon"]             = "Interface/AddOns/DisenchanterPlus/Images/Factions/icon_alliance",
+  ["Horde_icon"]                = "Interface/AddOns/DisenchanterPlus/Images/Factions/icon_horde",
+  ["alliance_flag"]             = "Interface/AddOns/DisenchanterPlus/Images/Factions/flag_alliance",
+  ["horde_flag"]                = "Interface/AddOns/DisenchanterPlus/Images/Factions/flag_horde",
 }
 
 ---Return icon

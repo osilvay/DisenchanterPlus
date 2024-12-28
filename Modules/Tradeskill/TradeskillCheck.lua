@@ -70,13 +70,28 @@ end
 function DP_TradeskillCheck:GetTradeSkillLines()
   local lines = {}
   for index = 1, GetNumCrafts(), 1 do
+    local reagents = {}
+    local numReagents = GetCraftNumReagents(index);
+    local totalReagents = 0;
+    for i = 1, numReagents, 1 do
+      local name, texturePath, numRequired, numHave = GetCraftReagentInfo(index, i);
+      totalReagents = totalReagents + numRequired;
+      table.insert(reagents, {
+        Name = name,
+        Texture = texturePath,
+        Count = numRequired,
+        PlayerCount = numHave,
+      })
+    end;
+
     local craftName, craftSubSpellName, craftType, numAvailable, isExpanded, trainingPointCost, requiredLevel = GetCraftInfo(index)
     local tradeSkillLine = {
       CraftName = craftName,
       CraftSubSpellName = craftSubSpellName,
       CraftType = craftType,
       RequiredLevel = requiredLevel,
-      NumAvailable = numAvailable
+      NumAvailable = numAvailable,
+      Reagents = reagents
     }
     table.insert(lines, tradeSkillLine)
   end
