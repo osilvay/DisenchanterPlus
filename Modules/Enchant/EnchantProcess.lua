@@ -38,7 +38,7 @@ function DP_EnchantProcess:UnitSpellCastSucceeded(unitTarget, castGUID, spellID)
   IsCorrectTradeSkill = false
   if not InCombatLockdown() and not UnitAffectingCombat("player") then
     local tradeSkillName = DP_TradeSkillCheck:FindTradeSkillBySpellID(spellID)
-    DisenchanterPlus:Debug(tradeSkillName or "nil")
+    --DisenchanterPlus:Debug(tradeSkillName or "nil")
     if tradeSkillName then
       IsCorrectTradeSkill = true
     end
@@ -73,13 +73,13 @@ function DP_EnchantProcess:CraftShow()
   end
 
   DP_EnchantProcess:CheckTradeskill()
-  DisenchanterPlus:Debug("|cffffcc00" .. TradeSkillInfo.Name .. "|r = " .. tostring(IsTradeSkillKnown))
+  --DisenchanterPlus:Debug("|cffffcc00" .. TradeSkillInfo.Name .. "|r = " .. tostring(IsTradeSkillKnown))
   --DisenchanterPlus:Dump(TradeSkillInfo)
 
   if IsTradeSkillKnown and TradeSkillInfo
       --and TradeSkillInfo.Name ~= DisenchanterPlus:DP_i18n("Enchanting")
       and not IsCraftingWindowOpen then
-    DisenchanterPlus:Debug("Opening |cffffcc00" .. TradeSkillInfo.Name .. "|r")
+    --DisenchanterPlus:Debug("Opening |cffffcc00" .. TradeSkillInfo.Name .. "|r")
     local tradeSkillLines = DP_EnchantProcess:GetTradeSkillLines()
     --DisenchanterPlus:Dump(tradeSkillLines)
 
