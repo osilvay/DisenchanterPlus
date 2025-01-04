@@ -5,6 +5,7 @@
 Doc
 Releases
 packager.bat
-packagerExclusions.lst
 pkgmeta.yaml
 *.zip
+*.lst
+DisenchanterPlus-Cata.toc

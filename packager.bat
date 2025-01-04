@@ -15,5 +15,5 @@ set "ClassicFilename=DisenchanterPlus-v%Build%-classic.zip"
 del "%Directory%Releases\%ClassicFilename%.zip"
 del "%Directory%Releases\%CataFilename%.zip"
 
-7z a -x!DisenchanterPlus-Cata.toc -x@packagerExclusions.lst -xr@packagerExclusions.lst -tzip ".\Releases\%ClassicFilename%" "%Directory%" -aoa
-7z a -x!DisenchanterPlus-Classic.toc -x@packagerExclusions.lst -xr@packagerExclusions.lst -tzip ".\Releases\%CataFilename%" "%Directory%" -aoa
+7z a -x@packagerExclusions-Classic.lst -xr@packagerExclusions-Classic.lst -tzip ".\Releases\%ClassicFilename%" "%Directory%" -aoa
+7z a -x@packagerExclusions-Cata.lst -xr@packagerExclusions-Cata.lst -tzip ".\Releases\%CataFilename%" "%Directory%" -aoa

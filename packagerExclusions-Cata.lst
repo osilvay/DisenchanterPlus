@@ -1,0 +1,11 @@
+.vscode
+.gitignore
+.version
+.git
+Doc
+Releases
+packager.bat
+pkgmeta.yaml
+*.zip
+*.lst
+DisenchanterPlus-Classic.toc
