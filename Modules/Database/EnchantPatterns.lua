@@ -38,6 +38,7 @@ function DP_EnchantPatterns:Initialize()
     DisenchanterPlus:DP_i18n("runed golden rod"),
     DisenchanterPlus:DP_i18n("runed truesilver rod"),
     DisenchanterPlus:DP_i18n("runed arcanite rod"),
+
     DisenchanterPlus:DP_i18n("minor wizard oil"),
     DisenchanterPlus:DP_i18n("minor mana oil"),
     DisenchanterPlus:DP_i18n("lesser wizard oil"),
@@ -45,8 +46,15 @@ function DP_EnchantPatterns:Initialize()
     DisenchanterPlus:DP_i18n("wizard oil"),
     DisenchanterPlus:DP_i18n("brilliant mana oil"),
     DisenchanterPlus:DP_i18n("brilliant wizard oil"),
+
+    DisenchanterPlus:DP_i18n("enchanted thorium bar"),
+    DisenchanterPlus:DP_i18n("enchanted leather"),
+    DisenchanterPlus:DP_i18n("smoking heart of the mountain"),
+
     DisenchanterPlus:DP_i18n("lesser magic wand"),
     DisenchanterPlus:DP_i18n("greater magic wand"),
+    DisenchanterPlus:DP_i18n("lesser mystic wand"),
+    DisenchanterPlus:DP_i18n("greater mystic wand"),
   }
 end
 

@@ -4,8 +4,8 @@ local DP_LootProcess = DP_ModuleLoader:CreateModule("DP_LootProcess")
 ---@type DP_Database
 local DP_Database = DP_ModuleLoader:ImportModule("DP_Database")
 
----@type DP_TradeskillCheck
-local DP_TradeskillCheck = DP_ModuleLoader:ImportModule("DP_TradeskillCheck")
+---@type DP_TradeSkillCheck
+local DP_TradeSkillCheck = DP_ModuleLoader:ImportModule("DP_TradeSkillCheck")
 
 local MaxLootReadyCount = 0
 local LootingInProgress = false
@@ -104,7 +104,7 @@ end
 ---@param spellID number
 function DP_LootProcess:UnitSpellCastSucceeded(unitTarget, castGUID, spellID)
   if unitTarget == "player" then
-    local tradeSkillName = DP_TradeskillCheck:FindTradeSkillBySpellID(spellID)
+    local tradeSkillName = DP_TradeSkillCheck:FindTradeSkillBySpellID(spellID)
     --DisenchanterPlus:Debug(proffesionName .. " : " .. spellID)
     if tradeSkillName then
       IsTradeSkill = true

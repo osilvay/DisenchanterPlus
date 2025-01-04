@@ -64,7 +64,7 @@ Modules\Enchant\EnchantProcess.lua
 
 Modules\Tooltip\EnchantingTooltip.lua
 
-Modules\Tradeskill\TradeskillCheck.lua
+Modules\TradeSkill\TradeSkillCheck.lua
 
 Modules\Bags\BagsCheck.lua
 

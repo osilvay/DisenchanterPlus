@@ -10,8 +10,8 @@ local DP_DisenchantGroup = DP_ModuleLoader:ImportModule("DP_DisenchantGroup")
 ---@type DP_DisenchantWindow
 local DP_DisenchantWindow = DP_ModuleLoader:ImportModule("DP_DisenchantWindow")
 
----@type DP_TradeskillCheck
-local DP_TradeskillCheck = DP_ModuleLoader:ImportModule("DP_TradeskillCheck")
+---@type DP_TradeSkillCheck
+local DP_TradeSkillCheck = DP_ModuleLoader:ImportModule("DP_TradeSkillCheck")
 
 ---@type DP_BagsCheck
 local DP_BagsCheck = DP_ModuleLoader:ImportModule("DP_BagsCheck")
@@ -287,7 +287,7 @@ function DP_DisenchantProcess:OpenDisenchantWindow()
 
   --local tradeskill = DP_DisenchantProcess:CheckTradeskill()
   --if tradeskill == nil then return end
-  local tradeskill = DP_TradeskillCheck:GetTradeSkill() or {}
+  local tradeskill = DP_TradeSkillCheck:GetTradeSkill() or {}
   DP_DisenchantWindow:OpenWindow({}, tradeskill)
   DP_DisenchantWindow:UpdateItemsLeft(DP_BagsCheck:GetTotalItemsInBagsToDisenchant())
 end
@@ -307,7 +307,7 @@ function DP_DisenchantProcess:ScanForItems()
   --DisenchanterPlus:Debug("Has tradeskill ?" .. tostring(disenchantIsKnown))
   if not disenchantIsKnown then return end
 
-  local tradeskill = DP_TradeskillCheck:GetTradeSkill() or {}
+  local tradeskill = DP_TradeSkillCheck:GetTradeSkill() or {}
   --DisenchanterPlus:Debug("Has tradeskill : " .. tostring(tradeskill))
 
   if tradeskill == nil then return end

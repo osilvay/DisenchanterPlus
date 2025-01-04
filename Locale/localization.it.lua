@@ -1,11 +1,18 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("DisenchanterPlus", "itIT", false)
 if not L then return end
 
+-- localization
+L["Addon"]                                                                         = "Addon"
+L["Disenchanting"]                                                                 = "Disenchanting"
+L["Enchanting"]                                                                    = "Enchanting"
+L["Armor"]                                                                         = "Armor"
+L["Weapon"]                                                                        = "Weapon"
+
+-- texts
 L["Delete character data"]                                                         = "Delete character data"
 L["Are you sure you want to delete this character?"]                               = "Are you sure you want to delete this character?"
 L["This operation can not be undone..."]                                           = "This operation can not be undone..."
 L["Memory usage"]                                                                  = "Memory usage"
-L["Addon"]                                                                         = "Addon"
 L["Disabled"]                                                                      = "Disabled"
 L["Enabled"]                                                                       = "Enabled"
 L["Entries"]                                                                       = "Entries"
@@ -21,8 +28,6 @@ L["Alt + Shift + Control"]                                                      
 L["Shift + Control"]                                                               = "Shift + Control"
 L["Accept"]                                                                        = "Accept"
 L["Cancel"]                                                                        = "Cancel"
-L["Armor"]                                                                         = "Armor"
-L["Weapon"]                                                                        = "Weapon"
 L["All"]                                                                           = "All"
 L["Items"]                                                                         = "Items"
 L["Dusts"]                                                                         = "Dusts"
@@ -35,7 +40,6 @@ L["Clean database"]                                                             
 L["Purge database"]                                                                = "Purge database"
 L["Starting auto disenchant"]                                                      = "Starting auto disenchant"
 L["Cancelling auto disenchant"]                                                    = "Cancelling auto disenchant"
-L["Enchanting"]                                                                    = "Enchanting"
 L["Initialized"]                                                                   = "Initialized"
 L["Left Click"]                                                                    = "Left Click"
 L["Open main window"]                                                              = "Open main window"
@@ -114,7 +118,6 @@ L["No data"]                                                                    
 L["Items in session list cleared."]                                                = "Items in session list cleared."
 L["Items in permanent ignore list cleared."]                                       = "Items in permanent ignore list cleared."
 L["more"]                                                                          = "more"
-L["Disenchanting"]                                                                 = "Disenchanting"
 L["Session ignore list cleared"]                                                   = "Session ignore list cleared"
 L["Permanent ignore list cleared"]                                                 = "Permanent ignore list cleared"
 L["No item found to disenchant."]                                                  = "No item found to disenchant."
@@ -169,7 +172,7 @@ L["Enchant"]                                                                    
 L["Common"]                                                                        = "Common"
 L["Item enchanter"]                                                                = "Item enchanter"
 L["Enchant list"]                                                                  = "Enchant list"
-L["Item list"]                                                                     = "Item list"
+L["Items in bags"]                                                                 = "Items in bags"
 L["Select"]                                                                        = "Select"
 L["You can start to enchant."]                                                     = "You can start to enchant."
 L["You don't have any materials for that enchantment."]                            = "You don't have any materials for that enchantment."

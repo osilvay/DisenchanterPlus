@@ -89,7 +89,9 @@ function _DP_DisenchanterPlusEvents.PlayerRegenEnabled(_)
 end
 
 function _DP_DisenchanterPlusEvents.CraftShow(_)
-  DP_EnchantProcess:CraftShow()
+  C_Timer.After(0.5, function()
+    DP_EnchantProcess:CraftShow()
+  end)
 end
 
 function _DP_DisenchanterPlusEvents.CraftClose(_)

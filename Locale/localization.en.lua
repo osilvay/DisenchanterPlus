@@ -170,7 +170,7 @@ L["Enchant"]                                                                    
 L["Common"]                                                                        = true
 L["Item enchanter"]                                                                = true
 L["Enchant list"]                                                                  = true
-L["Item list"]                                                                     = true
+L["Items in bags"]                                                                 = true
 L["Select"]                                                                        = true
 L["You can start to enchant."]                                                     = true
 L["You don't have any materials for that enchantment."]                            = true

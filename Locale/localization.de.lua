@@ -1,12 +1,14 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("DisenchanterPlus", "deDE", false)
 if not L then return end
 
+-- localization
 L["Addon"]                                                                         = "Addon"
 L["Disenchant"]                                                                    = "Entzaubern"
 L["Enchanting"]                                                                    = "Verzauberkunst"
 L["Armor"]                                                                         = "Rüstung"
 L["Weapon"]                                                                        = "Waffe"
 
+-- texts
 L["Delete character data"]                                                         = "Delete character data"
 L["Are you sure you want to delete this character?"]                               = "Are you sure you want to delete this character?"
 L["This operation can not be undone..."]                                           = "This operation can not be undone..."
@@ -170,7 +172,7 @@ L["Enchant"]                                                                    
 L["Common"]                                                                        = "Common"
 L["Item enchanter"]                                                                = "Item enchanter"
 L["Enchant list"]                                                                  = "Enchant list"
-L["Item list"]                                                                     = "Item list"
+L["Items in bags"]                                                                 = "Items in bags"
 L["Select"]                                                                        = "Select"
 L["You can start to enchant."]                                                     = "You can start to enchant."
 L["You don't have any materials for that enchantment."]                            = "You don't have any materials for that enchantment."
@@ -190,7 +192,7 @@ L["enchant cloak"]                                                              
 L["enchant weapon"]                                                                = "waffe"
 L["enchant 2h weapon"]                                                             = "zweihandwaffe"
 L["enchant chest"]                                                                 = "brust"
-L["enchant boots"]                                                                 = "schuhe"
+L["enchant boots"]                                                                 = "stiefel"
 L["enchant gloves"]                                                                = "handschuhe"
 L["enchant shield"]                                                                = "schild"
 

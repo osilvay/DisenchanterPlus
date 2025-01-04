@@ -4,26 +4,30 @@ local DP_EnchantProcess = DP_ModuleLoader:CreateModule("DP_EnchantProcess")
 ---@type DP_EnchantWindow
 local DP_EnchantWindow = DP_ModuleLoader:ImportModule("DP_EnchantWindow")
 
----@type DP_TradeskillCheck
-local DP_TradeskillCheck = DP_ModuleLoader:ImportModule("DP_TradeskillCheck")
+---@type DP_TradeSkillCheck
+local DP_TradeSkillCheck = DP_ModuleLoader:ImportModule("DP_TradeSkillCheck")
 
 ---@type DP_BagsCheck
 local DP_BagsCheck = DP_ModuleLoader:ImportModule("DP_BagsCheck")
 
 local IsTradeSkillKnown = false
+local IsCorrectTradeSkill = false
 local IsCraftingWindowOpen = false
 local TradeSkillInfo
-local TradeSkillLines = {}
-local ItemsInBags = {}
 
 ---Initialize
 function DP_EnchantProcess:Initialize()
   C_Timer.After(1, function()
-    TradeSkillInfo = DP_TradeskillCheck:GetTradeSkill()
-    if TradeSkillInfo then
-      IsTradeSkillKnown = true
-    end
+    DP_EnchantProcess:CheckTradeskill()
   end)
+end
+
+---Check tradeskill
+function DP_EnchantProcess:CheckTradeskill()
+  TradeSkillInfo = DP_TradeSkillCheck:GetTradeSkill()
+  if TradeSkillInfo then
+    IsTradeSkillKnown = true
+  end
 end
 
 ---Unit spell cast succeeded event
@@ -31,11 +35,13 @@ end
 ---@param castGUID string
 ---@param spellID number
 function DP_EnchantProcess:UnitSpellCastSucceeded(unitTarget, castGUID, spellID)
-  local tradeSkillName = DP_TradeskillCheck:FindTradeSkillBySpellID(spellID)
-  if tradeSkillName then
-    IsTradeSkillKnown = true
-  else
-    IsTradeSkillKnown = false
+  IsCorrectTradeSkill = false
+  if not InCombatLockdown() and not UnitAffectingCombat("player") then
+    local tradeSkillName = DP_TradeSkillCheck:FindTradeSkillBySpellID(spellID)
+    DisenchanterPlus:Debug(tradeSkillName or "nil")
+    if tradeSkillName then
+      IsCorrectTradeSkill = true
+    end
   end
 end
 
@@ -59,10 +65,25 @@ end
 
 ---Craft show event
 function DP_EnchantProcess:CraftShow()
-  if IsTradeSkillKnown and TradeSkillInfo and not IsCraftingWindowOpen then
-    --DisenchanterPlus:Info("Opening |cffffcc00" .. TradeSkillInfo.Name .. "|r")
+  if not IsCorrectTradeSkill then
+    if DP_EnchantProcess:IsCraftingWindowOpen() then
+      DP_EnchantProcess:CraftClose()
+    end
+    return
+  end
+
+  DP_EnchantProcess:CheckTradeskill()
+  DisenchanterPlus:Debug("|cffffcc00" .. TradeSkillInfo.Name .. "|r = " .. tostring(IsTradeSkillKnown))
+  --DisenchanterPlus:Dump(TradeSkillInfo)
+
+  if IsTradeSkillKnown and TradeSkillInfo
+      --and TradeSkillInfo.Name ~= DisenchanterPlus:DP_i18n("Enchanting")
+      and not IsCraftingWindowOpen then
+    DisenchanterPlus:Debug("Opening |cffffcc00" .. TradeSkillInfo.Name .. "|r")
+    local tradeSkillLines = DP_EnchantProcess:GetTradeSkillLines()
+    --DisenchanterPlus:Dump(tradeSkillLines)
+
     DP_EnchantProcess:SetCraftingWindowOpen(true)
-    DP_EnchantProcess:PopulateTradeSkillLines()
     --DP_EnchantProcess:PopulateItemsInBags()
     C_Timer.After(0.1, function()
       DP_EnchantProcess:OpenEnchantWindow()
@@ -100,16 +121,8 @@ function DP_EnchantProcess:CloseEnchantWindow()
   end
 end
 
----Populate tradeSkill lines
-function DP_EnchantProcess:PopulateTradeSkillLines()
-  if IsCraftingWindowOpen then
-    TradeSkillLines = DP_TradeskillCheck:GetTradeSkillLines()
-  end
-end
-
 ---Get tradeSkill lines
 ---@return table
 function DP_EnchantProcess:GetTradeSkillLines()
-  DP_EnchantProcess:PopulateTradeSkillLines()
-  return TradeSkillLines
+  return DP_TradeSkillCheck:GetTradeSkillLines()
 end

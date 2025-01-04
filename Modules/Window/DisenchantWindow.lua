@@ -58,7 +58,7 @@ local rareIconFill = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\
 local epicIconFill = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Qualities\\epic_fill:16:16|t"
 
 local DisenchanterPlusBaseFrame
-local textFrameBgColorAlpha = 0.85
+local textFrameBgColorAlpha = 0.75
 local windowOpened = false
 local itemToDisenchant
 local ignoreWindowOpened = false
@@ -71,7 +71,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   -- base frame ******************************************************************************************
   DisenchanterPlusBaseFrame = CreateFrame("Frame", "DisenchanterPlus_AutoDisenchant", UIParent, BackdropTemplateMixin and "BackdropTemplate")
   DisenchanterPlusBaseFrame:SetPoint("CENTER", UIParent, "CENTER", xOffset, yOffset)
-  DisenchanterPlusBaseFrame:SetFrameStrata("MEDIUM")
+  DisenchanterPlusBaseFrame:SetFrameStrata("HIGH")
   DisenchanterPlusBaseFrame:SetFrameLevel(0)
   DisenchanterPlusBaseFrame:SetSize(424, 190)
   DisenchanterPlusBaseFrame:SetMovable(true)
@@ -80,14 +80,15 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   DisenchanterPlusBaseFrame:SetScript("OnMouseUp", DP_DisenchantWindow.OnDragStop)
 
   DisenchanterPlusBaseFrame:SetBackdrop(DEFAULT_DIALOG_BACKDROP)
-  DisenchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, textFrameBgColorAlpha)
+  DisenchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, 0)
 
-  local titleBar = CreateFrame("Button", "EnchantWindow_BaseFrameTitleBackground", DisenchanterPlusBaseFrame)
+  local titleBar = CreateFrame("Frame", "EnchantWindow_BaseFrameTitleBackground", DisenchanterPlusBaseFrame)
   titleBar:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, "TOPLEFT", 0, 0)
   titleBar:SetSize(424, 36)
   titleBar:SetMovable(false)
-  titleBar:SetFrameStrata("LOW")
+  titleBar:SetFrameStrata("BACKGROUND")
   titleBar:SetFrameLevel(1)
+  DisenchanterPlusBaseFrame.titleBar = titleBar
 
   local titleBackground = titleBar:CreateTexture(nil, "OVERLAY")
   titleBackground:SetTexture("Interface\\Addons\\DisenchanterPlus\\Images\\Textures\\progressbar")
@@ -95,7 +96,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   titleBackground:SetHeight(34)
   titleBackground:SetWidth(416)
   titleBackground:SetPoint("LEFT", titleBar, 4, -2)
-  titleBackground:SetGradient("HORIZONTAL", CreateColor(0.82, 0.30, 0.91, 0.95), CreateColor(0.851, 0.565, 0.902, 0.95))
+  titleBackground:SetGradient("HORIZONTAL", CreateColor(0.8, 0.30, 0.9, 0.8), CreateColor(0.8, 0.5, 0.9, 0.8))
   titleBar.titleBackground = titleBackground
 
   local windowBackground = titleBar:CreateTexture(nil, "OVERLAY")
@@ -104,14 +105,13 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   windowBackground:SetHeight(150)
   windowBackground:SetWidth(416)
   windowBackground:SetPoint("TOPLEFT", titleBar, 4, -36)
-  windowBackground:SetGradient("VERTICAL", CreateColor(0, 0, 0, 0.5), CreateColor(0.6, 0.6, 0.6, 0.5))
+  windowBackground:SetGradient("VERTICAL", CreateColor(0, 0, 0, 0.8), CreateColor(0.6, 0.6, 0.6, 0.8))
   titleBar.windowBackground = windowBackground
 
   -- texts
   local titleText = DisenchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-  titleText:SetTextColor(1, 1, 1)
-  titleText:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, 20, -12)
-  --string.format("|T%s:%s:%s|t ", "Interface\\Addons\\DisenchanterPlus\\Images\\Menus\\disenchanterplus", 16, 16)
+  titleText:SetTextColor(0.8, 0.8, 0.8)
+  titleText:SetPoint("LEFT", titleBar, 20, -2)
   titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchant"))
   DisenchanterPlusBaseFrame.titleText = titleText
 

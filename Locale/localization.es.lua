@@ -1,8 +1,14 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("DisenchanterPlus", "esES", false)
 if not L then return end
 
+-- localization
 L["Addon"]                                                                         = "Extensión"
+L["Disenchanting"]                                                                 = "Desencantando"
+L["Enchanting"]                                                                    = "Encantamiento"
+L["Armor"]                                                                         = "Armadura"
+L["Weapon"]                                                                        = "Arma"
 
+-- texts
 L["Delete character data"]                                                         = "Borrar datos de personaje"
 L["Are you sure you want to delete this character?"]                               = "¿Estás seguro de que quieres borrar este personaje?"
 L["This operation can not be undone..."]                                           = "Esta operación no se puede deshacer..."
@@ -22,8 +28,6 @@ L["Alt + Shift + Control"]                                                      
 L["Shift + Control"]                                                               = "Mayúsculas + Control"
 L["Accept"]                                                                        = "Aceptar"
 L["Cancel"]                                                                        = "Cancelar"
-L["Armor"]                                                                         = "Armadura"
-L["Weapon"]                                                                        = "Arma"
 L["All"]                                                                           = "Todos"
 L["Items"]                                                                         = "Objetos"
 L["Dusts"]                                                                         = "Polvos"
@@ -36,7 +40,6 @@ L["Clean database"]                                                             
 L["Purge database"]                                                                = "Purgar base de datos"
 L["Starting auto disenchant"]                                                      = "Iniciando el desencantado automático"
 L["Cancelling auto disenchant"]                                                    = "Cancelando el desencantado automático"
-L["Enchanting"]                                                                    = "Encantamiento"
 L["Initialized"]                                                                   = "Inicializado"
 L["Left Click"]                                                                    = "Clic Izquierdo"
 L["Open main window"]                                                              = "Abrir la ventana principal"
@@ -115,7 +118,6 @@ L["No data"]                                                                    
 L["Items in session list cleared."]                                                = "Objetos en la lista de sesión limpiados."
 L["Items in permanent ignore list cleared."]                                       = "Objetos en la lista de ignorados permanentemente limpiados."
 L["more"]                                                                          = "más"
-L["Disenchanting"]                                                                 = "Desencantando"
 L["Session ignore list cleared"]                                                   = "Lista de ignorados en sesión vaciada"
 L["Permanent ignore list cleared"]                                                 = "Lista de ignorados permanentemente vaciada"
 L["No item found to disenchant."]                                                  = "No se ha encontrado un objeto para desencantar."
@@ -170,7 +172,7 @@ L["Enchant"]                                                                    
 L["Common"]                                                                        = "Común"
 L["Item enchanter"]                                                                = "Encantado de objetos"
 L["Enchant list"]                                                                  = "Lista de encantamientos"
-L["Item list"]                                                                     = "Lista de objetos"
+L["Items in bags"]                                                                 = "Objetos en bolsas"
 L["Select"]                                                                        = "Seleccionar"
 L["You can start to enchant."]                                                     = "Puedes empezar a encantar."
 L["You don't have any materials for that enchantment."]                            = "No tienes suficientes materiales para encantar."

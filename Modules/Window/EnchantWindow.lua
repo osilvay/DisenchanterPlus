@@ -64,7 +64,7 @@ local easy                       = "ff40c040"
 local trivial                    = "ff808080"
 
 local EnchanterPlusBaseFrame
-local textFrameBgColorAlpha      = 0.85
+local textFrameBgColorAlpha      = 0.80
 local windowOpened               = false
 local itemToDisenchant
 local ignoreWindowOpened         = false
@@ -85,8 +85,8 @@ function DP_EnchantWindow:CreateEnchantWindow()
   -- base frame ******************************************************************************************
   EnchanterPlusBaseFrame = CreateFrame("Frame", "EnchantWindow_BaseFrame", UIParent, BackdropTemplateMixin and "BackdropTemplate")
   EnchanterPlusBaseFrame:SetPoint("CENTER", UIParent, "CENTER", xOffset, yOffset)
-  EnchanterPlusBaseFrame:SetFrameStrata("DIALOG")
-  EnchanterPlusBaseFrame:SetFrameLevel(0)
+  EnchanterPlusBaseFrame:SetFrameStrata("HIGH")
+  EnchanterPlusBaseFrame:SetFrameLevel(1)
   EnchanterPlusBaseFrame:SetSize(624, 320)
   EnchanterPlusBaseFrame:SetMovable(true)
   EnchanterPlusBaseFrame:EnableMouse(true)
@@ -94,45 +94,38 @@ function DP_EnchantWindow:CreateEnchantWindow()
   EnchanterPlusBaseFrame:SetScript("OnMouseUp", DP_EnchantWindow.OnDragStop)
 
   EnchanterPlusBaseFrame:SetBackdrop(DEFAULT_DIALOG_BACKDROP)
-  EnchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, textFrameBgColorAlpha)
+  EnchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, 0)
 
-  -- title background
-  --local titleBackground = CreateFrame("Frame", "EnchantWindow_BaseFrameTitleBackground", EnchanterPlusBaseFrame, BackdropTemplateMixin and "BackdropTemplate")
-  --titleBackground:SetPoint("TOPLEFT", EnchanterPlusBaseFrame, "TOPLEFT", 0, 0)
-  --titleBackground:SetSize(624, 40)
-  --titleBackground:SetBackdropColor(0.3, 0.5, 1, 1)
-  --titleBackground:SetFrameStrata("LOW")
-
-  local titleBar = CreateFrame("Button", "EnchantWindow_BaseFrameTitleBackground", EnchanterPlusBaseFrame)
+  local titleBar = CreateFrame("Frame", "EnchantWindow_BaseFrameTitleBackground", EnchanterPlusBaseFrame)
   titleBar:SetPoint("TOPLEFT", EnchanterPlusBaseFrame, "TOPLEFT", 0, 0)
   titleBar:SetSize(624, 36)
   titleBar:SetMovable(false)
-  titleBar:SetFrameStrata("LOW")
+  titleBar:SetFrameStrata("BACKGROUND")
   titleBar:SetFrameLevel(1)
+  EnchanterPlusBaseFrame.titleBar = titleBar
 
-  local titleBackground = titleBar:CreateTexture(nil, "OVERLAY")
+  local titleBackground = titleBar:CreateTexture(nil, "BACKGROUND")
   titleBackground:SetTexture("Interface\\Addons\\DisenchanterPlus\\Images\\Textures\\progressbar")
-  titleBackground:SetDrawLayer("OVERLAY", 4)
+  titleBackground:SetDrawLayer("BACKGROUND", 4)
   titleBackground:SetHeight(34)
   titleBackground:SetWidth(616)
   titleBackground:SetPoint("LEFT", titleBar, 4, -2)
-  titleBackground:SetGradient("HORIZONTAL", CreateColor(0.82, 0.30, 0.91, 0.95), CreateColor(0.851, 0.565, 0.902, 0.95))
+  titleBackground:SetGradient("HORIZONTAL", CreateColor(0.8, 0.30, 0.9, 0.8), CreateColor(0.8, 0.5, 0.9, 0.8))
   titleBar.titleBackground = titleBackground
 
-  local windowBackground = titleBar:CreateTexture(nil, "OVERLAY")
+  local windowBackground = titleBar:CreateTexture(nil, "BACKGROUND")
   windowBackground:SetTexture("Interface\\Addons\\DisenchanterPlus\\Images\\Textures\\progressbar")
-  windowBackground:SetDrawLayer("OVERLAY", 4)
+  windowBackground:SetDrawLayer("BACKGROUND", 4)
   windowBackground:SetHeight(278)
   windowBackground:SetWidth(616)
   windowBackground:SetPoint("TOPLEFT", titleBar, 4, -36)
-  windowBackground:SetGradient("VERTICAL", CreateColor(0, 0, 0, 0.5), CreateColor(0.6, 0.6, 0.6, 0.5))
+  windowBackground:SetGradient("VERTICAL", CreateColor(0, 0, 0, 0.8), CreateColor(0.6, 0.6, 0.6, 0.8))
   titleBar.windowBackground = windowBackground
 
   -- texts
   local titleText = EnchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-  titleText:SetTextColor(1, 1, 1)
-  titleText:SetPoint("TOPLEFT", EnchanterPlusBaseFrame, 20, -12)
-  --string.format("|T%s:%s:%s|t ", "Interface\\Addons\\DisenchanterPlus\\Images\\Menus\\disenchanterplus", 16, 16)
+  titleText:SetTextColor(0.8, 0.8, 0.8)
+  titleText:SetPoint("LEFT", titleBar, 20, -2)
   titleText:SetText(DisenchanterPlus:DP_i18n("Item enchanter"))
   EnchanterPlusBaseFrame.titleText = titleText
 
@@ -335,7 +328,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
   tabScrollFrame1:Show()
 
   -- tab2 ******************************************************************************************
-  local tab2Button = DP_CustomFrames:CreateTab(EnchanterPlusBaseFrame, "EnchantWindow_Tab2", 1, DisenchanterPlus:DP_i18n("Item list"), true, 302, 24)
+  local tab2Button = DP_CustomFrames:CreateTab(EnchanterPlusBaseFrame, "EnchantWindow_Tab2", 1, DisenchanterPlus:DP_i18n("Items in bags"), true, 302, 24)
   tab2Button:SetPoint("TOPRIGHT", EnchanterPlusBaseFrame, "TOPRIGHT", -8, -38);
 
   EnchanterPlusBaseFrame.tab2Button = tab2Button
@@ -468,13 +461,15 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
     end
   end
 
+  --DisenchanterPlus:Dump(enchantExclusions)
   for _, lineInfo in pairs(tradeSkillLines) do
     local filterByCraftType = DP_CustomFunctions:TableHasValue(craftTypesList, lineInfo.CraftType)
-    local filtarByExclusion = not DP_CustomFunctions:TableHasValue(enchantExclusions, string.lower(lineInfo.CraftName))
+    local filtarByExclusion = DP_CustomFunctions:TableHasValue(enchantExclusions, string.lower(lineInfo.CraftName))
+    --DisenchanterPlus:Debug(string.format("%s = %s", lineInfo.CraftName, tostring(filtarByExclusion)))
     local filterByNumAvailable = (not DisenchanterPlus.db.char.general.filterWithoutMaterials or
       (DisenchanterPlus.db.char.general.filterWithoutMaterials and (lineInfo.NumAvailable and lineInfo.NumAvailable > 0))) and true or false
 
-    if filterByCraftType and filtarByExclusion and filterByNumAvailable then
+    if filterByCraftType and not filtarByExclusion and filterByNumAvailable then
       if enchantContainerLines[tostring(itemNum)] == nil then
         local enchantLineFrame = CreateFrame("Frame", "EnchantWindow_EnchantLine" .. itemNum, EnchanterPlusBaseFrame.tabScrollContentFrame1, BackdropTemplateMixin and "BackdropTemplate")
         enchantLineFrame.enchantCorrect = false
@@ -489,23 +484,29 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
         local acceptEnchantButton = CreateFrame("Button", "EnchantWindow_SelectButton" .. itemNum, enchantLineFrame, BackdropTemplateMixin and "BackdropTemplate")
         acceptEnchantButton.lineID = itemNum
         acceptEnchantButton.numAvailable = lineInfo.NumAvailable or 0
+        acceptEnchantButton.craftType = lineInfo.CraftType
+        acceptEnchantButton.craftName = lineInfo.CraftName
+        acceptEnchantButton.craftDescription = lineInfo.CraftDescription
         acceptEnchantButton.reagents = lineInfo.Reagents
 
         acceptEnchantButton:SetSize(32, 32)
         acceptEnchantButton:SetPoint("RIGHT", enchantLineFrame, -40, 0)
         acceptEnchantButton:SetScript("OnEnter", function(current)
           GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-          --local tooltipString = "|cffffffff" .. DisenchanterPlus:DP_i18n("Reagents") .. "|r\n\n"
-          GameTooltip:AddLine(DisenchanterPlus:DP_i18n("Reagents"))
+          GameTooltip:SetWidth(140)
+
+          local name = string.format("|c%s%s|r", DP_EnchantWindow:GetColorByCraftType(current.craftType), current.craftName)
+          GameTooltip:AddLine(name, 1, 1, 1, true)
+          GameTooltip:AddLine(current.craftDescription, 0.8, 0.8, 0.8, true)
+          GameTooltip:AddLine("\n")
+          GameTooltip:AddLine(DisenchanterPlus:DP_i18n("Reagents") .. ":", 1, 0.8, 0, true)
+
           local reagents = current.reagents or {}
           for _, reagent in pairs(reagents) do
             local reagentLeftLine = string.format(" + |T%d:0|t |cffe1e1e1%s|r", reagent.Texture or 134400, reagent.Name)
             local reagentRightLine = string.format("|cff91c1f1x|r |cff6191f1%d|r", reagent.Count)
             GameTooltip:AddLine(reagentLeftLine .. " " .. reagentRightLine)
-            --tooltipString = tooltipString .. reagentLine
           end
-          --GameTooltip:SetText(tooltipString, nil, nil, nil, nil, false)
-          --GameTooltip:AddDoubleLine()
           GameTooltip:Show()
           if enchantSelected ~= current.lineID then
             current.text:SetTextColor(1, 1, 1, 0.6)
@@ -616,6 +617,9 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
         local acceptEnchantButton = enchantLineFrame.acceptEnchantButton
         acceptEnchantButton.lineID = itemNum
         acceptEnchantButton.numAvailable = lineInfo.NumAvailable or 0
+        acceptEnchantButton.craftType = lineInfo.CraftType
+        acceptEnchantButton.craftName = lineInfo.CraftName
+        acceptEnchantButton.craftDescription = lineInfo.CraftDescription
         acceptEnchantButton.reagents = lineInfo.Reagents
 
         if lastSelectedEnchant == lineInfo.CraftName then
@@ -650,6 +654,7 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
     itemSelected = nil
     lastItemCurrent = nil
     DP_EnchantWindow:DisableEnchantButton()
+    DP_EnchantWindow:PopulateEnchantList()
     DP_EnchantWindow:PopulateItemList()
   end
 
