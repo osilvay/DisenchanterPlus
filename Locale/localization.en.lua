@@ -1,8 +1,15 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("DisenchanterPlus", "enUS", true)
 if not L then return end
 
+-- localization
 L["Addon"]                                                                         = true
+L["Disenchant"]                                                                    = true
+L["Enchanting"]                                                                    = true
+L["Armor"]                                                                         = true
+L["Weapon"]                                                                        = true
+L["Enchanting Vellum"]                                                             = true
 
+--texts
 L["Delete character data"]                                                         = true
 L["Are you sure you want to delete this character?"]                               = true
 L["This operation can not be undone..."]                                           = true
@@ -22,8 +29,6 @@ L["Alt + Shift + Control"]                                                      
 L["Shift + Control"]                                                               = true
 L["Accept"]                                                                        = true
 L["Cancel"]                                                                        = true
-L["Armor"]                                                                         = true
-L["Weapon"]                                                                        = true
 L["All"]                                                                           = true
 L["Items"]                                                                         = true
 L["Dusts"]                                                                         = true
@@ -36,7 +41,6 @@ L["Clean database"]                                                             
 L["Purge database"]                                                                = true
 L["Starting auto disenchant"]                                                      = true
 L["Cancelling auto disenchant"]                                                    = true
-L["Enchanting"]                                                                    = true
 L["Initialized"]                                                                   = true
 L["Left Click"]                                                                    = true
 L["Open main window"]                                                              = true
@@ -45,7 +49,6 @@ L["Open settings window"]                                                       
 L["Advanced"]                                                                      = true
 L["Enable debug"]                                                                  = true
 L["General"]                                                                       = true
-L["Disenchant"]                                                                    = true
 L["Enable"]                                                                        = true
 L["Enable auto disenchant items."]                                                 = true
 L["Auto disenchant update time"]                                                   = true

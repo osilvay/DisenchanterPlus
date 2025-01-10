@@ -3,7 +3,7 @@ if not L then return end
 
 -- localization
 L["Addon"]                                                                         = "Extensión"
-L["Disenchanting"]                                                                 = "Desencantando"
+L["Disenchant"]                                                                    = "Desencantar"
 L["Enchanting"]                                                                    = "Encantamiento"
 L["Armor"]                                                                         = "Armadura"
 L["Weapon"]                                                                        = "Arma"
@@ -49,7 +49,6 @@ L["Open settings window"]                                                       
 L["Advanced"]                                                                      = "Avanzado"
 L["Enable debug"]                                                                  = "Habilitar depuración"
 L["General"]                                                                       = "General"
-L["Disenchant"]                                                                    = "Desencantar"
 L["Enable"]                                                                        = "Activar"
 L["Enable auto disenchant items."]                                                 = "Activa desencantar automáticamente objetos."
 L["Auto disenchant update time"]                                                   = "Tiempo de actualización automática del desencantado"
@@ -119,6 +118,7 @@ L["No data"]                                                                    
 L["Items in session list cleared."]                                                = "Objetos en la lista de sesión limpiados."
 L["Items in permanent ignore list cleared."]                                       = "Objetos en la lista de ignorados permanentemente limpiados."
 L["more"]                                                                          = "más"
+L["Disenchanting"]                                                                 = "Desencantando"
 L["Session ignore list cleared"]                                                   = "Lista de ignorados en sesión vaciada"
 L["Permanent ignore list cleared"]                                                 = "Lista de ignorados permanentemente vaciada"
 L["No item found to disenchant."]                                                  = "No se ha encontrado un objeto para desencantar."
@@ -231,5 +231,3 @@ L["lesser mana oil"]      = "aceite inferior de maná"
 L["wizard oil"]           = "aceite de zahorí"
 L["brilliant mana oil"]   = "aceite de maná resplandeciente"
 L["brilliant wizard oil"] = "aceite brillante de zahorí"
-
--- for cataclism
