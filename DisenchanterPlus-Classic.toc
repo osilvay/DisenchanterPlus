@@ -8,19 +8,19 @@
 ## DefaultState: enabled
 ## LoadOnDemand: 0
 
+# init
 embeds.xml
-Locale\Locales.xml
-
-# ModuleLoader
 Modules\ModuleLoader.lua
+Modules\VersionCheck.lua
+
+# Locales
+Locale\Locales.xml
 
 # Modules
 Modules\EventHandler.lua
 Modules\Init.lua
 Modules\MinimapIcon.lua
 Modules\SlashCommands.lua
-Modules\VersionCheck.lua
-
 Modules\Events\DisenchanterPlusEvents.lua
 
 Modules\Settings\Settings.lua
@@ -73,5 +73,5 @@ Modules\Database\CataclysmDisenchantTable.lua
 Modules\Database\ClassicDisenchantTable.lua
 Modules\Database\EnchantPatterns.lua
 
-# Main
+-- mainfile
 DisenchanterPlus.lua
