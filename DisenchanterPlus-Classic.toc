@@ -73,5 +73,5 @@ Modules\Database\CataclysmDisenchantTable.lua
 Modules\Database\ClassicDisenchantTable.lua
 Modules\Database\EnchantPatterns.lua
 
--- mainfile
+# mainfile
 DisenchanterPlus.lua
