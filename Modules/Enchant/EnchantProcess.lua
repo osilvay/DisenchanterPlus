@@ -65,6 +65,7 @@ end
 
 ---Craft show event
 function DP_EnchantProcess:CraftShow()
+  if not DisenchanterPlus.db.char.general.enchantEnabled then return end
   if not IsCorrectTradeSkill then
     if DP_EnchantProcess:IsCraftingWindowOpen() then
       DP_EnchantProcess:CraftClose()
@@ -95,6 +96,7 @@ end
 
 ---Craft close event
 function DP_EnchantProcess:CraftClose()
+  if not DisenchanterPlus.db.char.general.enchantEnabled then return end
   if IsTradeSkillKnown and TradeSkillInfo and IsCraftingWindowOpen then
     --DisenchanterPlus:Info("Closing |cffffcc00" .. TradeSkillInfo.Name .. "|r")
     DP_EnchantProcess:SetCraftingWindowOpen(false)

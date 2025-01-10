@@ -1,6 +1,6 @@
 ## Interface: 11506
-## Title: |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v1.0.9.0|r
-## Version: Version 1.0.8.4
+## Title: |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v1.0.9.1|r
+## Version: Version 1.0.9.1
 ## Notes: Disenchanter tool for wow classic era
 ## Author: osilvay
 ## SavedVariables: DisenchanterPlusDB

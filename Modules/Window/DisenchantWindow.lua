@@ -105,7 +105,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   windowBackground:SetHeight(150)
   windowBackground:SetWidth(416)
   windowBackground:SetPoint("TOPLEFT", titleBar, 4, -36)
-  windowBackground:SetGradient("VERTICAL", CreateColor(0, 0, 0, 0.8), CreateColor(0.6, 0.6, 0.6, 0.8))
+  windowBackground:SetGradient("VERTICAL", CreateColor(0, 0, 0, 0.4), CreateColor(0.6, 0.6, 0.6, 0.4))
   titleBar.windowBackground = windowBackground
 
   -- texts

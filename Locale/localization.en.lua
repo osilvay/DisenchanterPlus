@@ -202,15 +202,29 @@ L["greater mystic wand"]                                                        
 L["enchanted thorium bar"]                                                         = true
 L["enchanted leather"]                                                             = true
 L["smoking heart of the mountain"]                                                 = true
-L["runed copper rod"]                                                              = true
-L["runed silver rod"]                                                              = true
-L["runed golden rod"]                                                              = true
-L["runed truesilver rod"]                                                          = true
-L["runed arcanite rod"]                                                            = true
-L["minor wizard oil"]                                                              = true
-L["minor mana oil"]                                                                = true
-L["lesser wizard oil"]                                                             = true
-L["lesser mana oil"]                                                               = true
-L["wizard oil"]                                                                    = true
-L["brilliant mana oil"]                                                            = true
-L["brilliant wizard oil"]                                                          = true
+
+if DisenchanterPlus.IsCataclysm then
+  L["runed copper rod"]     = true
+  L["runed silver rod"]     = true
+  L["runed golden rod"]     = true
+  L["runed truesilver rod"] = true
+  L["runed arcanite rod"]   = true
+  L["runed fel iron rod"]   = true
+  L["runed adamantite rod"] = true
+  L["runed eternium rod"]   = true
+  L["runed titanium rod"]   = true
+else
+  L["runed copper rod"]     = true
+  L["runed silver rod"]     = true
+  L["runed golden rod"]     = true
+  L["runed truesilver rod"] = true
+  L["runed arcanite rod"]   = true
+end
+
+L["minor wizard oil"]     = true
+L["minor mana oil"]       = true
+L["lesser wizard oil"]    = true
+L["lesser mana oil"]      = true
+L["wizard oil"]           = true
+L["brilliant mana oil"]   = true
+L["brilliant wizard oil"] = true

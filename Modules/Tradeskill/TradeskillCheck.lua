@@ -118,6 +118,7 @@ function DP_TradeSkillCheck:GetTradeSkillLinesForClassic()
       local name, texturePath, numRequired, numHave = DP_TradeSkillCheck.TradeSkillReagentInfo(index, i)
       totalReagents = totalReagents + numRequired;
       table.insert(reagents, {
+        Index = i,
         Name = name,
         Texture = texturePath,
         Count = numRequired,
@@ -128,6 +129,7 @@ function DP_TradeSkillCheck:GetTradeSkillLinesForClassic()
     local craftDescription = DP_TradeSkillCheck.TradeSkillDescription(index)
 
     local tradeSkillLine = {
+      Index = index,
       CraftName = craftName,
       CraftDescription = craftDescription,
       CraftType = craftType,
@@ -167,6 +169,7 @@ function DP_TradeSkillCheck:GetTradeSkillLinesForCata()
       local name, texturePath, numRequired, numHave = DP_TradeSkillCheck.TradeSkillReagentInfo(index, i)
       totalReagents = totalReagents + numRequired;
       table.insert(reagents, {
+        Index = i,
         Name = name,
         Texture = texturePath,
         Count = numRequired,
@@ -177,6 +180,7 @@ function DP_TradeSkillCheck:GetTradeSkillLinesForCata()
     local craftName, craftType, numAvailable, _, _, _ = DP_TradeSkillCheck.TradeSkillInfo(index)
     local craftDescription = DP_TradeSkillCheck.TradeSkillDescription(index)
     local tradeSkillLine = {
+      Index = index,
       CraftName = craftName,
       CraftDescription = craftDescription,
       CraftType = craftType,

@@ -53,8 +53,10 @@ function DP_GeneralGroup:CheckStatus(status)
   if status then
     DisenchanterPlus.db.char.general.tooltipsEnabled = false
     DisenchanterPlus.db.char.general.autoDisenchantEnabled = false
+    DisenchanterPlus.db.char.general.enchantEnabled = false
   else
     DisenchanterPlus.db.char.general.tooltipsEnabled = true
     DisenchanterPlus.db.char.general.autoDisenchantEnabled = true
+    DisenchanterPlus.db.char.general.enchantEnabled = true
   end
 end

@@ -119,7 +119,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
   windowBackground:SetHeight(278)
   windowBackground:SetWidth(616)
   windowBackground:SetPoint("TOPLEFT", titleBar, 4, -36)
-  windowBackground:SetGradient("VERTICAL", CreateColor(0, 0, 0, 0.8), CreateColor(0.6, 0.6, 0.6, 0.8))
+  windowBackground:SetGradient("VERTICAL", CreateColor(0, 0, 0, 0.4), CreateColor(0.6, 0.6, 0.6, 0.4))
   titleBar.windowBackground = windowBackground
 
   -- texts
@@ -474,6 +474,7 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
         local enchantLineFrame = CreateFrame("Frame", "EnchantWindow_EnchantLine" .. itemNum, EnchanterPlusBaseFrame.tabScrollContentFrame1, BackdropTemplateMixin and "BackdropTemplate")
         enchantLineFrame.enchantCorrect = false
         enchantLineFrame.enchant = lineInfo.CraftName
+        enchantLineFrame.index = lineInfo.Index
 
         enchantLineFrame:SetPoint("TOPLEFT", EnchanterPlusBaseFrame.tabScrollContentFrame1, "TOPLEFT", 0, -(offsetV * (itemNum - 1)))
         enchantLineFrame:SetSize(310, 32)
@@ -613,6 +614,7 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
         local enchantLineFrame = enchantContainerLines[tostring(itemNum)]
         enchantLineFrame.enchantCorrect = false
         enchantLineFrame.enchant = lineInfo.CraftName
+        enchantLineFrame.index = lineInfo.Index
 
         local acceptEnchantButton = enchantLineFrame.acceptEnchantButton
         acceptEnchantButton.lineID = itemNum
@@ -866,9 +868,16 @@ function DP_EnchantWindow:CheckReadyToEnchant()
   end
 
   local enchant = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID].enchant
+  local craftIndex = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastItemCurrent.lineID].index
   local itemName = EnchanterPlusBaseFrame.tabScrollContentFrame2.line[lastItemCurrent.lineID].itemName
 
-  local macro = string.format("/cast %s\n/use %s\n/click StaticPopup1Button1\n", enchant, itemName)
+  local macro = ""
+  if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
+    macro = string.format("/cast %s\n/use %s\n/click StaticPopup1Button1\n", enchant, itemName)
+  else
+    macro = string.format("/run DoTradeSkill(%s)\n/use %s\n/click StaticPopup1Button1\n", craftIndex, itemName)
+  end
+
   EnchanterPlusBaseFrame.yesButton:SetAttribute("macrotext", macro)
 
   C_Timer.After(0.2, function()

@@ -69,7 +69,9 @@ function _DP_MinimapIcon:CreateDataBrokerObject()
           DP_Settings:OpenSettingsFrame()
         end
       elseif button == "MiddleButton" then
-        DP_EnchantProcess:CraftShow()
+        if DisenchanterPlus.db.char.general.enchantEnabled then
+          DP_EnchantProcess:CraftShow()
+        end
       end
     end,
     OnTooltipShow = function(tooltip)

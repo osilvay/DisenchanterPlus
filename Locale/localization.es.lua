@@ -7,6 +7,7 @@ L["Disenchanting"]                                                              
 L["Enchanting"]                                                                    = "Encantamiento"
 L["Armor"]                                                                         = "Armadura"
 L["Weapon"]                                                                        = "Arma"
+L["Enchanting Vellum"]                                                             = "Vitela de encantamiento"
 
 -- texts
 L["Delete character data"]                                                         = "Borrar datos de personaje"
@@ -204,15 +205,31 @@ L["greater mystic wand"]                                                        
 L["enchanted thorium bar"]                                                         = "lingote de torio encantado"
 L["enchanted leather"]                                                             = "cuero encantado"
 L["smoking heart of the mountain"]                                                 = "corazón de la montaña humeante"
-L["runed copper rod"]                                                              = "vara de cobre rúnico"
-L["runed silver rod"]                                                              = "vara rúnica plateada"
-L["runed golden rod"]                                                              = "vara rúnica dorada"
-L["runed truesilver rod"]                                                          = "vara rúnica de veraplata"
-L["runed arcanite rod"]                                                            = "vara de arcanita rúnica"
-L["minor wizard oil"]                                                              = "aceite menor de zahorí"
-L["minor mana oil"]                                                                = "aceite menor de maná"
-L["lesser wizard oil"]                                                             = "aceite inferior de zahorí"
-L["lesser mana oil"]                                                               = "aceite inferior de maná"
-L["wizard oil"]                                                                    = "aceite de zahorí"
-L["brilliant mana oil"]                                                            = "aceite de maná resplandeciente"
-L["brilliant wizard oil"]                                                          = "aceite brillante de zahorí"
+
+if DisenchanterPlus.IsCataclysm then
+  L["runed copper rod"]     = "vara rúnica de cobre"
+  L["runed silver rod"]     = "vara rúnica de plata"
+  L["runed golden rod"]     = "vara rúnica de oro"
+  L["runed truesilver rod"] = "vara rúnica de veraplata"
+  L["runed arcanite rod"]   = "vara rúnica de arcanita"
+  L["runed fel iron rod"]   = "vara rúnica de hierro vil"
+  L["runed adamantite rod"] = "vara rúnica de adamantita"
+  L["runed eternium rod"]   = "vara rúnica de eternio"
+  L["runed titanium rod"]   = "vara rúnica de titanio"
+else
+  L["runed copper rod"]     = "vara de cobre rúnico"
+  L["runed silver rod"]     = "vara rúnica plateada"
+  L["runed golden rod"]     = "vara rúnica dorada"
+  L["runed truesilver rod"] = "vara rúnica de veraplata"
+  L["runed arcanite rod"]   = "vara de arcanita rúnica"
+end
+
+L["minor wizard oil"]     = "aceite menor de zahorí"
+L["minor mana oil"]       = "aceite menor de maná"
+L["lesser wizard oil"]    = "aceite inferior de zahorí"
+L["lesser mana oil"]      = "aceite inferior de maná"
+L["wizard oil"]           = "aceite de zahorí"
+L["brilliant mana oil"]   = "aceite de maná resplandeciente"
+L["brilliant wizard oil"] = "aceite brillante de zahorí"
+
+-- for cataclism

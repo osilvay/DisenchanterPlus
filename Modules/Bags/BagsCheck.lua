@@ -10,6 +10,7 @@ local DP_DisenchantGroup = DP_ModuleLoader:ImportModule("DP_DisenchantGroup")
 local L = LibStub("AceLocale-3.0"):GetLocale("DisenchanterPlus")
 
 local disenchantSpellID = 13262
+local enchantingVellum = 38682
 local totalItemsInBagsToDisenchant = 0
 
 ---Items in bags
@@ -75,7 +76,7 @@ function DP_BagsCheck:ItemInBag(bagIndex, sessionIgnoredList, permanentIgnoredLi
       local itemName, _, itemQuality, itemLevel, itemMinLevel, itemType, _, _, _, itemTexture, _, _, _, _, _, _, _ = C_Item.GetItemInfo(containerInfo.itemID)
       local isBound = containerInfo.isBound
 
-      if (itemType == DisenchanterPlus:DP_i18n("Armor") or itemType == DisenchanterPlus:DP_i18n("Weapon")) and
+      if (itemType == DisenchanterPlus:DP_i18n("Armor") or itemType == DisenchanterPlus:DP_i18n("Weapon") or containerInfo.itemID == enchantingVellum) and
           not DP_CustomFunctions:TableHasKey(sessionIgnoredList, tostring(containerInfo.itemID)) and
           not DP_CustomFunctions:TableHasKey(permanentIgnoredList, tostring(containerInfo.itemID)) and
           DP_CustomFunctions:TableHasValue(itemQualityList, tostring(itemQuality)) and
@@ -135,10 +136,11 @@ function DP_BagsCheck:GetItemsInBags(equipLocation)
         local _, _, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, _, itemEquipLoc, itemTexture, _, _, _, _, _, _, _ = C_Item.GetItemInfo(containerInfo.itemID)
 
         if (itemType == DisenchanterPlus:DP_i18n("Armor") or itemType == DisenchanterPlus:DP_i18n("Weapon")) and
-            DP_CustomFunctions:TableHasValue(itemQualityList, tostring(itemQuality)) then
+            DP_CustomFunctions:TableHasValue(itemQualityList, tostring(itemQuality)) or containerInfo.itemID == enchantingVellum then
           --DisenchanterPlus:Debug(equipLocation .. " = " .. itemEquipLoc)
+
           local itemString, realItemName = containerInfo.hyperlink:match("|H(.*)|h%[(.*)%]|h")
-          if not equipLocation or equipLocation == itemEquipLoc then
+          if not equipLocation or equipLocation == itemEquipLoc or containerInfo.itemID == enchantingVellum then
             numItemsInBag = numItemsInBag + 1
             itemsInBags[tostring(containerInfo.itemID)] = {
               ItemName = realItemName,

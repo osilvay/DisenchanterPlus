@@ -1,3 +1,10 @@
+## **Version 1.0.9.1**
+
+- Added Enchanting vellums [Cata].
+- Minor interface changes.
+- Fixed a bug with disable all settings for enchants.
+- Bug fixes.
+
 ## **Version 1.0.9.0**
 
 - Added enchanting functionality. You can now select an enchantment, an item, and enchant it continuously without popups (not tested in cataclysm yet).
