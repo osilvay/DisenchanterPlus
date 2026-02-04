@@ -3,6 +3,12 @@ local DP_SettingsDefaults = DP_ModuleLoader:CreateModule("DP_SettingsDefaults");
 
 function DP_SettingsDefaults:Load()
   return {
+    profile = {
+      minimap = {
+        hide = false,
+        minimapPos = 220,
+      },
+    },
     global = {
       data = {
         items = {},

@@ -1,3 +1,11 @@
+## **Version 2.0.0.1-RC1**
+
+- Fixed a bug with moving minimap icon.
+
+## **Version 2.0.0.0-RC1**
+
+- Updated to Classic TBC (2.5.5)
+
 ## **Version 1.0.9.2**
 
 - Toc version.

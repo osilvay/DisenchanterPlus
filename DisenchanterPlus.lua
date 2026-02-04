@@ -31,6 +31,15 @@ function DisenchanterPlus:OnInitialize()
   DisenchanterPlus.db = LibStub("AceDB-3.0"):New("DisenchanterPlusDB", DP_SettingsDefaults:Load(), true)
   DisenchanterPlus.key = UnitName("player") .. " - " .. GetRealmName()
   DisenchanterPlus.started = false
+
+  -- Asegurar que la tabla minimap existe en el perfil
+  if not DisenchanterPlus.db.profile.minimap then
+    DisenchanterPlus.db.profile.minimap = {}
+  end
+
+  -- Inicializar valores por defecto si no existen
+  DisenchanterPlus.db.profile.minimap.hide = DisenchanterPlus.db.profile.minimap.hide or false
+
   DP_EventHandler:RegisterEarlyEvents()
 end
 
