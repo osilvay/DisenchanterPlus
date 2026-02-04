@@ -14,7 +14,9 @@ local tradeSkillList = {
 ---@return table|nil
 function DP_TradeSkillCheck:GetTradeSkill()
   local result
-  if DisenchanterPlus.IsClassic or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsHardcore then
+  if DisenchanterPlus.IsClassic or DisenchanterPlus.IsEra
+      or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsHardcore
+      or DisenchanterPlus.IsTBC then
     for tradeSkillIndex = 1, GetNumSkillLines() do
       local tradeSkillName, isHeader, _, tradeSkillRank, _, _, _, _, _, _, _, _, _ = GetSkillLineInfo(tradeSkillIndex)
       if not isHeader then

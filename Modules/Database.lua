@@ -10,6 +10,9 @@ local DP_CataclysmDisenchantTable = DP_ModuleLoader:ImportModule("DP_CataclysmDi
 ---@type DP_ClassicDisenchantTable
 local DP_ClassicDisenchantTable = DP_ModuleLoader:ImportModule("DP_ClassicDisenchantTable")
 
+---@type DP_TBCDisenchantTable
+local DP_TBCDisenchantTable = DP_ModuleLoader:ImportModule("DP_TBCDisenchantTable")
+
 ---@type DP_EnchantPatterns
 local DP_EnchantPatterns = DP_ModuleLoader:ImportModule("DP_EnchantPatterns")
 
@@ -127,6 +130,9 @@ function DP_Database:Initialize()
   if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
     -- classic_era
     DP_ClassicDisenchantTable:Initialize()
+  elseif DisenchanterPlus.IsTBC then
+    -- tbc
+    DP_TBCDisenchantTable:Initialize()
   elseif DisenchanterPlus.IsCataclysm then
     -- cataclysm
     DP_CataclysmDisenchantTable:Initialize()
@@ -149,6 +155,9 @@ function DP_Database:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel,
   if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
     -- classic_era
     return DP_ClassicDisenchantTable:CheckSkillLevelForItem() -- always true
+  elseif DisenchanterPlus.IsTBC then
+    -- tbc
+    return DP_TBCDisenchantTable:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel, itemQuality)
   elseif DisenchanterPlus.IsCataclysm then
     -- cataclysm
     return DP_CataclysmDisenchantTable:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel, itemQuality)
@@ -161,6 +170,8 @@ end
 function DP_Database:GetExpectedDisenchantData()
   if DisenchanterPlus.IsClassic or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsHardcore then
     return DP_ClassicDisenchantTable:GenerateDisenchantTable()
+  elseif DisenchanterPlus.IsTBC then
+    return DP_TBCDisenchantTable:GenerateDisenchantTable()
   elseif DisenchanterPlus.IsCataclysm then
     return DP_CataclysmDisenchantTable:GenerateDisenchantTable()
   end

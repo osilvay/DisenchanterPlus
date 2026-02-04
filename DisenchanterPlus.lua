@@ -21,7 +21,7 @@ DisenchanterPlus.DEBUG_INFO = "|cff00bc32[INFO]|r"
 DisenchanterPlus.DEBUG_DEVELOP = "|cff7c83ff[DEVELOP]|r"
 DisenchanterPlus.DEBUG_SPAM = "|cffff8484[SPAM]|r"
 local AddonColor = "ffed6bff"
-local AddonVersion = "1.0.9.1"
+local AddonVersion = "2.0.0.0-RC1"
 
 BINDING_NAME_DISENCHANTER_PLUS_ACCEPT_DISENCHANT = L["Accept disenchant"]
 BINDING_NAME_DISENCHANTER_PLUS_CANCEL_DISENCHANT = L["Cancel disenchant"]

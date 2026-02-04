@@ -200,7 +200,8 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
     --DisenchanterPlus:Debug(string.format("MinILevel = %s, MaxILevel = %s", tostring(currentData.MinILevel), tostring(currentData.MaxILevel)))
 
     local levelToCheck
-    if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
+    if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra
+        or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsTBC then
       -- classic_era
       levelToCheck = (itemMinLevel > 0) and itemMinLevel or itemLevel
     elseif DisenchanterPlus.IsCataclysm then
