@@ -1,6 +1,6 @@
 ## Interface: 40402
-## Title: |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v1.0.9.2|r
-## Version: Version 2.0.0.0-RC1
+## Title: |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v2.0.0.0|r
+## Version: Version 2.0.0.0
 ## Notes: Disenchanter tool for wow cata classic
 ## Author: osilvay
 ## SavedVariables: DisenchanterPlusDB
