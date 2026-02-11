@@ -10,6 +10,38 @@ local all = L["All"]
 local classicDisenchantData = {}
 local expectedPercents = {}
 
+local skillLevelData = {
+  UNCOMMON = {
+    { 1,   1,   20 },
+    { 25,  21,  25 },
+    { 50,  26,  30 },
+    { 75,  31,  35 },
+    { 100, 36,  40 },
+    { 125, 41,  45 },
+    { 150, 46,  50 },
+    { 175, 51,  55 },
+    { 200, 56,  60 },
+    { 225, 61,  99 },
+    { 275, 102, 120 },
+  },
+  RARE = {
+    { 25,  10,  25 },
+    { 50,  26,  30 },
+    { 75,  31,  35 },
+    { 100, 36,  40 },
+    { 125, 41,  45 },
+    { 150, 46,  50 },
+    { 175, 51,  55 },
+    { 200, 56,  60 },
+    { 225, 61,  97 },
+    { 275, 100, 115 },
+  },
+  EPIC = {
+    { 225, 61,  95 },
+    { 300, 100, 164 }
+  }
+}
+
 function DP_TBCDisenchantTable:Initialize()
   classicDisenchantData = {
     { 5,  10, "1-2x", DisenchanterPlus.EnchantingItems.strange_dust,  "1-2x", DisenchanterPlus.EnchantingItems.lesser_magic_essence,    nil,  nil,                                                     nil,  nil,                                            false },
@@ -79,7 +111,39 @@ end
 ---Check kill level for item
 ---@return boolean
 function DP_TBCDisenchantTable:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel, itemQuality)
-  return true
+  --DisenchanterPlus:Debug(tostring(skillLevel))
+  --DisenchanterPlus:Debug(tostring(itemLevel))
+  --DisenchanterPlus:Debug(tostring(itemMinLevel))
+  --DisenchanterPlus:Debug(tostring(itemQuality))
+  local result = false
+
+  if skillLevel and itemLevel and itemQuality then
+    local subTable
+    if itemQuality == 2 then
+      --DisenchanterPlus:Debug(tostring("Uncommon"))
+      subTable = skillLevelData.UNCOMMON
+    elseif itemQuality == 3 then
+      --DisenchanterPlus:Debug(tostring("Rare"))
+      subTable = skillLevelData.RARE
+    elseif itemQuality == 4 then
+      --DisenchanterPlus:Debug(tostring("Epic"))
+      subTable = skillLevelData.EPIC
+    else
+      --DisenchanterPlus:Debug(tostring("Unknown"))
+      subTable = {}
+    end
+    if subTable then
+      for i = #subTable, 1, -1 do
+        local minSkillLevel, minItemLevel, maxItemLevel = subTable[i][1], subTable[i][2], subTable[i][3]
+        if itemLevel >= minItemLevel and itemLevel <= maxItemLevel and skillLevel >= minSkillLevel then
+          result = true
+          break
+        end
+      end
+    end
+  end
+  --DisenchanterPlus:Debug(tostring(result))
+  return result
 end
 
 ---Get disenchant table

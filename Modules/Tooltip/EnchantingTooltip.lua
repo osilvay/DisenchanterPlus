@@ -38,7 +38,9 @@ function DP_EnchantingTooltip:ShowTooltip(itemInfo)
   if itemID == nil then return end
   --DisenchanterPlus:Debug("ShowTooltip [" .. tostring(itemID) .. "]")
 
-  local _, itemType, _, _, _, _, _ = C_Item.GetItemInfoInstant(itemID)
+  --local _, itemType, _, _, _, _, _ = C_Item.GetItemInfoInstant(itemID)
+  local _, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
+
   --DisenchanterPlus:Debug(string.format("itemQuality = %s - itemType = %s", tostring(itemQuality), tostring(itemType)))
 
   if itemType == DisenchanterPlus:DP_i18n("Armor") or itemType == DisenchanterPlus:DP_i18n("Weapon") then
@@ -56,6 +58,7 @@ function DP_EnchantingTooltip:ShowTooltip(itemInfo)
   if not isShowItemID then
     itemIDText = ""
   end
+  itemIDText = itemIDText .. " " .. itemLevel
 
   if isShowTitle then
     local titleText = string.format("%s", DisenchanterPlus:MessageWithAddonColor(DisenchanterPlus:DP_i18n("Enchanting")))
