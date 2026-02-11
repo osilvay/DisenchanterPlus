@@ -157,7 +157,7 @@ function DP_Database:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel,
     return DP_ClassicDisenchantTable:CheckSkillLevelForItem()
   elseif DisenchanterPlus.IsTBC then
     -- tbc
-    return DP_TBCDisenchantTable:CheckSkillLevelForItem()
+    return DP_TBCDisenchantTable:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel, itemQuality)
   elseif DisenchanterPlus.IsCataclysm then
     -- cataclysm
     return DP_CataclysmDisenchantTable:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel, itemQuality)

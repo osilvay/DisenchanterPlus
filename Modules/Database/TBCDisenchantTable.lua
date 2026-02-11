@@ -12,19 +12,19 @@ local expectedPercents = {}
 
 function DP_TBCDisenchantTable:Initialize()
   classicDisenchantData = {
-    { 5,  10, "1-2x", DisenchanterPlus.EnchantingItems.strange_dust,  "1-2x", DisenchanterPlus.EnchantingItems.lesser_magic_essence,    nil,  nil,                                                     nil,  nil },
-    { 11, 15, "2-3x", DisenchanterPlus.EnchantingItems.strange_dust,  "1-2x", DisenchanterPlus.EnchantingItems.greater_magic_essence,   "1x", DisenchanterPlus.EnchantingItems.small_glimmering_shard, nil,  nil },
-    { 16, 20, "4-6x", DisenchanterPlus.EnchantingItems.strange_dust,  "1-2x", DisenchanterPlus.EnchantingItems.lesser_astral_essence,   "1x", DisenchanterPlus.EnchantingItems.small_glimmering_shard, nil,  nil },
-    { 21, 25, "1-2x", DisenchanterPlus.EnchantingItems.soul_dust,     "1-2x", DisenchanterPlus.EnchantingItems.greater_astral_essence,  "1x", DisenchanterPlus.EnchantingItems.large_glimmering_shard, nil,  nil },
-    { 26, 30, "2-5x", DisenchanterPlus.EnchantingItems.soul_dust,     "1-2x", DisenchanterPlus.EnchantingItems.lesser_mystic_essence,   "1x", DisenchanterPlus.EnchantingItems.small_glowing_shard,    nil,  nil },
-    { 31, 35, "1-2x", DisenchanterPlus.EnchantingItems.vision_dust,   "1-2x", DisenchanterPlus.EnchantingItems.greater_mystic_essence,  "1x", DisenchanterPlus.EnchantingItems.large_glowing_shard,    nil,  nil },
-    { 36, 40, "2-5x", DisenchanterPlus.EnchantingItems.vision_dust,   "1-2x", DisenchanterPlus.EnchantingItems.lesser_nether_essence,   "1x", DisenchanterPlus.EnchantingItems.small_radiant_shard,    nil,  nil },
-    { 41, 45, "1-2x", DisenchanterPlus.EnchantingItems.dream_dust,    "1-2x", DisenchanterPlus.EnchantingItems.greater_nether_essence,  "1x", DisenchanterPlus.EnchantingItems.large_radiant_shard,    nil,  nil },
-    { 46, 50, "2-5x", DisenchanterPlus.EnchantingItems.dream_dust,    "1-2x", DisenchanterPlus.EnchantingItems.lesser_eternal_essence,  "1x", DisenchanterPlus.EnchantingItems.small_brilliant_shard,  nil,  nil },
-    { 51, 55, "1-2x", DisenchanterPlus.EnchantingItems.illusion_dust, "1-2x", DisenchanterPlus.EnchantingItems.greater_eternal_essence, "1x", DisenchanterPlus.EnchantingItems.large_brilliant_shard,  "1x", DisenchanterPlus.EnchantingItems.nexus_crystal },
-    { 55, 60, "2-5x", DisenchanterPlus.EnchantingItems.illusion_dust, "1-3x", DisenchanterPlus.EnchantingItems.greater_eternal_essence, "1x", DisenchanterPlus.EnchantingItems.large_brilliant_shard,  "1x", DisenchanterPlus.EnchantingItems.nexus_crystal },
-    { 57, 63, "1-2x", DisenchanterPlus.EnchantingItems.arcane_dust,   "1-3x", DisenchanterPlus.EnchantingItems.lesser_planar_essence,   "1x", DisenchanterPlus.EnchantingItems.small_prismatic_shard,  "1x", nil },
-    { 64, 70, "2-5x", DisenchanterPlus.EnchantingItems.arcane_dust,   "1-3x", DisenchanterPlus.EnchantingItems.greater_planar_essence,  "1x", DisenchanterPlus.EnchantingItems.large_prismatic_shard,  "1x", DisenchanterPlus.EnchantingItems.void_crystal }
+    { 5,  10, "1-2x", DisenchanterPlus.EnchantingItems.strange_dust,  "1-2x", DisenchanterPlus.EnchantingItems.lesser_magic_essence,    nil,  nil,                                                     nil,  nil,                                            false },
+    { 11, 15, "2-3x", DisenchanterPlus.EnchantingItems.strange_dust,  "1-2x", DisenchanterPlus.EnchantingItems.greater_magic_essence,   "1x", DisenchanterPlus.EnchantingItems.small_glimmering_shard, nil,  nil,                                            false },
+    { 16, 20, "4-6x", DisenchanterPlus.EnchantingItems.strange_dust,  "1-2x", DisenchanterPlus.EnchantingItems.lesser_astral_essence,   "1x", DisenchanterPlus.EnchantingItems.small_glimmering_shard, nil,  nil,                                            false },
+    { 21, 25, "1-2x", DisenchanterPlus.EnchantingItems.soul_dust,     "1-2x", DisenchanterPlus.EnchantingItems.greater_astral_essence,  "1x", DisenchanterPlus.EnchantingItems.large_glimmering_shard, nil,  nil,                                            false },
+    { 26, 30, "2-5x", DisenchanterPlus.EnchantingItems.soul_dust,     "1-2x", DisenchanterPlus.EnchantingItems.lesser_mystic_essence,   "1x", DisenchanterPlus.EnchantingItems.small_glowing_shard,    nil,  nil,                                            false },
+    { 31, 35, "1-2x", DisenchanterPlus.EnchantingItems.vision_dust,   "1-2x", DisenchanterPlus.EnchantingItems.greater_mystic_essence,  "1x", DisenchanterPlus.EnchantingItems.large_glowing_shard,    nil,  nil,                                            false },
+    { 36, 40, "2-5x", DisenchanterPlus.EnchantingItems.vision_dust,   "1-2x", DisenchanterPlus.EnchantingItems.lesser_nether_essence,   "1x", DisenchanterPlus.EnchantingItems.small_radiant_shard,    nil,  nil,                                            false },
+    { 41, 45, "1-2x", DisenchanterPlus.EnchantingItems.dream_dust,    "1-2x", DisenchanterPlus.EnchantingItems.greater_nether_essence,  "1x", DisenchanterPlus.EnchantingItems.large_radiant_shard,    nil,  nil,                                            false },
+    { 46, 50, "2-5x", DisenchanterPlus.EnchantingItems.dream_dust,    "1-2x", DisenchanterPlus.EnchantingItems.lesser_eternal_essence,  "1x", DisenchanterPlus.EnchantingItems.small_brilliant_shard,  nil,  nil,                                            false },
+    { 51, 55, "1-2x", DisenchanterPlus.EnchantingItems.illusion_dust, "1-2x", DisenchanterPlus.EnchantingItems.greater_eternal_essence, "1x", DisenchanterPlus.EnchantingItems.large_brilliant_shard,  "1x", DisenchanterPlus.EnchantingItems.nexus_crystal, false },
+    { 55, 60, "2-5x", DisenchanterPlus.EnchantingItems.illusion_dust, "1-3x", DisenchanterPlus.EnchantingItems.greater_eternal_essence, "1x", DisenchanterPlus.EnchantingItems.large_brilliant_shard,  "1x", DisenchanterPlus.EnchantingItems.nexus_crystal, false },
+    { 57, 63, "1-2x", DisenchanterPlus.EnchantingItems.arcane_dust,   "1-3x", DisenchanterPlus.EnchantingItems.lesser_planar_essence,   "1x", DisenchanterPlus.EnchantingItems.small_prismatic_shard,  "1x", nil,                                            true },
+    { 64, 70, "2-5x", DisenchanterPlus.EnchantingItems.arcane_dust,   "1-3x", DisenchanterPlus.EnchantingItems.greater_planar_essence,  "1x", DisenchanterPlus.EnchantingItems.large_prismatic_shard,  "1x", DisenchanterPlus.EnchantingItems.void_crystal,  true }
   }
   expectedPercents = {
     UNCOMMON = {
@@ -78,7 +78,7 @@ end
 
 ---Check kill level for item
 ---@return boolean
-function DP_TBCDisenchantTable:CheckSkillLevelForItem()
+function DP_TBCDisenchantTable:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel, itemQuality)
   return true
 end
 
@@ -113,16 +113,19 @@ function DP_TBCDisenchantTable:GenerateDisenchantTable()
     local shardData = currentData[8]
     local crystalText = currentData[9]
     local crystalData = currentData[10]
+    local isTbc = currentData[11]
 
     -- process uncommon **********************************************************************
     local armorEntry = {
       MinILevel = minItemLevel,
       MaxILevel = maxItemLevel,
+      IsTBC = isTbc,
       ItemIDs = {}
     }
     local weaponEntry = {
       MinILevel = minItemLevel,
       MaxILevel = maxItemLevel,
+      IsTBC = isTbc,
       ItemIDs = {}
     }
 

@@ -184,6 +184,9 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
   local _, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
   local essencesData = {}
 
+  local tbcCheck = false
+  if DisenchanterPlus.IsTBC and itemLevel >= 81 then tbcCheck = true end
+
   if itemQuality == 2 then
     essencesData = PercentByQualityAndLevel["UNCOMMON"][itemType]
   elseif itemQuality == 3 then
@@ -192,7 +195,6 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
     essencesData = PercentByQualityAndLevel["EPIC"][DisenchanterPlus:DP_i18n("All")]
   end
   if essencesData == nil then return {} end
-
   local result = {}
   --DisenchanterPlus:Debug(string.format("itemLevel = %s, itemMinLevel = %s", tostring(itemLevel), tostring(itemMinLevel)))
   --DisenchanterPlus:Debug(string.format("itemLevel = %s", tostring(itemLevel)))
@@ -207,14 +209,13 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
     elseif DisenchanterPlus.IsCataclysm then
       -- cataclysm
       levelToCheck = itemLevel
+      currentData.IsTBC = false
     end
 
-    if levelToCheck >= currentData.MinILevel and levelToCheck <= currentData.MaxILevel then
+    if levelToCheck >= currentData.MinILevel and levelToCheck <= currentData.MaxILevel and (tbcCheck == currentData.IsTBC) then
       --DisenchanterPlus:Dump(currentData.ItemIDs)
       for essenceItemID, currentEssenceData in pairs(currentData.ItemIDs) do
         local essenceItemName, essenceItemLink, essenceItemQuality, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(essenceItemID)
-        --DisenchanterPlus:Debug(string.format("essenceItemID = %s = essenceItemLink = %s", essenceItemID, essenceItemLink))
-
         local auctionatorPrice
         local auctionatorString = "|cffcc1100" .. DisenchanterPlus:DP_i18n("No data") .. "|r"
         if DisenchanterPlus.db.char.general.auctionatorIntegration and Auctionator and essenceItemLink ~= nil then
@@ -227,17 +228,19 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
           end
         end
 
-        local essenceToAdd = {
-          ItemID = essenceItemID,
-          ItemName = essenceItemName,
-          ItemLink = essenceItemLink,
-          ItemQuality = essenceItemQuality,
-          Percent = currentEssenceData.Percent,
-          QuantityText = currentEssenceData.QuantityText,
-          AuctionatorPrice = auctionatorPrice,
-          AuctionatorString = auctionatorString
-        }
-        table.insert(result, essenceToAdd)
+        if currentEssenceData.Percent > 0 then
+          local essenceToAdd = {
+            ItemID = essenceItemID,
+            ItemName = essenceItemName,
+            ItemLink = essenceItemLink,
+            ItemQuality = essenceItemQuality,
+            Percent = currentEssenceData.Percent,
+            QuantityText = currentEssenceData.QuantityText,
+            AuctionatorPrice = auctionatorPrice,
+            AuctionatorString = auctionatorString
+          }
+          table.insert(result, essenceToAdd)
+        end
       end
       break
     end
