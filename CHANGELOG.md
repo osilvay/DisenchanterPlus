@@ -2,6 +2,7 @@
 
 - Fixed a bug with moving minimap icon.
 - Fixed disenchant table for classic TBC.
+- Fixed a bug with disenchant table in tooltip.
 
 ## **Version 2.0.0.0-RC1**
 
