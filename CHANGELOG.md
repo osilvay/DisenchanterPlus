@@ -1,3 +1,8 @@
+## **Version 2.0.0.1**
+
+- Fixed a skill check error in Classic TBC.
+- Fixed an error where failed disenchants would permanently add items to the ignored list.
+
 ## **Version 2.0.0.0**
 
 - Fixed a bug with moving minimap icon.
