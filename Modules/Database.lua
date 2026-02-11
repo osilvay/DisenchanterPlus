@@ -154,10 +154,10 @@ function DP_Database:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel,
 
   if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
     -- classic_era
-    return DP_ClassicDisenchantTable:CheckSkillLevelForItem() -- always true
+    return DP_ClassicDisenchantTable:CheckSkillLevelForItem()
   elseif DisenchanterPlus.IsTBC then
     -- tbc
-    return DP_TBCDisenchantTable:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel, itemQuality)
+    return DP_TBCDisenchantTable:CheckSkillLevelForItem()
   elseif DisenchanterPlus.IsCataclysm then
     -- cataclysm
     return DP_CataclysmDisenchantTable:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel, itemQuality)

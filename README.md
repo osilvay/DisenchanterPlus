@@ -43,4 +43,4 @@ Your feedback is valuable! If you encounter any issues or have suggestions:
 
 ## License
 
-This project is licensed under the all rights reserved.
+This project is licensed under the [GNU GPL v3](LICENSE) - see the [LICENSE](LICENSE) file for details.
