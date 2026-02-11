@@ -202,7 +202,7 @@ function DP_DisenchantProcess:UnitSpellCastFailed(unitTarget, castGUID, spellID)
     DP_DisenchantWindow:CloseWindow()
 
     if itemID then
-      DP_DisenchantProcess:AddPermanentIgnoredItem(itemID)
+      DP_DisenchantProcess:AddSessionIgnoredItem(itemID)
     end
 
     C_Timer.After(1, function()
