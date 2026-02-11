@@ -43,4 +43,15 @@ Your feedback is valuable! If you encounter any issues or have suggestions:
 
 ## License
 
-This project is licensed under the [GNU GPL v3](LICENSE) - see the [LICENSE](LICENSE) file for details.
+[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+This addon is licensed under the **MIT License**.
+
+**Copyright © 2024 [osilvay]**
+
+See the full license text in the [LICENSE](LICENSE) file.
+
+### Additional Terms for WoW
+
+- This addon must be used in compliance with [Blizzard's Terms of Service](https://www.blizzard.com/en-us/legal/)
+- Addon provided "as-is" without warranty
