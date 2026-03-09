@@ -17,10 +17,11 @@ The addon can be managed using the following slash commands:
 
 - `/dplus`: Display help information.
 - `/dplus config`: Opens configuration window.
+- `/dplus minimap`: Toggle minimap icon visibility.
 
 ## Compatibility
 
-- **Classic WoW** (Season of Discovery, Classic Hardcore)
+- **Classic WoW** (Season of Discovery, Classic Hardcore, Classic Anniversary)
 - **Classic Cataclysm**
 
 ## Installation
@@ -32,6 +33,7 @@ The addon can be managed using the following slash commands:
 2. **Extract** to your WoW `Interface/AddOns` directory:
    - For **Classic Cataclysm**: `World of Warcraft/_classic_/Interface/AddOns`
    - For **Classic WoW** (Season of Discovery, Classic Hardcore): `World of Warcraft/_classic_era_/Interface/AddOns`
+   - For **Classic WoW Anniversary** : `World of Warcraft/_anniversary_/Interface/AddOns`
 3. **Restart WoW** or **Reload** to enable the addon in the AddOns menu.
 
 ## Feedback
