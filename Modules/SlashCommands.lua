@@ -19,15 +19,28 @@ function DP_SlashCommands.RegisterSlashCommands()
 end
 
 function DP_SlashCommands.HandleCommands(input)
+  -- Import the Minimap module
+  local DP_MinimapIcon = DP_ModuleLoader:ImportModule("DP_MinimapIcon")
   local command = string.lower(input) or "help"
+
   if command == "config" then
     DP_SlashCommands:OpenSettingsWindow()
   elseif command == "main" then
     DP_SlashCommands:OpenWelcomeWindow()
+  elseif command == "minimap" then
+    -- Toggle the boolean in your DB
+    DisenchanterPlus.db.profile.minimap.hide = not DisenchanterPlus.db.profile.minimap.hide
+    -- Call the visibility function we created in the first step
+    if DP_MinimapIcon and DP_MinimapIcon.ToggleVisibility then
+        DP_MinimapIcon:ToggleVisibility()
+        local status = DisenchanterPlus.db.profile.minimap.hide and "Hidden" or "Shown"
+        DisenchanterPlus:Print("Minimap icon is now: " .. status)
+    end
   else
     DisenchanterPlus:Print(format("|cffe1e1f1Disenchanter|r |cfff141bfPlus|r : %s", DisenchanterPlus:DP_i18n("Available commands")))
     DisenchanterPlus:Print(format("/dplus |cffc1c1c1config|r - %s", DisenchanterPlus:DP_i18n("Open settings window")))
     DisenchanterPlus:Print(format("/dplus |cffc1c1c1main|r - %s", DisenchanterPlus:DP_i18n("Open main window")))
+    DisenchanterPlus:Print(format("/dplus |cffc1c1c1minimap|r - %s", "Toggle minimap icon visibility"))
   end
 end
 
