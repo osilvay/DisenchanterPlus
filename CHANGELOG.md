@@ -1,3 +1,7 @@
+## **Version 2.0.0.2**
+
+- Add Toggle minimap visibility (Thanks to https://github.com/rcouch00)
+
 ## **Version 2.0.0.1**
 
 - Fixed a skill check error in Classic TBC.
