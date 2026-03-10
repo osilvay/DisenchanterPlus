@@ -28,6 +28,7 @@ local _LibDBIcon = LibStub("LibDBIcon-1.0");
 function DP_MinimapIcon:Initialize()
   _LibDBIcon:Register("DisenchanterPlus", _DP_MinimapIcon:CreateDataBrokerObject(), DisenchanterPlus.db.profile.minimap);
   DisenchanterPlus.minimapConfigIcon = _LibDBIcon
+  self:ToggleVisibility()
 end
 
 ---Create data object
@@ -109,4 +110,13 @@ end
 
 function DP_MinimapIcon:UpdateIcon(value)
   _DP_MinimapIcon.LDBDataObject.icon = value
+end
+
+function DP_MinimapIcon:ToggleVisibility()
+    local isHidden = DisenchanterPlus.db.profile.minimap.hide
+    if isHidden then
+        _LibDBIcon:Hide("DisenchanterPlus")
+    else
+        _LibDBIcon:Show("DisenchanterPlus")
+    end
 end
