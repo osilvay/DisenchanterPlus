@@ -29,10 +29,6 @@ function DP_DisenchanterPlusEvents:Initialize()
     -- classic_era
     DisenchanterPlus:RegisterEvent("CRAFT_SHOW", _DP_DisenchanterPlusEvents.CraftShow)
     DisenchanterPlus:RegisterEvent("CRAFT_CLOSE", _DP_DisenchanterPlusEvents.CraftClose)
-  elseif DisenchanterPlus.IsCataclysm then
-    -- cataclysm
-    DisenchanterPlus:RegisterEvent("TRADE_SKILL_SHOW", _DP_DisenchanterPlusEvents.CraftShow)
-    DisenchanterPlus:RegisterEvent("TRADE_SKILL_CLOSE", _DP_DisenchanterPlusEvents.CraftClose)
   end
   DP_LootProcess:Initialize()
   DP_DisenchantProcess:Initialize()

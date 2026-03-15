@@ -879,8 +879,6 @@ function DP_EnchantWindow:CheckReadyToEnchant()
   if DisenchanterPlus.IsClassic or DisenchanterPlus.IsTBC or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra
       or DisenchanterPlus.IsEraSeasonal then
     macro = string.format("/cast %s\n/use %s\n/click StaticPopup1Button1\n", enchant, itemName)
-  elseif DisenchanterPlus.IsCataclysm then
-    macro = string.format("/run DoTradeSkill(%s)\n/use %s\n/click StaticPopup1Button1\n", craftIndex, itemName)
   end
 
   EnchanterPlusBaseFrame.yesButton:SetAttribute("macrotext", macro)

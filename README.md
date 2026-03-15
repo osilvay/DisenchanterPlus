@@ -1,59 +1,166 @@
 # Disenchanter Plus
 
-## Overview
+A powerful World of Warcraft addon for managing enchantment materials and automating the disenchanting process. Track essences obtained from disenchanting, get expected material yields, auto-disenchant items, and integrate with Auctionator for price data.
 
-**Disenchanter Plus** Tool that keeps track of materials obtained by disenchanting items and disenchants items in your inventory.
+## ✨ Features
 
-## Features
+- **📈 Material Tracking:** Keep a complete history of essences and materials obtained from disenchanting items.
+- **🔮 Expected Materials Display:** View what materials you'll get before disenchanting an item.
+- **⚙️ Auto-Disenchant:** Automatically disenchant items in your inventory based on quality and custom filters.
+- **🎨 Bulk Enchanting:** Apply enchantments to multiple items efficiently with a streamlined mass enchanting interface.
+- **💰 Auctionator Integration:** See last auction house prices in tooltips for enchanting materials.
+- **🎯 Advanced Filtering:** Filter disenchant items by quality (Uncommon, Rare, Epic) and custom exclusion lists.
+- **📊 Database Management:** Automatic tracking and archiving of disenchanting history.
+- **🔧 Extensive Configuration:** Fine-tune every aspect of the addon via the settings window.
 
-- **Tracking:** Track essences obtained from disenchant items.
-- **Expected materials:** Shows expected materials from disenchant.
-- **Auto disenchant:** Disenchant items from inventory.
-- **Auctionator integration:** Shows last auction prices in tooltip.
+## 🚀 Quick Start
 
-## Slash Commands
+1. **Install the addon** (see [Installation](#installation) below)
+2. **Open the addon:** `/dplus` to see available commands
+3. **Configure settings:** `/dplus config` to customize behavior
+4. **Enable enchanting:** Toggle the enchanting module in settings if needed
+5. **Start disenchanting:** Open your disenchant window or use auto-disenchant feature
 
-The addon can be managed using the following slash commands:
+## 📋 Slash Commands
 
-- `/dplus`: Display help information.
-- `/dplus config`: Opens configuration window.
-- `/dplus minimap`: Toggle minimap icon visibility.
+The addon provides the following slash commands:
 
-## Compatibility
+| Command          | Description                                     |
+| ---------------- | ----------------------------------------------- |
+| `/dplus`         | Display help information and available commands |
+| `/dplus config`  | Open the configuration/settings window          |
+| `/dplus minimap` | Toggle minimap icon visibility                  |
+
+## 🎮 Compatibility
+
+### Supported Versions
 
 - **Classic WoW** (Season of Discovery, Classic Hardcore, Classic Anniversary)
-- **Classic Cataclysm**
 
-## Installation
+### Requirements
 
-1. **Download** the addon from:
-   - [CurseForge](https://www.curseforge.com/wow/addons/disenchater-plus)
-   - [Wago.io](https://addons.wago.io/addons/disenchanter-plus)
-   - [GitHub](https://github.com/osilvay/DisenchanterPlus)
-2. **Extract** to your WoW `Interface/AddOns` directory:
-   - For **Classic Cataclysm**: `World of Warcraft/_classic_/Interface/AddOns`
-   - For **Classic WoW** (Season of Discovery, Classic Hardcore): `World of Warcraft/_classic_era_/Interface/AddOns`
-   - For **Classic WoW Anniversary** : `World of Warcraft/_anniversary_/Interface/AddOns`
-3. **Restart WoW** or **Reload** to enable the addon in the AddOns menu.
+- World of Warcraft (supported versions listed above)
+- Ace3 library (included)
 
-## Feedback
+## 📦 Installation
 
-Your feedback is valuable! If you encounter any issues or have suggestions:
+### Step 1: Download
 
-- **Report Issues:** [GitHub Issues](https://github.com/osilvay/DisenchanterPlus/issues)
-- **Contact:** Reach out via [GitHub](https://github.com/osilvay).
+Get the addon from one of these sources:
 
-## License
+- **[CurseForge](https://www.curseforge.com/wow/addons/disenchater-plus)** (Recommended)
+- **[GitHub Releases](https://github.com/osilvay/DisenchanterPlus/releases)**
+
+### Step 2: Extract
+
+Extract the downloaded file to your WoW AddOns folder:
+
+**For Classic WoW (Season of Discovery, Classic Hardcore):**
+
+```
+World of Warcraft/_classic_era_/Interface/AddOns/
+```
+
+**For Classic WoW Anniversary:**
+
+```
+World of Warcraft/_anniversary_/Interface/AddOns/
+```
+
+### Step 3: Restart
+
+- **Restart World of Warcraft**, or
+- **Run `/reload`** at your game console to reload without restarting
+
+The addon should now appear in your AddOns list and be ready to use!
+
+## ⚙️ Configuration
+
+Access the settings window with `/dplus config` to customize:
+
+- **Quality Filters:** Choose which item quality to auto-disenchant (Uncommon, Rare, Epic)
+- **Material Filtering:** Filter by material availability
+- **Custom Exclusions:** Add specific items to ignore
+- **UI Preferences:** Minimap icon position, frame location, etc.
+
+## 🏗️ Architecture
+
+The addon is modular with the following key components:
+
+- **EnchantWindow.lua** - Main enchanting UI and material tracking
+- **DisenchantWindow.lua** - Item selection and disenchanting interface
+- **TradeskillCheck.lua** - Profession detection and validation
+- **Database.lua** - Material history and statistics
+- **EnchantProcess.lua** - Spell casting and enchanting logic
+- **DisenchantProcess.lua** - Item processing and automation
+
+## 🐛 Troubleshooting
+
+### "You don't have Enchanting profession"
+
+- Make sure your character has the Enchanting profession learned
+- Open your Enchanting tradeskill window to verify
+
+### "You need to open the enchanting tradeskill book"
+
+- Open your Enchanting tradeskill window from your spellbook
+- The addon will then display available enchantments
+
+### Items not auto-disenchanting
+
+- Check your quality filters in `/dplus config`
+- Verify the item isn't in your custom exclusion list
+- Ensure items meet the material availability filter
+
+### Minimap button not showing
+
+- Run `/dplus minimap` to toggle it back on
+- Check that the minimap icon setting is enabled in config
+
+## 📝 Localization
+
+The addon includes translations for:
+
+- English (en)
+- Spanish (es)
+- German (de)
+- French (fr)
+- Italian (it)
+
+## 🤝 Contributing & Feedback
+
+Your feedback helps make Disenchanter Plus better!
+
+### Report Issues
+
+Found a bug? Report it on **[GitHub Issues](https://github.com/osilvay/DisenchanterPlus/issues)**
+
+Please include:
+
+- Your WoW version (Classic Era, SoD, Cataclysm, etc.)
+- Steps to reproduce the issue
+- Any error messages from the game console
+
+### Suggestions
+
+Have ideas for new features? Open a **[GitHub Discussion](https://github.com/osilvay/DisenchanterPlus/discussions)** or **[GitHub Issue](https://github.com/osilvay/DisenchanterPlus/issues)**
+
+## 📄 License
 
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-This addon is licensed under the **MIT License**.
+This addon is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
 
 **Copyright © 2024 [osilvay]**
 
-See the full license text in the [LICENSE](LICENSE) file.
-
-### Additional Terms for WoW
+### WoW Terms of Service
 
 - This addon must be used in compliance with [Blizzard's Terms of Service](https://www.blizzard.com/en-us/legal/)
 - Addon provided "as-is" without warranty
+- This is a community addon and is not affiliated with or endorsed by Blizzard Entertainment
+
+## 🙏 Acknowledgments
+
+- Built with **[Ace3](https://www.wowace.com/projects/ace3)** framework
+- Thanks to all the testers and contributors
+- Special thanks to the Classic WoW community

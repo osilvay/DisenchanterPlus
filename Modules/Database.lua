@@ -4,9 +4,6 @@ local DP_Database = DP_ModuleLoader:CreateModule("DP_Database")
 ---@type DP_CustomFunctions
 local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
 
----@type DP_CataclysmDisenchantTable
-local DP_CataclysmDisenchantTable = DP_ModuleLoader:ImportModule("DP_CataclysmDisenchantTable")
-
 ---@type DP_ClassicDisenchantTable
 local DP_ClassicDisenchantTable = DP_ModuleLoader:ImportModule("DP_ClassicDisenchantTable")
 
@@ -133,9 +130,6 @@ function DP_Database:Initialize()
   elseif DisenchanterPlus.IsTBC then
     -- tbc
     DP_TBCDisenchantTable:Initialize()
-  elseif DisenchanterPlus.IsCataclysm then
-    -- cataclysm
-    DP_CataclysmDisenchantTable:Initialize()
   end
   DP_EnchantPatterns:Initialize()
 end
@@ -158,9 +152,6 @@ function DP_Database:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel,
   elseif DisenchanterPlus.IsTBC then
     -- tbc
     return DP_TBCDisenchantTable:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel, itemQuality)
-  elseif DisenchanterPlus.IsCataclysm then
-    -- cataclysm
-    return DP_CataclysmDisenchantTable:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel, itemQuality)
   end
   return false
 end
@@ -172,8 +163,6 @@ function DP_Database:GetExpectedDisenchantData()
     return DP_ClassicDisenchantTable:GenerateDisenchantTable()
   elseif DisenchanterPlus.IsTBC then
     return DP_TBCDisenchantTable:GenerateDisenchantTable()
-  elseif DisenchanterPlus.IsCataclysm then
-    return DP_CataclysmDisenchantTable:GenerateDisenchantTable()
   end
   return {}
 end

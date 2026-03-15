@@ -69,7 +69,6 @@ Modules\TradeSkill\TradeSkillCheck.lua
 Modules\Bags\BagsCheck.lua
 
 Modules\Database.lua
-Modules\Database\CataclysmDisenchantTable.lua
 Modules\Database\ClassicDisenchantTable.lua
 Modules\Database\TBCDisenchantTable.lua
 Modules\Database\EnchantPatterns.lua

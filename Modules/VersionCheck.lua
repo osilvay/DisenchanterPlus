@@ -6,10 +6,6 @@ DisenchanterPlus = LibStub("AceAddon-3.0"):NewAddon("DisenchanterPlus", "AceCons
 ---@type boolean
 DisenchanterPlus.IsMainline = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 
---- Addon is running on Classic Cataclysm client
----@type boolean
-DisenchanterPlus.IsCataclysm = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
-
 --- Addon is running on Classic Wotlk client
 ---@type boolean
 DisenchanterPlus.IsWotlk = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC

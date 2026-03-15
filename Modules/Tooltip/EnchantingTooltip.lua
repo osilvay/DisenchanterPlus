@@ -209,10 +209,6 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
         or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsTBC then
       -- classic_era
       levelToCheck = (itemMinLevel > 0) and itemMinLevel or itemLevel
-    elseif DisenchanterPlus.IsCataclysm then
-      -- cataclysm
-      levelToCheck = itemLevel
-      currentData.IsTBC = false
     end
 
     if levelToCheck >= currentData.MinILevel and levelToCheck <= currentData.MaxILevel and (tbcCheck == currentData.IsTBC) then
