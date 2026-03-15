@@ -184,6 +184,7 @@ L["Confirm enchant"]                                                            
 L["Confirm enchant in selected item."]                                             = "Confirmar encantamiento en objeto seleccionado."
 L["Middle Click"]                                                                  = "Clic central"
 L["Open enchant window"]                                                           = "Abrir la ventana de encantamiento"
+L["Open enchant window."]                                                          = "Abrir la ventana de encantamiento."
 L["Reagents"]                                                                      = "Reactivos"
 L["Refresh enchants"]                                                              = "Recargar encantamientos"
 
@@ -224,10 +225,11 @@ else
   L["runed arcanite rod"]   = "vara de arcanita rúnica"
 end
 
-L["minor wizard oil"]     = "aceite menor de zahorí"
-L["minor mana oil"]       = "aceite menor de maná"
-L["lesser wizard oil"]    = "aceite inferior de zahorí"
-L["lesser mana oil"]      = "aceite inferior de maná"
-L["wizard oil"]           = "aceite de zahorí"
-L["brilliant mana oil"]   = "aceite de maná resplandeciente"
-L["brilliant wizard oil"] = "aceite brillante de zahorí"
+L["minor wizard oil"]                                                   = "aceite menor de zahorí"
+L["minor mana oil"]                                                     = "aceite menor de maná"
+L["lesser wizard oil"]                                                  = "aceite inferior de zahorí"
+L["lesser mana oil"]                                                    = "aceite inferior de maná"
+L["wizard oil"]                                                         = "aceite de zahorí"
+L["brilliant mana oil"]                                                 = "aceite de maná resplandeciente"
+L["brilliant wizard oil"]                                               = "aceite brillante de zahorí"
+L["You need to open the enchanting tradeskill book and click refresh."] = "Necesitas abrir el libro de profesiones de encantamiento y hacer clic en actualizar."

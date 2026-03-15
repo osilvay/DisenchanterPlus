@@ -141,7 +141,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
   settingsButton:SetPoint("TOPRIGHT", EnchanterPlusBaseFrame, -45, -10)
   settingsButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Opens settings window."), nil, nil, nil, nil, true)
+    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Opens settings window."), 1, 0.82, 0, 1, true)
     settingsButton.text:SetTextColor(1, 1, 1)
     settingsButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\settings:14:14|t ") --.. DisenchanterPlus:DP_i18n("Settings")
   end)
@@ -173,7 +173,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
   closeButton:SetPoint("TOPRIGHT", EnchanterPlusBaseFrame, -10, -10)
   closeButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Close window until next iteration."), nil, nil, nil, nil, true)
+    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Close window until next iteration."), 1, 0.82, 0, 1, true)
     closeButton.text:SetTextColor(1, 1, 1)
     closeButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\close:14:14|t ") --.. DisenchanterPlus:DP_i18n("Settings")
   end)
@@ -228,7 +228,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
       keybind = " |cffeeeeff" .. DisenchanterPlus.db.char.general.confirmEnchant .. "|r"
     end
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Proceed with the enchantment.") .. keybind, 1, 1, 1, 1, true)
+    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Proceed with the enchantment.") .. keybind, 1, 0.82, 0, 1, true)
     yesButton.text:SetTextColor(1, 1, 1)
     yesButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\wand:14:14|t " .. DisenchanterPlus:DP_i18n("Enchant"))
   end)
@@ -660,7 +660,11 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
     DP_EnchantWindow:PopulateItemList()
   end
 
-  EnchanterPlusBaseFrame.footText:SetText("|cffffc700" .. DisenchanterPlus:DP_i18n("Select an enchantment from the left list.") .. "|r")
+  if numLinesInEnchantContainer == 0 then
+    EnchanterPlusBaseFrame.footText:SetText("|cffff0a30" .. DisenchanterPlus:DP_i18n("You need to open the enchanting tradeskill book and click refresh.") .. "|r")
+  else
+    EnchanterPlusBaseFrame.footText:SetText("|cffffc700" .. DisenchanterPlus:DP_i18n("Select an enchantment from the left list.") .. "|r")
+  end
 end
 
 ---Get color by craft type
@@ -744,7 +748,7 @@ function DP_EnchantWindow:PopulateItemList(enchant)
       acceptItemButton:SetPoint("RIGHT", itemLineFrame, -40, 0)
       acceptItemButton:SetScript("OnEnter", function(current)
         GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-        GameTooltip:SetText(DisenchanterPlus:DP_i18n("Select"), nil, nil, nil, nil, true)
+        GameTooltip:SetText(DisenchanterPlus:DP_i18n("Select"), 1, 0.82, 0, 1, true)
         if itemSelected ~= current.lineID then
           current.text:SetTextColor(1, 1, 1, 0.6)
           current.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:24:24|t")
@@ -875,7 +879,7 @@ function DP_EnchantWindow:CheckReadyToEnchant()
   if DisenchanterPlus.IsClassic or DisenchanterPlus.IsTBC or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra
       or DisenchanterPlus.IsEraSeasonal then
     macro = string.format("/cast %s\n/use %s\n/click StaticPopup1Button1\n", enchant, itemName)
-  else
+  elseif DisenchanterPlus.IsCataclysm then
     macro = string.format("/run DoTradeSkill(%s)\n/use %s\n/click StaticPopup1Button1\n", craftIndex, itemName)
   end
 
@@ -927,7 +931,7 @@ function DP_EnchantWindow:DrawCraftButton(name, icon, tooltipText, craftIndex, x
   craftButton:SetPoint("TOPRIGHT", EnchanterPlusBaseFrame, x, y)
   craftButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-    GameTooltip:SetText(tooltipText, nil, nil, nil, nil, true)
+    GameTooltip:SetText(tooltipText, 1, 0.82, 0, 1, true)
     current.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\CraftTypes\\" .. icon .. "_fill:16:16|t ") --.. DisenchanterPlus:DP_i18n("Settings")
     current:SetAlpha(0.8)
   end)

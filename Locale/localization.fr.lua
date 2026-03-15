@@ -184,6 +184,7 @@ L["Confirm enchant"]                                                            
 L["Confirm enchant in selected item."]                                             = "Confirm enchant in selected item."
 L["Middle Click"]                                                                  = "Middle Click"
 L["Open enchant window"]                                                           = "Open enchant window"
+L["Open enchant window."]                                                          = "Open enchant window."
 L["Reagents"]                                                                      = "Reagents"
 L["Refresh enchants"]                                                              = "Refresh enchants"
 
@@ -224,10 +225,11 @@ else
   L["runed arcanite rod"]   = "runed arcanite rod"
 end
 
-L["minor wizard oil"]     = "minor wizard oil"
-L["minor mana oil"]       = "minor mana oil"
-L["lesser wizard oil"]    = "lesser wizard oil"
-L["lesser mana oil"]      = "lesser mana oil"
-L["wizard oil"]           = "wizard oil"
-L["brilliant mana oil"]   = "brilliant mana oil"
-L["brilliant wizard oil"] = "brilliant wizard oil"
+L["minor wizard oil"]                                                   = "minor wizard oil"
+L["minor mana oil"]                                                     = "minor mana oil"
+L["lesser wizard oil"]                                                  = "lesser wizard oil"
+L["lesser mana oil"]                                                    = "lesser mana oil"
+L["wizard oil"]                                                         = "wizard oil"
+L["brilliant mana oil"]                                                 = "brilliant mana oil"
+L["brilliant wizard oil"]                                               = "brilliant wizard oil"
+L["You need to open the enchanting tradeskill book and click refresh."] = "You need to open the enchanting tradeskill book and click refresh."
