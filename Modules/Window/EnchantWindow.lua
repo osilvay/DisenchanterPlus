@@ -218,7 +218,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
 
   yesButton:RegisterForClicks("LeftButtonUp", "LeftButtonDown")
   yesButton:SetAttribute("type", "macro")
-  yesButton:SetAttribute("macrotext", "/cheer")
+  yesButton:SetAttribute("macrotext", "")
 
   DP_EnchantWindow:UpdateKeybindings()
 
@@ -868,11 +868,12 @@ function DP_EnchantWindow:CheckReadyToEnchant()
   end
 
   local enchant = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID].enchant
-  local craftIndex = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastItemCurrent.lineID].index
+  local craftIndex = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID].index
   local itemName = EnchanterPlusBaseFrame.tabScrollContentFrame2.line[lastItemCurrent.lineID].itemName
 
   local macro = ""
-  if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
+  if DisenchanterPlus.IsClassic or DisenchanterPlus.IsTBC or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra
+      or DisenchanterPlus.IsEraSeasonal then
     macro = string.format("/cast %s\n/use %s\n/click StaticPopup1Button1\n", enchant, itemName)
   else
     macro = string.format("/run DoTradeSkill(%s)\n/use %s\n/click StaticPopup1Button1\n", craftIndex, itemName)
