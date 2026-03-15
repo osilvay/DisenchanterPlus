@@ -71,7 +71,7 @@ function _DP_MinimapIcon:CreateDataBrokerObject()
         end
       elseif button == "MiddleButton" then
         if DisenchanterPlus.db.char.general.enchantEnabled then
-          DP_EnchantProcess:CraftShow()
+          DP_EnchantProcess:OpenEnchantWindow()
         end
       end
     end,
@@ -113,10 +113,10 @@ function DP_MinimapIcon:UpdateIcon(value)
 end
 
 function DP_MinimapIcon:ToggleVisibility()
-    local isHidden = DisenchanterPlus.db.profile.minimap.hide
-    if isHidden then
-        _LibDBIcon:Hide("DisenchanterPlus")
-    else
-        _LibDBIcon:Show("DisenchanterPlus")
-    end
+  local isHidden = DisenchanterPlus.db.profile.minimap.hide
+  if isHidden then
+    _LibDBIcon:Hide("DisenchanterPlus")
+  else
+    _LibDBIcon:Show("DisenchanterPlus")
+  end
 end

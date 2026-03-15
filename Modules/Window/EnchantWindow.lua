@@ -228,7 +228,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
       keybind = " |cffeeeeff" .. DisenchanterPlus.db.char.general.confirmEnchant .. "|r"
     end
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Proceed with the enchantment.") .. keybind, nil, nil, nil, nil, true)
+    GameTooltip:SetText(DisenchanterPlus:DP_i18n("Proceed with the enchantment.") .. keybind, 1, 1, 1, 1, true)
     yesButton.text:SetTextColor(1, 1, 1)
     yesButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\wand:14:14|t " .. DisenchanterPlus:DP_i18n("Enchant"))
   end)

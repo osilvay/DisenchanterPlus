@@ -7,10 +7,11 @@ local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
 ---@type DP_CustomMedias
 local DP_CustomMedias = DP_ModuleLoader:ImportModule("DP_CustomMedias")
 
----Dump table to string
+---Dump table to string with nil protection
 ---@param o table
 ---@return string o
 function DP_CustomFunctions:Dump(o)
+  if o == nil then return "nil" end
   if type(o) == 'table' then
     local s = '{ '
     for k, v in pairs(o) do
@@ -23,10 +24,14 @@ function DP_CustomFunctions:Dump(o)
   end
 end
 
----Remove duplications in table
+---Remove duplications in table with nil protection
 ---@param currentTable table
 ---@return table res
 function DP_CustomFunctions:RemoveDuplicationsInTable(currentTable)
+  if currentTable == nil or type(currentTable) ~= 'table' then
+    DisenchanterPlus:Warning("RemoveDuplicationsInTable: Invalid table")
+    return {}
+  end
   local hash = {}
   local res = {}
   for _, v in ipairs(currentTable) do
@@ -38,11 +43,14 @@ function DP_CustomFunctions:RemoveDuplicationsInTable(currentTable)
   return res
 end
 
----Check if table contains value
+---Check if table contains value with nil protection
 ---@param table table
 ---@param value any
 ---@return boolean
 function DP_CustomFunctions:TableHasValue(table, value)
+  if table == nil or type(table) ~= 'table' then
+    return false
+  end
   local f = false
   for k, v in pairs(table) do
     if table[k] == value then
@@ -53,11 +61,14 @@ function DP_CustomFunctions:TableHasValue(table, value)
   return f
 end
 
----Check if table contains key
+---Check if table contains key with nil protection
 ---@param table table
 ---@param key string
 ---@return boolean
 function DP_CustomFunctions:TableHasKey(table, key)
+  if table == nil or type(table) ~= 'table' or key == nil then
+    return false
+  end
   local f = false
   for k, _ in pairs(table) do
     if k == key then
@@ -68,10 +79,13 @@ function DP_CustomFunctions:TableHasKey(table, key)
   return f
 end
 
----Count table entries
+---Count table entries with nil protection
 ---@param currentTable table
 ---@return number
 function DP_CustomFunctions:CountTableEntries(currentTable)
+  if currentTable == nil or type(currentTable) ~= 'table' then
+    return 0
+  end
   local f = 0
   for _, v in pairs(currentTable) do
     f = f + 1
@@ -80,12 +94,16 @@ function DP_CustomFunctions:CountTableEntries(currentTable)
 end
 
 function DP_CustomFunctions:RemoveIndexFromTable(currentTable, currentIndex)
+  if currentTable == nil or type(currentTable) ~= 'table' or currentIndex == nil then
+    DisenchanterPlus:Warning("RemoveIndexFromTable: Invalid parameters")
+    return {}
+  end
   local resultTable = {}
   --DisenchanterPlus:Debug("Removing from table : " .. tostring(currentIndex))
   --DisenchanterPlus:Dump(currentTable)
   for k, v in pairs(currentTable) do
     if k ~= currentIndex then
-      table.insert(resultTable, k, v)
+      resultTable[k] = v -- Fixed: was table.insert(resultTable, k, v) which is incorrect
     end
   end
   --DisenchanterPlus:Debug("Removed from table : " .. tostring(currentIndex))
@@ -93,11 +111,17 @@ function DP_CustomFunctions:RemoveIndexFromTable(currentTable, currentIndex)
   return resultTable
 end
 
----Synchronize two tables
+---Synchronize two tables with nil protection
 ---@param table1 table
 ---@param table2 table
 ---@return table
 function DP_CustomFunctions:SyncTableEntries(table1, table2)
+  if table1 == nil or type(table1) ~= 'table' then
+    return {}
+  end
+  if table2 == nil or type(table2) ~= 'table' then
+    table2 = {}
+  end
   local r = {}
   for k, v in pairs(table1) do
     if not DP_CustomFunctions:TableHasKey(table2, k) then

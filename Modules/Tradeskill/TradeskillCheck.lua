@@ -83,7 +83,8 @@ end
 ---Populate tradeSkill lines
 ---@return table
 function DP_TradeSkillCheck:GetTradeSkillLines()
-  if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
+  if DisenchanterPlus.IsClassic or DisenchanterPlus.IsTBC or DisenchanterPlus.IsHardcore
+      or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
     -- classic_era
     return DP_TradeSkillCheck:GetTradeSkillLinesForClassic()
   elseif DisenchanterPlus.IsCataclysm then

@@ -3,7 +3,7 @@
 .version
 .git
 Doc
-Releases
+Release
 packager.bat
 pkgmeta.yaml
 *.zip

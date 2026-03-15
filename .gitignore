@@ -58,4 +58,7 @@ luac.out
 .history
 .ionide
 
+Sources/
+Release/
+
 # End of https://www.toptal.com/developers/gitignore/api/lua,visualstudiocode

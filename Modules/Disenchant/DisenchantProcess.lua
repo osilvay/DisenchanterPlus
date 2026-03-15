@@ -36,9 +36,13 @@ function DP_DisenchantProcess:Initialize()
   end)
 end
 
----Add item to ignored session list
+---Add item to ignored session list with nil protection
 ---@param itemID number
 function DP_DisenchantProcess:AddSessionIgnoredItem(itemID)
+  if itemID == nil then
+    DisenchanterPlus:Warning("AddSessionIgnoredItem: Invalid itemID")
+    return
+  end
   --DisenchanterPlus:Dump(sessionIgnoredItems)
   local sessionIgnoredList = DP_DisenchantGroup:GetSessionIgnoreList() or {}
   if not DP_CustomFunctions:TableHasKey(sessionIgnoredList, tostring(itemID)) then
@@ -76,9 +80,13 @@ function DP_DisenchantProcess:EmptyPermanentIgnoredItemsList()
   end)
 end
 
----Add item to ignored session list
+---Add item to ignored session list with nil protection
 ---@param itemID number
 function DP_DisenchantProcess:AddPermanentIgnoredItem(itemID)
+  if itemID == nil then
+    DisenchanterPlus:Warning("AddPermanentIgnoredItem: Invalid itemID")
+    return
+  end
   --DisenchanterPlus:Debug("AddPermanentIgnoredItem : " .. tostring(itemID))
   local permanentIgnoreList = DP_DisenchantGroup:GetPermanentIgnoreList() or {}
   if not DP_CustomFunctions:TableHasKey(permanentIgnoreList, tostring(itemID)) then
@@ -303,7 +311,7 @@ function DP_DisenchantProcess:ScanForItems()
   --DisenchanterPlus:Debug("Has itemToDisenchant ? " .. tostring(itemToDisenchant))
   if InCombatLockdown() or UnitAffectingCombat("player") or disenchanting or itemToDisenchant then return end
 
-  local disenchantIsKnown = IsSpellKnown(disenchantSpellID)
+  local disenchantIsKnown = C_SpellBook.IsSpellKnown(disenchantSpellID)
   --DisenchanterPlus:Debug("Has tradeskill ?" .. tostring(disenchantIsKnown))
   if not disenchantIsKnown then return end
 

@@ -3,7 +3,7 @@ manual-changelog: CHANGELOG.md
 ignore:
   - Doc
   - Patches
-  - Releases
+  - Release
   - .gitignore
   - .version
   - DisenchanterPlus.toc

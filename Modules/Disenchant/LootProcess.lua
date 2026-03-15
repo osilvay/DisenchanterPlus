@@ -17,7 +17,7 @@ local IsItemLocked = false
 function DP_LootProcess:Initialize()
 end
 
----loot ready
+---loot ready with error protection
 function DP_LootProcess:LootReady()
   --DisenchanterPlus:Debug("LootingInProgress : " .. tostring(LootingInProgress))
   if LootingInProgress then
@@ -26,26 +26,53 @@ function DP_LootProcess:LootReady()
     LootingInProgress = true
   end
 
-  MaxLootReadyCount = math.max(MaxLootReadyCount, GetNumLootItems())
+  local numLootItems = GetNumLootItems()
+  MaxLootReadyCount = math.max(MaxLootReadyCount, numLootItems)
   --DisenchanterPlus:Debug("MaxLootReadyCount : " .. tostring(MaxLootReadyCount))
-  for slotIndex = 1, GetNumLootItems() do
-    local lootLink = GetLootSlotLink(slotIndex)
+
+  -- Security: limit max loot items to prevent infinite loops
+  local maxLootLimit = 1000
+  if numLootItems > maxLootLimit then
+    DisenchanterPlus:Warning("Loot items exceed safe limit (" .. tostring(numLootItems) .. ">" .. tostring(maxLootLimit) .. "). Capping at limit.")
+    numLootItems = maxLootLimit
+  end
+
+  for slotIndex = 1, numLootItems do
+    local success, lootLink = pcall(function() return GetLootSlotLink(slotIndex) end)
+    if not success or lootLink == nil then
+      DisenchanterPlus:Debug("Failed to get loot link for slot " .. tostring(slotIndex))
+      break
+    end
+
     local slotType = GetLootSlotType(slotIndex)
     if lootLink ~= nil and slotType ~= nil then
       local itemID, _, _, _, _, _, _ = C_Item.GetItemInfoInstant(lootLink)
-      if itemID == nil then return end
+      if itemID == nil then
+        DisenchanterPlus:Debug("ItemID is nil for loot link at slot " .. tostring(slotIndex))
+        break
+      end
 
       local lootIcon, lootName, lootQuantity, currencyID, lootQuality, _, _, _, _ = GetLootSlotInfo(slotIndex)
+      if lootIcon == nil or lootName == nil then
+        DisenchanterPlus:Debug("Loot info missing for slot " .. tostring(slotIndex))
+        break
+      end
 
       --DisenchanterPlus:Debug("itemID : " .. tostring(itemID))
       local enchantingItemType = DP_LootProcess:CheckEnchantingItemType(itemID)
-      if enchantingItemType == nil then return end
+      if enchantingItemType == nil then
+        DisenchanterPlus:Debug("Not an enchanting item: " .. tostring(itemID))
+        break
+      end
 
       if itemID ~= -1 then
         local sources = { GetLootSourceInfo(slotIndex) }
         --DisenchanterPlus:Debug(string.format(" %d > quality = %d, name =  %s [%d mobs] - item_id = %d - quantity = %d", i, lootQuantity, lootName, #sources / 2, itemID, lootQuantity))
         --DisenchanterPlus:Dump(sources)
-        for sourceIndex = 1, #sources, 2 do
+
+        -- Security: limit source iterations to prevent infinite loops
+        local maxSourceIterations = 100
+        for sourceIndex = 1, math.min(#sources, maxSourceIterations), 2 do
           local guidType = select(1, strsplit("-", sources[sourceIndex]))
           --DisenchanterPlus:Debug("guidType = " .. tostring(guidType))
           --if guidType ~= "Item" then
@@ -117,10 +144,15 @@ function DP_LootProcess:UnitSpellCastSucceeded(unitTarget, castGUID, spellID)
   end
 end
 
----Save enchanting item details
+---Save enchanting item details with error protection
 ---@param lootInfo table
 function DP_LootProcess:SaveEnchantingItemDetails(lootInfo)
-  if lootInfo ~= nil then
+  if lootInfo == nil or lootInfo.ItemID == nil then
+    DisenchanterPlus:Warning("SaveEnchantingItemDetails: Invalid lootInfo or missing ItemID")
+    return
+  end
+
+  local success, result = pcall(function()
     local itemID = lootInfo.ItemID
     --DisenchanterPlus:Dump(enchantingItemInfo)
 
@@ -162,54 +194,69 @@ function DP_LootProcess:SaveEnchantingItemDetails(lootInfo)
     for _, sourceItemID in pairs(sourceItemsToSave) do
       DP_LootProcess:SaveSourceItemDetails(sourceItemID, enchantingItemInfo)
     end
+  end)
+
+  if not success then
+    DisenchanterPlus:Error("Failed to save enchanting item details: " .. tostring(result))
   end
 end
 
----Save source item details
+---Save source item details with error protection
 ---@param itemID number
 ---@param essenceInfo table
 function DP_LootProcess:SaveSourceItemDetails(itemID, essenceInfo)
-  --DisenchanterPlus:Debug("Saving source itemID " .. tostring(itemID))
-  --DisenchanterPlus:Debug("Essence itemID " .. tostring(essenceInfo.ItemID))
-  --DisenchanterPlus:Dump(essenceInfo)
-  local sourceItemInfo = DP_Database:GetItemData(itemID)
-  if sourceItemInfo == nil then
-    local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, _, _, itemTexture, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
-
-    sourceItemInfo = {
-      ItemName = itemName,
-      Quality = itemQuality,
-      ItemLink = itemLink,
-      ItemLevel = itemLevel,
-      ItemMinLevel = itemMinLevel,
-      ItemType = itemType,
-      ItemSubType = itemSubType,
-      ItemTexture = itemTexture,
-      EnchantingItems = {},
-    }
+  if itemID == nil or essenceInfo == nil or essenceInfo.ItemID == nil then
+    DisenchanterPlus:Warning("SaveSourceItemDetails: Invalid parameters")
+    return
   end
 
-  local savedEnchantingItems = sourceItemInfo.EnchantingItems or {}
-  local essenceItemID = essenceInfo.ItemID
-  local essenceItemInfo = savedEnchantingItems[essenceItemID]
+  local success, result = pcall(function()
+    --DisenchanterPlus:Debug("Saving source itemID " .. tostring(itemID))
+    --DisenchanterPlus:Debug("Essence itemID " .. tostring(essenceInfo.ItemID))
+    --DisenchanterPlus:Dump(essenceInfo)
+    local sourceItemInfo = DP_Database:GetItemData(itemID)
+    if sourceItemInfo == nil then
+      local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, _, _, itemTexture, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
 
-  if essenceItemInfo == nil then
-    essenceItemInfo = essenceInfo
-  else
-    local savedItems = tonumber(essenceItemInfo.Items) or 0
-    local savedQuantity = tonumber(essenceItemInfo.Quantity) or 0
-    local currentItems = tonumber(essenceInfo.Items) or 0
-    local currentQuantity = tonumber(essenceInfo.Quantity) or 0
-    essenceItemInfo.Items = currentItems + savedItems
-    essenceItemInfo.Quantity = currentQuantity + savedQuantity
+      sourceItemInfo = {
+        ItemName = itemName,
+        Quality = itemQuality,
+        ItemLink = itemLink,
+        ItemLevel = itemLevel,
+        ItemMinLevel = itemMinLevel,
+        ItemType = itemType,
+        ItemSubType = itemSubType,
+        ItemTexture = itemTexture,
+        EnchantingItems = {},
+      }
+    end
+
+    local savedEnchantingItems = sourceItemInfo.EnchantingItems or {}
+    local essenceItemID = essenceInfo.ItemID
+    local essenceItemInfo = savedEnchantingItems[essenceItemID]
+
+    if essenceItemInfo == nil then
+      essenceItemInfo = essenceInfo
+    else
+      local savedItems = tonumber(essenceItemInfo.Items) or 0
+      local savedQuantity = tonumber(essenceItemInfo.Quantity) or 0
+      local currentItems = tonumber(essenceInfo.Items) or 0
+      local currentQuantity = tonumber(essenceInfo.Quantity) or 0
+      essenceItemInfo.Items = currentItems + savedItems
+      essenceItemInfo.Quantity = currentQuantity + savedQuantity
+    end
+    essenceItemInfo.ItemName = essenceInfo.ItemName
+    essenceItemInfo.Quality = essenceInfo.Quality
+
+    sourceItemInfo.EnchantingItems[essenceItemID] = essenceItemInfo
+    --DisenchanterPlus:Dump(sourceItemInfo)
+
+    DP_Database:SetItemData(itemID, sourceItemInfo)
+  end)
+
+  if not success then
+    DisenchanterPlus:Error("Failed to save source item details: " .. tostring(result))
   end
-  essenceItemInfo.ItemName = essenceInfo.ItemName
-  essenceItemInfo.Quality = essenceInfo.Quality
-
-  sourceItemInfo.EnchantingItems[essenceItemID] = essenceItemInfo
-  --DisenchanterPlus:Dump(sourceItemInfo)
-
-  DP_Database:SetItemData(itemID, sourceItemInfo)
 end
 
 ---Process item locked
