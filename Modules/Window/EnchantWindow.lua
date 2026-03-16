@@ -28,6 +28,10 @@ local DP_EnchantProcess          = DP_ModuleLoader:ImportModule("DP_EnchantProce
 ---@type DP_CustomFrames
 local DP_CustomFrames            = DP_ModuleLoader:ImportModule("DP_CustomFrames")
 
+---@class EnchantLineText : FontString
+---@field lineID number
+---@field numAvailable number
+
 local DEFAULT_DIALOG_BACKDROP    = {
   bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
   edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -230,19 +234,19 @@ function DP_EnchantWindow:CreateEnchantWindow()
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(DisenchanterPlus:DP_i18n("Proceed with the enchantment.") .. keybind, 1, 0.82, 0, 1, true)
     yesButton.text:SetTextColor(1, 1, 1)
-    yesButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\wand:14:14|t " .. DisenchanterPlus:DP_i18n("Enchant"))
+    yesButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:14:14|t " .. DisenchanterPlus:DP_i18n("Enchant"))
   end)
   yesButton:SetScript("OnLeave", function(current)
     GameTooltip:Hide()
     yesButton.text:SetTextColor(0.6, 0.6, 0.6)
-    yesButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\wand_a:14:14|t " .. DisenchanterPlus:DP_i18n("Enchant"))
+    yesButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept_a:14:14|t " .. DisenchanterPlus:DP_i18n("Enchant"))
   end)
   yesButton:SetScript("PreClick", function(current)
     if not enchanting then
       DP_EnchantWindow:DisableEnchantButton()
       C_Timer.After(5.5, function()
         local lastSelectedEnchant
-        if lastEnchantCurrent and lastItemCurrent then
+        if lastEnchantCurrent and lastItemCurrent and EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID] then
           lastSelectedEnchant = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID].enchant
         end
         DP_EnchantWindow:EnableEnchantButton()
@@ -255,7 +259,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
   EnchanterPlusBaseFrame.yesButton = yesButton
 
   local yesText = yesButton:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-  local yesString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\wand_a:14:14|t " .. DisenchanterPlus:DP_i18n("Enchant")
+  local yesString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept_a:14:14|t " .. DisenchanterPlus:DP_i18n("Enchant")
   yesText:SetPoint("CENTER", yesButton, "CENTER")
   yesText:SetText(yesString)
   yesText:SetTextColor(0.6, 0.6, 0.6)
@@ -382,7 +386,9 @@ function DP_EnchantWindow:CloseWindow()
   if lastEnchantCurrent then
     lastEnchantCurrent.text:SetTextColor(1, 1, 1, 0.1)
     lastEnchantCurrent.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:24:24|t")
-    EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID]:SetBackdropColor(1, 1, 1, 0)
+    if EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID] then
+      EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID]:SetBackdropColor(1, 1, 1, 0)
+    end
     enchantSelected = nil
     lastEnchantCurrent = nil
     itemSelected = nil
@@ -512,7 +518,9 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
           if enchantSelected ~= current.lineID then
             current.text:SetTextColor(1, 1, 1, 0.6)
             current.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:24:24|t")
-            EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]:SetBackdropColor(1, 1, 1, 0.3)
+            if EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID] then
+              EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]:SetBackdropColor(1, 1, 1, 0.3)
+            end
           end
         end)
         acceptEnchantButton:SetScript("OnLeave", function(current)
@@ -520,7 +528,9 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
           if enchantSelected ~= current.lineID then
             current.text:SetTextColor(1, 1, 1, 0.1)
             current.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept_a:24:24|t")
-            EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]:SetBackdropColor(1, 1, 1, 0)
+            if EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID] then
+              EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]:SetBackdropColor(1, 1, 1, 0)
+            end
           end
         end)
         acceptEnchantButton:SetScript("OnClick", function(current)
@@ -528,17 +538,23 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
             if lastEnchantCurrent then
               lastEnchantCurrent.text:SetTextColor(1, 1, 1, 0.1)
               lastEnchantCurrent.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:24:24|t")
-              EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID]:SetBackdropColor(1, 1, 1, 0)
+              if EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID] then
+                EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID]:SetBackdropColor(1, 1, 1, 0)
+              end
             end
             current.text:SetTextColor(1, 1, 1, 1)
-            EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]:SetBackdropColor(1, 1, 1, 0.6)
+            if EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID] then
+              EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]:SetBackdropColor(1, 1, 1, 0.6)
+            end
             enchantSelected = current.lineID
             lastEnchantCurrent = current
             if current.numAvailable and current.numAvailable > 0 then
               current.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept_c:24:24|t")
               itemSelected    = nil
               lastItemCurrent = nil
-              DP_EnchantWindow:PopulateItemList(EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID].enchant)
+              if EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID] then
+                DP_EnchantWindow:PopulateItemList(EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID].enchant)
+              end
             else
               current.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\close_c:24:24|t")
               EnchanterPlusBaseFrame.footText:SetText("|cffff0a30" .. DisenchanterPlus:DP_i18n("You don't have any materials for that enchantment.") .. "|r")
@@ -547,7 +563,9 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
           else
             current.text:SetTextColor(1, 1, 1, 0.1)
             current.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:24:24|t")
-            EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]:SetBackdropColor(1, 1, 1, 0)
+            if EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID] then
+              EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]:SetBackdropColor(1, 1, 1, 0)
+            end
             EnchanterPlusBaseFrame.footText:SetText("|cffffc700" .. DisenchanterPlus:DP_i18n("Select an enchantment from the left list.") .. "|r")
             enchantSelected = nil
             lastEnchantCurrent = nil
@@ -580,11 +598,16 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
 
         -- enchant text
         local enchantLineText = enchantLineFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        ---@cast enchantLineText EnchantLineText
         enchantLineText.lineID = itemNum
         enchantLineText.numAvailable = lineInfo.NumAvailable or 0
 
         enchantLineText:SetSize(240, 32)
         enchantLineText:SetPoint("LEFT", enchantLineFrame, 10, 0)
+
+        local fontPath, _, outline = GameFontNormal:GetFont()
+        enchantLineText:SetFont(fontPath, 15, "NONE" or "")
+
         enchantLineText:SetText(string.format("|c%s%s %s|r",
           DP_EnchantWindow:GetColorByCraftType(lineInfo.CraftType),
           (lineInfo.NumAvailable and lineInfo.NumAvailable > 0) and "[" .. lineInfo.NumAvailable .. "]" or "-",
@@ -593,18 +616,22 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
         enchantLineText:SetMaxLines(1)
         enchantLineText:SetScript("OnEnter", function(current)
           if enchantSelected ~= current.lineID then
-            local tabFrame = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]
-            tabFrame.acceptEnchantButton.text:SetTextColor(1, 1, 1, 0.6)
-            tabFrame.acceptEnchantButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:24:24|t")
-            tabFrame:SetBackdropColor(1, 1, 1, 0.3)
+            if EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID] then
+              local tabFrame = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]
+              tabFrame.acceptEnchantButton.text:SetTextColor(1, 1, 1, 0.6)
+              tabFrame.acceptEnchantButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:24:24|t")
+              tabFrame:SetBackdropColor(1, 1, 1, 0.3)
+            end
           end
         end)
         enchantLineText:SetScript("OnLeave", function(current)
           if enchantSelected ~= current.lineID then
-            local tabFrame = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]
-            tabFrame.acceptEnchantButton.text:SetTextColor(1, 1, 1, 0.1)
-            tabFrame.acceptEnchantButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:24:24|t")
-            tabFrame:SetBackdropColor(1, 1, 1, 0.0)
+            if EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID] then
+              local tabFrame = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]
+              tabFrame.acceptEnchantButton.text:SetTextColor(1, 1, 1, 0.1)
+              tabFrame.acceptEnchantButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:24:24|t")
+              tabFrame:SetBackdropColor(1, 1, 1, 0.0)
+            end
           end
         end)
         enchantLineFrame.enchantLineText = enchantLineText
@@ -803,12 +830,17 @@ function DP_EnchantWindow:PopulateItemList(enchant)
       acceptItemText:SetTextColor(1, 1, 1, 0.1)
       acceptItemButton.text = acceptItemText
 
-      -- item text ***************************************************************************************************************************************
+      -- item text
       local itemLineText = itemLineFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+      ---@cast itemLineText EnchantLineText
       itemLineText.lineID = itemNum
 
       itemLineText:SetSize(240, 32)
       itemLineText:SetPoint("LEFT", itemLineFrame, 10, 0)
+
+      local fontPath, _, outline = GameFontNormal:GetFont()
+      itemLineText:SetFont(fontPath, 15, "NONE" or "")
+
       itemLineText:SetText(string.format("%s", lineInfo.ItemLink))
       itemLineText:SetJustifyH("LEFT")
       itemLineText:SetMaxLines(1)
@@ -867,6 +899,12 @@ end
 ---@return string|nil
 function DP_EnchantWindow:CheckReadyToEnchant()
   if not lastEnchantCurrent or not lastItemCurrent then
+    DP_EnchantWindow:DisableEnchantButton()
+    return
+  end
+
+  if not (EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID] and
+        EnchanterPlusBaseFrame.tabScrollContentFrame2.line and EnchanterPlusBaseFrame.tabScrollContentFrame2.line[lastItemCurrent.lineID]) then
     DP_EnchantWindow:DisableEnchantButton()
     return
   end
