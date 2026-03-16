@@ -1,3 +1,8 @@
+## **Version 2.0.1.2**
+
+- Fixed disenchant window not reopening after closing with Escape key.
+- Fixed state synchronization issue in DisenchantProcess.
+
 ## **Version 2.0.1.1**
 
 - Removed unnecessary source files
