@@ -369,6 +369,7 @@ function DP_EnchantWindow:OpenWindow()
       EnchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, textFrameBgColorAlpha)
       EnchanterPlusBaseFrame:Show()
       EnchanterPlusBaseFrame.settingsButton:Show()
+      table.insert(UISpecialFrames, "EnchantWindow_BaseFrame")
       windowOpened = true
     end)
   end
@@ -397,6 +398,12 @@ function DP_EnchantWindow:CloseWindow()
   end
   DP_EnchantProcess:SetCraftingWindowOpen(false)
   DP_EnchantWindow:DisableEnchantButton()
+  for i, frameName in ipairs(UISpecialFrames) do
+    if frameName == "EnchantWindow_BaseFrame" then
+      table.remove(UISpecialFrames, i)
+      break
+    end
+  end
   EnchanterPlusBaseFrame:Hide()
   windowOpened = false
 end
@@ -486,6 +493,7 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
         enchantLineFrame:SetSize(310, 32)
         enchantLineFrame:SetBackdrop(CUSTOM_DIALOG_BACKDROP)
         enchantLineFrame:SetBackdropColor(1, 1, 1, 0)
+        enchantLineFrame:EnableMouse(true)
 
         -- select button
         local acceptEnchantButton = CreateFrame("Button", "EnchantWindow_SelectButton" .. itemNum, enchantLineFrame, BackdropTemplateMixin and "BackdropTemplate")
@@ -766,6 +774,7 @@ function DP_EnchantWindow:PopulateItemList(enchant)
       itemLineFrame:SetSize(310, 32)
       itemLineFrame:SetBackdrop(CUSTOM_DIALOG_BACKDROP)
       itemLineFrame:SetBackdropColor(1, 1, 1, 0)
+      itemLineFrame:EnableMouse(true)
 
       -- select button ***************************************************************************************************************************************
       local acceptItemButton = CreateFrame("Button", "EnchantWindow_SelectItemButton" .. itemNum, itemLineFrame, BackdropTemplateMixin and "BackdropTemplate")
@@ -856,7 +865,7 @@ function DP_EnchantWindow:PopulateItemList(enchant)
         if itemSelected ~= current.lineID then
           local tabFrame = EnchanterPlusBaseFrame.tabScrollContentFrame2.line[current.lineID]
           tabFrame.acceptItemButton.text:SetTextColor(1, 1, 1, 0.1)
-          tabFrame.acceptItemButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:24:24|t")
+          tabFrame.acceptItemButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept_a:24:24|t")
           tabFrame:SetBackdropColor(1, 1, 1, 0.0)
         end
       end)

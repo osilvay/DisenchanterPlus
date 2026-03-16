@@ -595,6 +595,7 @@ function DP_DisenchantWindow:OpenWindow(bagItems, tradeskill)
       end
 
       DisenchanterPlusBaseFrame.ignoreButton:Show()
+      table.insert(UISpecialFrames, "DisenchanterPlus_AutoDisenchant")
       windowOpened = true
       --DP_DisenchantWindow:RedrawQualities()
     end)
@@ -622,6 +623,12 @@ function DP_DisenchantWindow:CloseWindow()
   end
 
   DisenchanterPlusBaseFrame:Hide()
+  for i, frameName in ipairs(UISpecialFrames) do
+    if frameName == "DisenchanterPlus_AutoDisenchant" then
+      table.remove(UISpecialFrames, i)
+      break
+    end
+  end
 
   windowOpened = false
   itemToDisenchant = nil
