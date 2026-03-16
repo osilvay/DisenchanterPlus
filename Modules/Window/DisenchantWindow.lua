@@ -84,6 +84,19 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
 
   DisenchanterPlusBaseFrame:SetBackdrop(DEFAULT_DIALOG_BACKDROP)
   DisenchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, 0)
+  DisenchanterPlusBaseFrame:SetScript("OnHide", function()
+    -- Sincronizar estado cuando se oculta la ventana
+    windowOpened = false
+    DP_DisenchantProcess:ResetItemState()
+
+    -- Remover de UISpecialFrames cuando se oculta
+    for i, frameName in ipairs(UISpecialFrames) do
+      if frameName == "DisenchanterPlus_AutoDisenchant" then
+        table.remove(UISpecialFrames, i)
+        break
+      end
+    end
+  end)
 
   local titleBar = CreateFrame("Frame", "EnchantWindow_BaseFrameTitleBackground", DisenchanterPlusBaseFrame)
   titleBar:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, "TOPLEFT", 0, 0)
@@ -561,6 +574,7 @@ end
 ---Open auto disenchant window
 ---@param bagItems table
 ---@param tradeskill table
+---Open window
 function DP_DisenchantWindow:OpenWindow(bagItems, tradeskill)
   if not DisenchanterPlusBaseFrame then
     DisenchanterPlusBaseFrame = DP_DisenchantWindow:CreateAutoDisenchantWindow()
@@ -571,7 +585,8 @@ function DP_DisenchantWindow:OpenWindow(bagItems, tradeskill)
   end
 
   --DisenchanterPlus:Debug(tostring(windowOpened))
-  if not windowOpened then
+  -- Permitir abrir si no está visible (en lugar de solo verificar windowOpened)
+  if not DisenchanterPlusBaseFrame:IsVisible() then
     C_Timer.After(0.2, function()
       DisenchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, textFrameBgColorAlpha)
       DisenchanterPlusBaseFrame:Show()
@@ -595,7 +610,17 @@ function DP_DisenchantWindow:OpenWindow(bagItems, tradeskill)
       end
 
       DisenchanterPlusBaseFrame.ignoreButton:Show()
-      table.insert(UISpecialFrames, "DisenchanterPlus_AutoDisenchant")
+      -- Agregar a UISpecialFrames solo si no está ya
+      local isInUISpecialFrames = false
+      for _, frameName in ipairs(UISpecialFrames) do
+        if frameName == "DisenchanterPlus_AutoDisenchant" then
+          isInUISpecialFrames = true
+          break
+        end
+      end
+      if not isInUISpecialFrames then
+        table.insert(UISpecialFrames, "DisenchanterPlus_AutoDisenchant")
+      end
       windowOpened = true
       --DP_DisenchantWindow:RedrawQualities()
     end)
@@ -632,6 +657,8 @@ function DP_DisenchantWindow:CloseWindow()
 
   windowOpened = false
   itemToDisenchant = nil
+  -- Limpiar estado en DisenchantProcess
+  DP_DisenchantProcess:ResetItemState()
   DisenchanterPlusBaseFrame.yesButton:SetAttribute("target-bag", nil)
   DisenchanterPlusBaseFrame.yesButton:SetAttribute("target-slot", nil)
   DisenchanterPlusBaseFrame.yesButton:SetAttribute("spell", nil)

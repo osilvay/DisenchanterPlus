@@ -99,6 +99,18 @@ function DP_EnchantWindow:CreateEnchantWindow()
 
   EnchanterPlusBaseFrame:SetBackdrop(DEFAULT_DIALOG_BACKDROP)
   EnchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, 0)
+  EnchanterPlusBaseFrame:SetScript("OnHide", function()
+    -- Sincronizar estado cuando se oculta la ventana
+    windowOpened = false
+
+    -- Remover de UISpecialFrames cuando se oculta
+    for i, frameName in ipairs(UISpecialFrames) do
+      if frameName == "EnchantWindow_BaseFrame" then
+        table.remove(UISpecialFrames, i)
+        break
+      end
+    end
+  end)
 
   local titleBar = CreateFrame("Frame", "EnchantWindow_BaseFrameTitleBackground", EnchanterPlusBaseFrame)
   titleBar:SetPoint("TOPLEFT", EnchanterPlusBaseFrame, "TOPLEFT", 0, 0)
@@ -364,12 +376,23 @@ function DP_EnchantWindow:OpenWindow()
   end
 
   --DisenchanterPlus:Debug(tostring(windowOpened))
-  if not windowOpened then
+  -- Permitir abrir si no está visible (en lugar de solo verificar windowOpened)
+  if not EnchanterPlusBaseFrame:IsVisible() then
     C_Timer.After(0.2, function()
       EnchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, textFrameBgColorAlpha)
       EnchanterPlusBaseFrame:Show()
       EnchanterPlusBaseFrame.settingsButton:Show()
-      table.insert(UISpecialFrames, "EnchantWindow_BaseFrame")
+      -- Agregar a UISpecialFrames solo si no está ya
+      local isInUISpecialFrames = false
+      for _, frameName in ipairs(UISpecialFrames) do
+        if frameName == "EnchantWindow_BaseFrame" then
+          isInUISpecialFrames = true
+          break
+        end
+      end
+      if not isInUISpecialFrames then
+        table.insert(UISpecialFrames, "EnchantWindow_BaseFrame")
+      end
       windowOpened = true
     end)
   end

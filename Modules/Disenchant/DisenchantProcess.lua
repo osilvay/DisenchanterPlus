@@ -288,6 +288,9 @@ end
 
 ---Open disenchant window
 function DP_DisenchantProcess:OpenDisenchantWindow()
+  print(disenchanting)
+  print(itemToDisenchant)
+
   if InCombatLockdown() or UnitAffectingCombat("player") or disenchanting or itemToDisenchant then return end
 
   --local disenchantIsKnown = IsSpellKnown(disenchantSpellID)
@@ -329,6 +332,12 @@ function DP_DisenchantProcess:ScanForItems()
     DP_DisenchantWindow:OpenWindow(itemInfoFromBag, tradeskill)
     DP_DisenchantWindow:UpdateItemsLeft(DP_BagsCheck:GetTotalItemsInBagsToDisenchant())
   end
+end
+
+---Reset item state when window is closed
+function DP_DisenchantProcess:ResetItemState()
+  itemToDisenchant = false
+  disenchanting = false
 end
 
 ---Is process running
