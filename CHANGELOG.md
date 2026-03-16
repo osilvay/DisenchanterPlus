@@ -1,6 +1,11 @@
+## **Version 2.0.1.0**
+
+- Fixed enchanting window errors.
+- Cataclysm compatibility removed
+
 ## **Version 2.0.0.2**
 
-- Add Toggle minimap visibility (Thanks to https://github.com/rcouch00)
+- Added toggle minimap visibility (Thanks to https://github.com/rcouch00)
 
 ## **Version 2.0.0.1**
 
@@ -25,7 +30,7 @@
 
 - Added Enchanting vellums [Cata].
 - Minor interface changes.
-- Fixed a bug with disable all settings for enchants.
+- Fixed a bug when disabling all settings for enchants.
 - Bug fixes.
 
 ## **Version 1.0.9.0**
@@ -58,7 +63,7 @@
 
 - Minor changes in main window.
 - Fixed an error with items that have been disenchanted and reappear.
-- Fixed an error wuth tooltips in main window.
+- Fixed an error with tooltips in main window.
 
 ## **Version 1.0.8.3**
 
@@ -70,11 +75,11 @@
 ## **Version 1.0.8.2**
 
 - Fixed a bug with combat lockdown and looting items.
-- Fixed a bug when entering in combat.
+- Fixed a bug when entering combat.
 
 ## **Version 1.0.8.1**
 
-- Fixed a bug when an item does not had auction price.
+- Fixed a bug when an item did not have an auction price.
 
 ## **Version 1.0.8.0**
 
@@ -92,20 +97,20 @@
 
 - Settings panel redone.
 - Fixed a bug in Cata with disenchanting tables (Road-block issue).
-- Fixed a bug when entering in combat and main frame has not been initialized.
+- Fixed a bug when entering combat if main frame has not been initialized.
 - Code cleanup.
 - Bug fixes.
 
 ## **Version 1.0.7-alpha1**
 
 - Settings panel redone.
-- Fixed a bug that the "Press Key to Show" option for tooltip disenchant information doesn't seem to do anything. (Road-block issue)
+- Fixed an issue where the "Press Key to Show" option for tooltip disenchant information didn't seem to do anything. (Road-block issue)
 - Code cleanup.
 
 ## **Version 1.0.6**
 
 - Closing the main window now does not pause the automatic disenchant.
-- Add an option to the settings to show/hide the qualities that are going to be disenchanted
+- Added an option to the settings to show/hide the qualities that are going to be disenchanted
 - Fixed a bug with combat lockdown.
 - Fixed a bug when displaying the item name in the disenchant window
 
@@ -145,12 +150,12 @@
 
 ## **Version 1.0.2**
 
-- Correction when the auto disenchant status changes the minimap icon doesnt do it.
+- Fixed the minimap icon not updating when auto disenchant status changes.
 
 ## **Version 1.0.1**
 
-- Now can start/stop auto disenchant from minimap button.
-- Now can open disenchant window when there are no items to disenchant (to clean ignored/session lists).
+- Can now start/stop auto disenchant from minimap button.
+- Can now open disenchant window when there are no items to disenchant (to clean ignored/session lists).
 - Added button to start/stop auto disenchant in the main disenchant window.
 - Bug fixes
 
