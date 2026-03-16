@@ -5,6 +5,7 @@
 Doc
 Release
 packager.bat
+packager.sh
 pkgmeta.yaml
 *.zip
 *.lst

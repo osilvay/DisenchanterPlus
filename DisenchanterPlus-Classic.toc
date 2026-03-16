@@ -5,6 +5,7 @@
 ## Author: osilvay
 ## SavedVariables: DisenchanterPlusDB
 ## OptionalDeps: Ace3, CallbackHandler-1.0, LibStub
+## IconTexture: Interface\AddOns\DisenchanterPlus\Images\Menus\disenchanterplus.tga
 ## DefaultState: enabled
 ## LoadOnDemand: 0
 
