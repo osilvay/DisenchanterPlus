@@ -1,5 +1,9 @@
 ## **Version 2.0.1.1**
 
+- Removed unnecessary source files
+
+## **Version 2.0.1.0**
+
 - Fixed enchanting window errors.
 - Cataclysm compatibility removed
 
