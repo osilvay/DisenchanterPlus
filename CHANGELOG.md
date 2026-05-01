@@ -4,6 +4,7 @@
 - Fixed protected field access warnings
 - Fixed tooltips displaying when disabled
 - Made enchantment names clickable for selection
+- Removed non-existent "Material Tracking" feature from documentation
 - Updated documentation with bulk enchanting guide
 
 ## **Version 2.0.1.3**
