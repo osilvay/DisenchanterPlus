@@ -1,3 +1,7 @@
+## **Version 2.0.1.4**
+
+- Fixed text visibility issues in window titles
+
 ## **Version 2.0.1.3**
 
 - Removed unnecessary log

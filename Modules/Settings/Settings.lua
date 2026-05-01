@@ -67,7 +67,6 @@ function DP_Settings:DrawSettingsFrame()
   end)
   DisenchanterPlusSettingsFrame = disenchanterPlusSettingsFrame;
 
-  _G["DisenchanterPlusSettingsFrame"] = DisenchanterPlusSettingsFrame.frame
   table.insert(UISpecialFrames, "DisenchanterPlusSettingsFrame");
 end
 

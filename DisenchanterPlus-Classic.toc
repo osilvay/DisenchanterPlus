@@ -1,6 +1,6 @@
 ## Interface: 20505
-## Title: |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v2.0.1.3|r
-## Version: Version 2.0.1.3
+## Title: |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v2.0.1.4|r
+## Version: Version 2.0.1.4
 ## Notes: Disenchanter tool for wow classic era
 ## Author: osilvay
 ## SavedVariables: DisenchanterPlusDB
@@ -46,9 +46,6 @@ Modules\Settings\EnchantTab\Groups\EnchantGroup.lua
 Modules\Window\DisenchantWindow.lua
 Modules\Window\EnchantWindow.lua
 Modules\Window\IgnoredWindow.lua
-Modules\Window\WelcomeWindow.lua
-Modules\Window\Tables\WelcomeHeader.lua
-Modules\Window\Tables\WelcomeBody.lua
 
 Modules\Custom\CustomFrames.lua
 Modules\Custom\CustomFunctions.lua

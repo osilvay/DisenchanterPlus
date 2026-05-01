@@ -4,9 +4,6 @@ local DP_SlashCommands = DP_ModuleLoader:CreateModule("DP_SlashCommands")
 ---@type DP_Settings
 local DP_Settings = DP_ModuleLoader:ImportModule("DP_Settings")
 
----@type DP_WelcomeWindow
-local DP_WelcomeWindow = DP_ModuleLoader:ImportModule("DP_WelcomeWindow")
-
 ---@type DP_DisenchantWindow
 local DP_DisenchantWindow = DP_ModuleLoader:ImportModule("DP_DisenchantWindow")
 
@@ -25,28 +22,24 @@ function DP_SlashCommands.HandleCommands(input)
 
   if command == "config" then
     DP_SlashCommands:OpenSettingsWindow()
-  elseif command == "main" then
-    DP_SlashCommands:OpenWelcomeWindow()
   elseif command == "minimap" then
     -- Toggle the boolean in your DB
     DisenchanterPlus.db.profile.minimap.hide = not DisenchanterPlus.db.profile.minimap.hide
     -- Call the visibility function we created in the first step
     if DP_MinimapIcon and DP_MinimapIcon.ToggleVisibility then
-        DP_MinimapIcon:ToggleVisibility()
-        local status = DisenchanterPlus.db.profile.minimap.hide and "Hidden" or "Shown"
-        DisenchanterPlus:Print("Minimap icon is now: " .. status)
+      DP_MinimapIcon:ToggleVisibility()
+      local status = DisenchanterPlus.db.profile.minimap.hide and "Hidden" or "Shown"
+      DisenchanterPlus:Print("Minimap icon is now: " .. status)
     end
   else
     DisenchanterPlus:Print(format("|cffe1e1f1Disenchanter|r |cfff141bfPlus|r : %s", DisenchanterPlus:DP_i18n("Available commands")))
     DisenchanterPlus:Print(format("/dplus |cffc1c1c1config|r - %s", DisenchanterPlus:DP_i18n("Open settings window")))
-    DisenchanterPlus:Print(format("/dplus |cffc1c1c1main|r - %s", DisenchanterPlus:DP_i18n("Open main window")))
     DisenchanterPlus:Print(format("/dplus |cffc1c1c1minimap|r - %s", "Toggle minimap icon visibility"))
   end
 end
 
 function DP_SlashCommands:CloseAllFrames()
   DP_Settings:HideSettingsFrame()
-  DP_WelcomeWindow:HideDisenchanterPlusWindowFrame()
   if DP_DisenchantWindow:IsWindowOpened() then
     DP_CustomSounds:PlayCustomSound("WindowClose")
     DP_DisenchantWindow:CloseWindow()
@@ -57,12 +50,5 @@ function DP_SlashCommands:OpenSettingsWindow()
   DP_SlashCommands:CloseAllFrames()
   C_Timer.After(0.2, function()
     DP_Settings:OpenSettingsFrame()
-  end)
-end
-
-function DP_SlashCommands:OpenWelcomeWindow()
-  DP_SlashCommands:CloseAllFrames()
-  C_Timer.After(0.2, function()
-    DP_WelcomeWindow:OpenDisenchanterPlusWindowFrame()
   end)
 end

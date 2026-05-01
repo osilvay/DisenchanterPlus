@@ -10,9 +10,6 @@ local DP_SlashCommands = DP_ModuleLoader:ImportModule("DP_SlashCommands")
 ---@type DP_MinimapIcon
 local DP_MinimapIcon = DP_ModuleLoader:ImportModule("DP_MinimapIcon")
 
----@type DP_WelcomeWindow
-local DP_WelcomeWindow = DP_ModuleLoader:ImportModule("DP_WelcomeWindow")
-
 ---@type DP_DisenchanterPlusEvents
 local DP_DisenchanterPlusEvents = DP_ModuleLoader:ImportModule("DP_DisenchanterPlusEvents")
 
@@ -28,7 +25,6 @@ local DP_EnchantProcess = DP_ModuleLoader:ImportModule("DP_EnchantProcess")
 function DP_Init:Initialize()
   DP_MinimapIcon:Initialize()
   DP_SlashCommands.RegisterSlashCommands()
-  DP_WelcomeWindow:Initialize()
   DP_Settings:Initialize()
   DP_Database:Initialize()
   DP_EnchantingTooltip:Initialize()
