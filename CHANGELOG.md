@@ -1,6 +1,10 @@
 ## **Version 2.0.1.4**
 
-- Fixed text visibility issues in window titles
+- Fixed UI rendering and window layering issues
+- Fixed protected field access warnings
+- Fixed tooltips displaying when disabled
+- Made enchantment names clickable for selection
+- Updated documentation with bulk enchanting guide
 
 ## **Version 2.0.1.3**
 

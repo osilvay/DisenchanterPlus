@@ -28,6 +28,9 @@ function DP_EnchantingTooltip:ShowTooltip(itemInfo)
   local isEnchantingItem = false
   local isItem = false
 
+  -- Check if tooltips are disabled
+  if not DisenchanterPlus.db.char.general.tooltipsEnabled then return end
+
   local showTooltip = DP_CustomFunctions:IsKeyPressed(DisenchanterPlus.db.char.general.pressKeyDown)
   if not showTooltip then return end
 

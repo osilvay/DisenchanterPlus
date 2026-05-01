@@ -4,8 +4,7 @@ A powerful World of Warcraft addon for managing enchantment materials and automa
 
 ## ✨ Features
 
-- **📈 Material Tracking:** Keep a complete history of essences and materials obtained from disenchanting items.
-- **🔮 Expected Materials Display:** View what materials you'll get before disenchanting an item.
+- ** Expected Materials Display:** View what materials you'll get before disenchanting an item.
 - **⚙️ Auto-Disenchant:** Automatically disenchant items in your inventory based on quality and custom filters.
 - **🎨 Bulk Enchanting:** Apply enchantments to multiple items efficiently with a streamlined mass enchanting interface.
 - **💰 Auctionator Integration:** See last auction house prices in tooltips for enchanting materials.
@@ -87,7 +86,7 @@ Access the settings window with `/dplus config` to customize:
 
 The addon is modular with the following key components:
 
-- **EnchantWindow.lua** - Main enchanting UI and material tracking
+- **EnchantWindow.lua** - Main enchanting UI
 - **DisenchantWindow.lua** - Item selection and disenchanting interface
 - **TradeskillCheck.lua** - Profession detection and validation
 - **Database.lua** - Material history and statistics
@@ -116,6 +115,29 @@ The addon is modular with the following key components:
 
 - Run `/dplus minimap` to toggle it back on
 - Check that the minimap icon setting is enabled in config
+
+## ❓ Frequently Asked Questions
+
+### How do I use the Bulk Enchanting feature?
+
+The Bulk Enchanting window works differently from Auto-Disenchant. Here's the proper workflow:
+
+1. **Open your Enchanting Tradeskill** from your spellbook
+2. **Make sure the tradeskill window stays open** - the addon detects it
+3. **Click the enchant window button** (wand icon) in the disenchant window OR access it via minimap icon
+4. **Click "Refresh"** in the enchant window to load available enchantments
+5. **Select an enchantment** from the LEFT list (e.g., "Enchant Bracer - +5 Health")
+6. **Select an item** from the RIGHT list (items in your bags that can be enchanted with that spell appear here)
+7. **Click the green checkmark** to enchant the item
+
+**Important Notes:**
+
+- Items only appear on the right when you select an enchantment on the left
+- **The addon only shows items in your bags/inventory - NOT items you currently have equipped**
+- If you want to enchant an equipped item, you must first unequip it and put it in your bags
+- The addon automatically filters items based on enchantment type (bracers with bracer enchants, weapons with weapon enchants, etc.)
+- You must have the materials/reagents required for the enchantment
+- Keep your Enchanting tradeskill window open while enchanting
 
 ## 📝 Localization
 

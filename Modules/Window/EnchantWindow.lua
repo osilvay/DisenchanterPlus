@@ -630,6 +630,18 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
         acceptEnchantText:SetText(acceptEnchantString)
         acceptEnchantButton.text = acceptEnchantText
 
+        -- clickeable text button (invisible overlay)
+        local enchantTextButton = CreateFrame("Button", "EnchantWindow_TextButton" .. itemNum, enchantLineFrame)
+        enchantTextButton.lineID = itemNum
+        enchantTextButton:SetSize(240, 32)
+        enchantTextButton:SetPoint("LEFT", enchantLineFrame, 10, 0)
+        enchantTextButton:SetScript("OnClick", function(current)
+          if EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID] then
+            EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID].acceptEnchantButton:Click()
+          end
+        end)
+        enchantLineFrame.enchantTextButton = enchantTextButton
+
         -- enchant text
         local enchantLineText = enchantLineFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         ---@cast enchantLineText EnchantLineText
@@ -684,6 +696,9 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
         acceptEnchantButton.craftName = lineInfo.CraftName
         acceptEnchantButton.craftDescription = lineInfo.CraftDescription
         acceptEnchantButton.reagents = lineInfo.Reagents
+
+        local enchantTextButton = enchantLineFrame.enchantTextButton
+        enchantTextButton.lineID = itemNum
 
         if lastSelectedEnchant == lineInfo.CraftName then
           local acceptEnchantString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept_c:24:24|t"
