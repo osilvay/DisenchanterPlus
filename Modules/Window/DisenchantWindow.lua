@@ -113,6 +113,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   titleBackground:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, 4, -4)
   titleBackground:SetPoint("BOTTOMRIGHT", DisenchanterPlusBaseFrame, -4, 154)
   titleBackground:SetColorTexture(DisenchanterPlus:GetAddonColorDarkRGB():GetRGB())
+  titleBackground:SetAlpha(0.8)
   DisenchanterPlusBaseFrame.titleBackground = titleBackground
 
   local windowBackground = DisenchanterPlusBaseFrame:CreateTexture(nil, "BACKGROUND")
@@ -120,6 +121,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   windowBackground:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, 4, -4)
   windowBackground:SetPoint("BOTTOMRIGHT", DisenchanterPlusBaseFrame, -4, 4)
   windowBackground:SetColorTexture(DisenchanterPlus:GetAddonWindowBackgroundColorRGB():GetRGB())
+  windowBackground:SetAlpha(0.8)
   DisenchanterPlusBaseFrame.windowBackground = windowBackground
 
   -- texts
