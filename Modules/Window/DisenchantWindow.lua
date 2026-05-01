@@ -183,8 +183,8 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
 
   -- close button ******************************************************************************************
   local closeButton = CreateFrame("Button", "AutoDisenchant_CloseButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
-  closeButton:SetSize(32, 22)
-  closeButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -10, -10)
+  closeButton:SetSize(32, 26)
+  closeButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -10, -8)
   closeButton:SetFrameLevel(2)
   closeButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
@@ -217,8 +217,8 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
 
   -- settings button ******************************************************************************************
   local settingsButton = CreateFrame("Button", "AutoDisenchant_SettingsButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
-  settingsButton:SetSize(32, 22)
-  settingsButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -45, -10)
+  settingsButton:SetSize(32, 26)
+  settingsButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -45, -8)
   settingsButton:SetFrameLevel(2)
   settingsButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
@@ -250,8 +250,8 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
 
   -- pause button ******************************************************************************************
   local pauseButton = CreateFrame("Button", "AutoDisenchant_PauseButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
-  pauseButton:SetSize(32, 22)
-  pauseButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -80, -10)
+  pauseButton:SetSize(32, 26)
+  pauseButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -80, -8)
   pauseButton:SetFrameLevel(2)
   pauseButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
@@ -287,8 +287,8 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
 
   -- play button ******************************************************************************************
   local playButton = CreateFrame("Button", "AutoDisenchant_PlayButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
-  playButton:SetSize(32, 22)
-  playButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -80, -10)
+  playButton:SetSize(32, 26)
+  playButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -80, -8)
   playButton:SetFrameLevel(2)
   playButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
@@ -325,8 +325,8 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
 
   -- enchant button ******************************************************************************************
   local enchantButton = CreateFrame("Button", "AutoDisenchant_EnchantButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
-  enchantButton:SetSize(32, 22)
-  enchantButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -115, -10)
+  enchantButton:SetSize(32, 26)
+  enchantButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -115, -8)
   enchantButton:SetFrameLevel(2)
   enchantButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
@@ -902,7 +902,7 @@ function DP_DisenchantWindow:DrawQualityButton(name, icon, tooltipText, qualityI
     edgeSize = 2,
     insets = { left = 1, right = 1, top = 1, bottom = 1 },
   })
-  qualityButton:SetBackdropColor(0.1, 0.1, 0.1, 0.5)
+  qualityButton:SetBackdropColor(0.0, 0.0, 0.0, 0.0)
   qualityButton:SetBackdropBorderColor(0.3, 0.3, 0.3, 1)
   qualityButton:SetAlpha(0.6)
 

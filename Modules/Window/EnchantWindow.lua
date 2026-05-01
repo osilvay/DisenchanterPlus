@@ -121,21 +121,22 @@ function DP_EnchantWindow:CreateEnchantWindow()
   titleBar:SetFrameLevel(1)
   EnchanterPlusBaseFrame.titleBar = titleBar
 
-  local titleBackground = titleBar:CreateTexture(nil, "BORDER")
-  titleBackground:SetDrawLayer("BORDER", 1)
-  titleBackground:SetHeight(32)
-  titleBackground:SetWidth(616)
-  titleBackground:SetPoint("TOPLEFT", titleBar, 4, -2)
+  local titleBackground = EnchanterPlusBaseFrame:CreateTexture(nil, "BACKGROUND")
+  titleBackground:SetDrawLayer("BACKGROUND", 2)
+  titleBackground:SetHeight(36)
+  titleBackground:SetPoint("TOPLEFT", EnchanterPlusBaseFrame, 4, -4)
+  titleBackground:SetPoint("BOTTOMRIGHT", EnchanterPlusBaseFrame, -4, 280)
   titleBackground:SetColorTexture(DisenchanterPlus:GetAddonColorDarkRGB():GetRGB())
-  titleBar.titleBackground = titleBackground
+  titleBackground:SetAlpha(0.8)
+  EnchanterPlusBaseFrame.titleBackground = titleBackground
 
-  local windowBackground = titleBar:CreateTexture(nil, "BACKGROUND")
+  local windowBackground = EnchanterPlusBaseFrame:CreateTexture(nil, "BACKGROUND")
   windowBackground:SetDrawLayer("BACKGROUND", 1)
-  windowBackground:SetHeight(278)
-  windowBackground:SetWidth(616)
-  windowBackground:SetPoint("TOPLEFT", titleBar, 4, -36)
+  windowBackground:SetPoint("TOPLEFT", EnchanterPlusBaseFrame, 4, -4)
+  windowBackground:SetPoint("BOTTOMRIGHT", EnchanterPlusBaseFrame, -4, 4)
   windowBackground:SetColorTexture(DisenchanterPlus:GetAddonWindowBackgroundColorRGB():GetRGB())
-  titleBar.windowBackground = windowBackground
+  windowBackground:SetAlpha(0.8)
+  EnchanterPlusBaseFrame.windowBackground = windowBackground
 
   -- texts
   local titleText = titleBar:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
@@ -152,8 +153,8 @@ function DP_EnchantWindow:CreateEnchantWindow()
 
   -- settings button ******************************************************************************************
   local settingsButton = CreateFrame("Button", "EnchantWindow_SettingsButton", EnchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
-  settingsButton:SetSize(32, 22)
-  settingsButton:SetPoint("TOPRIGHT", EnchanterPlusBaseFrame, -45, -10)
+  settingsButton:SetSize(32, 26)
+  settingsButton:SetPoint("TOPRIGHT", EnchanterPlusBaseFrame, -45, -8)
   settingsButton:SetFrameLevel(2)
   settingsButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
@@ -185,8 +186,8 @@ function DP_EnchantWindow:CreateEnchantWindow()
 
   -- close button ******************************************************************************************
   local closeButton = CreateFrame("Button", "EnchantWindow_CloseButton", EnchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
-  closeButton:SetSize(32, 22)
-  closeButton:SetPoint("TOPRIGHT", EnchanterPlusBaseFrame, -10, -10)
+  closeButton:SetSize(32, 26)
+  closeButton:SetPoint("TOPRIGHT", EnchanterPlusBaseFrame, -10, -8)
   closeButton:SetFrameLevel(2)
   closeButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
@@ -1024,7 +1025,7 @@ function DP_EnchantWindow:DrawCraftButton(name, icon, tooltipText, craftIndex, x
     edgeSize = 2,
     insets = { left = 1, right = 1, top = 1, bottom = 1 },
   })
-  craftButton:SetBackdropColor(0.1, 0.1, 0.1, 0.5)
+  craftButton:SetBackdropColor(0.0, 0.0, 0.0, 0.0)
   craftButton:SetBackdropBorderColor(0.3, 0.3, 0.3, 1)
   craftButton:SetAlpha(0.6)
 
