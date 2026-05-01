@@ -39,10 +39,10 @@ local DEFAULT_DIALOG_BACKDROP    = {
   tileSize = 24,
   edgeSize = 24,
   insets = {
-    left = 5,
-    right = 5,
-    top = 5,
-    bottom = 5,
+    left = 1,
+    right = 1,
+    top = 1,
+    bottom = 1,
   },
 }
 local CUSTOM_DIALOG_BACKDROP     = {
@@ -99,6 +99,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
 
   EnchanterPlusBaseFrame:SetBackdrop(DEFAULT_DIALOG_BACKDROP)
   EnchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, 0)
+  EnchanterPlusBaseFrame:SetBackdropBorderColor(0.3, 0.3, 0.3, 1)
   EnchanterPlusBaseFrame:SetScript("OnHide", function()
     -- Sincronizar estado cuando se oculta la ventana
     windowOpened = false
@@ -116,30 +117,28 @@ function DP_EnchantWindow:CreateEnchantWindow()
   titleBar:SetPoint("TOPLEFT", EnchanterPlusBaseFrame, "TOPLEFT", 0, 0)
   titleBar:SetSize(624, 36)
   titleBar:SetMovable(false)
-  titleBar:SetFrameStrata("BACKGROUND")
+  titleBar:SetFrameStrata("HIGH")
   titleBar:SetFrameLevel(1)
   EnchanterPlusBaseFrame.titleBar = titleBar
 
-  local titleBackground = titleBar:CreateTexture(nil, "BACKGROUND")
-  titleBackground:SetTexture("Interface\\Addons\\DisenchanterPlus\\Images\\Textures\\progressbar")
-  titleBackground:SetDrawLayer("BACKGROUND", 4)
-  titleBackground:SetHeight(34)
+  local titleBackground = titleBar:CreateTexture(nil, "BORDER")
+  titleBackground:SetDrawLayer("BORDER", 1)
+  titleBackground:SetHeight(32)
   titleBackground:SetWidth(616)
-  titleBackground:SetPoint("LEFT", titleBar, 4, -2)
-  titleBackground:SetGradient("HORIZONTAL", CreateColor(0.8, 0.30, 0.9, 0.8), CreateColor(0.8, 0.5, 0.9, 0.8))
+  titleBackground:SetPoint("TOPLEFT", titleBar, 4, -2)
+  titleBackground:SetColorTexture(DisenchanterPlus:GetAddonColorDarkRGB():GetRGB())
   titleBar.titleBackground = titleBackground
 
   local windowBackground = titleBar:CreateTexture(nil, "BACKGROUND")
-  windowBackground:SetTexture("Interface\\Addons\\DisenchanterPlus\\Images\\Textures\\progressbar")
-  windowBackground:SetDrawLayer("BACKGROUND", 4)
+  windowBackground:SetDrawLayer("BACKGROUND", 1)
   windowBackground:SetHeight(278)
   windowBackground:SetWidth(616)
   windowBackground:SetPoint("TOPLEFT", titleBar, 4, -36)
-  windowBackground:SetGradient("VERTICAL", CreateColor(0, 0, 0, 0.4), CreateColor(0.6, 0.6, 0.6, 0.4))
+  windowBackground:SetColorTexture(DisenchanterPlus:GetAddonWindowBackgroundColorRGB():GetRGB())
   titleBar.windowBackground = windowBackground
 
   -- texts
-  local titleText = EnchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+  local titleText = titleBar:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
   titleText:SetTextColor(0.8, 0.8, 0.8)
   titleText:SetPoint("LEFT", titleBar, 20, -2)
   titleText:SetText(DisenchanterPlus:DP_i18n("Item enchanter"))
@@ -155,6 +154,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
   local settingsButton = CreateFrame("Button", "EnchantWindow_SettingsButton", EnchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
   settingsButton:SetSize(32, 22)
   settingsButton:SetPoint("TOPRIGHT", EnchanterPlusBaseFrame, -45, -10)
+  settingsButton:SetFrameLevel(2)
   settingsButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(DisenchanterPlus:DP_i18n("Opens settings window."), 1, 0.82, 0, 1, true)
@@ -187,6 +187,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
   local closeButton = CreateFrame("Button", "EnchantWindow_CloseButton", EnchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
   closeButton:SetSize(32, 22)
   closeButton:SetPoint("TOPRIGHT", EnchanterPlusBaseFrame, -10, -10)
+  closeButton:SetFrameLevel(2)
   closeButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(DisenchanterPlus:DP_i18n("Close window until next iteration."), 1, 0.82, 0, 1, true)
@@ -219,6 +220,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
   yesButton:SetEnabled(false)
   yesButton:SetSize(100, 22)
   yesButton:SetPoint("BOTTOMRIGHT", EnchanterPlusBaseFrame, -20, 20)
+  yesButton:SetFrameLevel(2)
 
   local yesDummyButton = CreateFrame("Button", "EnchantWindow_YesDummyButton", EnchanterPlusBaseFrame, "UIPanelButtonTemplate")
   yesDummyButton:SetSize(100, 22)
@@ -997,6 +999,7 @@ function DP_EnchantWindow:DrawCraftButton(name, icon, tooltipText, craftIndex, x
   craftButton.craftIndex = craftIndex
   craftButton:SetSize(32, 22)
   craftButton:SetPoint("TOPRIGHT", EnchanterPlusBaseFrame, x, y)
+  craftButton:SetFrameLevel(2)
   craftButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(tooltipText, 1, 0.82, 0, 1, true)
@@ -1021,7 +1024,8 @@ function DP_EnchantWindow:DrawCraftButton(name, icon, tooltipText, craftIndex, x
     edgeSize = 2,
     insets = { left = 1, right = 1, top = 1, bottom = 1 },
   })
-  craftButton:SetBackdropColor(0, 0, 0, 0)
+  craftButton:SetBackdropColor(0.1, 0.1, 0.1, 0.5)
+  craftButton:SetBackdropBorderColor(0.3, 0.3, 0.3, 1)
   craftButton:SetAlpha(0.6)
 
   local craftText = craftButton:CreateFontString(nil, "OVERLAY", "GameFontNormal")

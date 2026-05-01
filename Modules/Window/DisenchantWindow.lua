@@ -38,10 +38,10 @@ local DEFAULT_DIALOG_BACKDROP = {
   tileSize = 24,
   edgeSize = 24,
   insets = {
-    left = 5,
-    right = 5,
-    top = 5,
-    bottom = 5,
+    left = 1,
+    right = 1,
+    top = 1,
+    bottom = 1,
   },
 }
 local CUSTOM_DIALOG_BACKDROP = {
@@ -83,7 +83,8 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   DisenchanterPlusBaseFrame:SetScript("OnMouseUp", DP_DisenchantWindow.OnDragStop)
 
   DisenchanterPlusBaseFrame:SetBackdrop(DEFAULT_DIALOG_BACKDROP)
-  DisenchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, 0)
+  --DisenchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, 0)
+  DisenchanterPlusBaseFrame:SetBackdropBorderColor(0.6, 0.6, 0.6, 1)
   DisenchanterPlusBaseFrame:SetScript("OnHide", function()
     -- Sincronizar estado cuando se oculta la ventana
     windowOpened = false
@@ -102,30 +103,27 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   titleBar:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, "TOPLEFT", 0, 0)
   titleBar:SetSize(424, 36)
   titleBar:SetMovable(false)
-  titleBar:SetFrameStrata("BACKGROUND")
+  titleBar:SetFrameStrata("HIGH")
   titleBar:SetFrameLevel(1)
   DisenchanterPlusBaseFrame.titleBar = titleBar
 
-  local titleBackground = titleBar:CreateTexture(nil, "OVERLAY")
-  titleBackground:SetTexture("Interface\\Addons\\DisenchanterPlus\\Images\\Textures\\progressbar")
-  titleBackground:SetDrawLayer("OVERLAY", 4)
-  titleBackground:SetHeight(34)
-  titleBackground:SetWidth(416)
-  titleBackground:SetPoint("LEFT", titleBar, 4, -2)
-  titleBackground:SetGradient("HORIZONTAL", CreateColor(0.8, 0.30, 0.9, 0.8), CreateColor(0.8, 0.5, 0.9, 0.8))
-  titleBar.titleBackground = titleBackground
+  local titleBackground = DisenchanterPlusBaseFrame:CreateTexture(nil, "BORDER")
+  titleBackground:SetDrawLayer("BACKGROUND", 2)
+  titleBackground:SetHeight(36)
+  titleBackground:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, 4, -4)
+  titleBackground:SetPoint("BOTTOMRIGHT", DisenchanterPlusBaseFrame, -4, 154)
+  titleBackground:SetColorTexture(DisenchanterPlus:GetAddonColorDarkRGB():GetRGB())
+  DisenchanterPlusBaseFrame.titleBackground = titleBackground
 
-  local windowBackground = titleBar:CreateTexture(nil, "OVERLAY")
-  windowBackground:SetTexture("Interface\\Addons\\DisenchanterPlus\\Images\\Textures\\progressbar")
-  windowBackground:SetDrawLayer("OVERLAY", 4)
-  windowBackground:SetHeight(150)
-  windowBackground:SetWidth(416)
-  windowBackground:SetPoint("TOPLEFT", titleBar, 4, -36)
-  windowBackground:SetGradient("VERTICAL", CreateColor(0, 0, 0, 0.4), CreateColor(0.6, 0.6, 0.6, 0.4))
-  titleBar.windowBackground = windowBackground
+  local windowBackground = DisenchanterPlusBaseFrame:CreateTexture(nil, "BACKGROUND")
+  windowBackground:SetDrawLayer("BACKGROUND", 1)
+  windowBackground:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, 4, -4)
+  windowBackground:SetPoint("BOTTOMRIGHT", DisenchanterPlusBaseFrame, -4, 4)
+  windowBackground:SetColorTexture(DisenchanterPlus:GetAddonWindowBackgroundColorRGB():GetRGB())
+  DisenchanterPlusBaseFrame.windowBackground = windowBackground
 
   -- texts
-  local titleText = DisenchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+  local titleText = titleBar:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
   titleText:SetTextColor(0.8, 0.8, 0.8)
   titleText:SetPoint("LEFT", titleBar, 20, -2)
   titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchant"))
@@ -185,6 +183,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   local closeButton = CreateFrame("Button", "AutoDisenchant_CloseButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
   closeButton:SetSize(32, 22)
   closeButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -10, -10)
+  closeButton:SetFrameLevel(2)
   closeButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(DisenchanterPlus:DP_i18n("Close window until next iteration."), 1, 0.82, 0, 1, true)
@@ -218,6 +217,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   local settingsButton = CreateFrame("Button", "AutoDisenchant_SettingsButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
   settingsButton:SetSize(32, 22)
   settingsButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -45, -10)
+  settingsButton:SetFrameLevel(2)
   settingsButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(DisenchanterPlus:DP_i18n("Opens settings window."), 1, 0.82, 0, 1, true)
@@ -250,6 +250,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   local pauseButton = CreateFrame("Button", "AutoDisenchant_PauseButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
   pauseButton:SetSize(32, 22)
   pauseButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -80, -10)
+  pauseButton:SetFrameLevel(2)
   pauseButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(DisenchanterPlus:DP_i18n("Pause the disenchantment process."), 1, 0.82, 0, 1, true)
@@ -286,6 +287,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   local playButton = CreateFrame("Button", "AutoDisenchant_PlayButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
   playButton:SetSize(32, 22)
   playButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -80, -10)
+  playButton:SetFrameLevel(2)
   playButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(DisenchanterPlus:DP_i18n("Starts the disenchantment process."), 1, 0.82, 0, 1, true)
@@ -323,6 +325,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   local enchantButton = CreateFrame("Button", "AutoDisenchant_EnchantButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
   enchantButton:SetSize(32, 22)
   enchantButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, -115, -10)
+  enchantButton:SetFrameLevel(2)
   enchantButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(DisenchanterPlus:DP_i18n("Open enchant window."), 1, 0.82, 0, 1, true)
@@ -358,6 +361,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   noButton:SetEnabled(false)
   noButton:SetSize(95, 22)
   noButton:SetPoint("BOTTOMRIGHT", DisenchanterPlusBaseFrame, -130, 20)
+  noButton:SetFrameLevel(2)
   noButton:SetScript("OnEnter", function(current)
     local keybind = ""
     if DisenchanterPlus.db.char.general.cancelDisenchant ~= nil then
@@ -395,6 +399,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   yesButton:SetEnabled(false)
   yesButton:SetSize(100, 22)
   yesButton:SetPoint("BOTTOMRIGHT", DisenchanterPlusBaseFrame, -20, 20)
+  yesButton:SetFrameLevel(2)
 
   local yesDummyButton = CreateFrame("Button", "AutoDisenchant_YesDummyButton", DisenchanterPlusBaseFrame, "UIPanelButtonTemplate")
   yesDummyButton:SetSize(90, 22)
@@ -445,6 +450,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   ignoreButton:SetEnabled(false)
   ignoreButton:SetSize(90, 22)
   ignoreButton:SetPoint("BOTTOMLEFT", DisenchanterPlusBaseFrame, 20, 20)
+  ignoreButton:SetFrameLevel(2)
   ignoreButton:SetScript("OnEnter", function(current)
     local keybind = ""
     if DisenchanterPlus.db.char.general.ignoreDisenchant ~= nil then
@@ -481,6 +487,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   local clearPermanentButton = CreateFrame("Button", "AutoDisenchant_ClearIgnoredButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
   clearPermanentButton:SetSize(32, 22)
   clearPermanentButton:SetPoint("BOTTOMLEFT", DisenchanterPlusBaseFrame, 120, 20)
+  clearPermanentButton:SetFrameLevel(2)
   clearPermanentButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(DisenchanterPlus:DP_i18n("Open ignored items list."), 1, 0.82, 0, 1, true)
@@ -868,6 +875,7 @@ function DP_DisenchantWindow:DrawQualityButton(name, icon, tooltipText, qualityI
   qualityButton.qualityIndex = qualityIndex
   qualityButton:SetSize(32, 22)
   qualityButton:SetPoint("TOPRIGHT", DisenchanterPlusBaseFrame, x, y)
+  qualityButton:SetFrameLevel(2)
   qualityButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(tooltipText, 1, 0.82, 0, 1, true)
@@ -892,7 +900,8 @@ function DP_DisenchantWindow:DrawQualityButton(name, icon, tooltipText, qualityI
     edgeSize = 2,
     insets = { left = 1, right = 1, top = 1, bottom = 1 },
   })
-  qualityButton:SetBackdropColor(0, 0, 0, 0)
+  qualityButton:SetBackdropColor(0.1, 0.1, 0.1, 0.5)
+  qualityButton:SetBackdropBorderColor(0.3, 0.3, 0.3, 1)
   qualityButton:SetAlpha(0.6)
 
   local craftText = qualityButton:CreateFontString(nil, "OVERLAY", "GameFontNormal")

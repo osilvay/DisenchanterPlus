@@ -43,7 +43,7 @@ function DP_WelcomeWindow:Initialize()
     disenchanterPlusWindowFrame:Hide()
     DisenchanterPlusWindowFrame = disenchanterPlusWindowFrame;
 
-    _G["DisenchanterPlusWindowFrame"] = DisenchanterPlusWindowFrame.frame
+    _G["DisenchanterPlusWindowFrame"] = DisenchanterPlusWindowFrame
     table.insert(UISpecialFrames, "DisenchanterPlusWindowFrame")
   end
 end

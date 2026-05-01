@@ -10,8 +10,8 @@ local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
 ---@type DP_DisenchantWindow
 local DP_DisenchantWindow = DP_ModuleLoader:ImportModule("DP_DisenchantWindow")
 
----@type DP_EnchantWindow
-local DP_EnchantWindow = DP_ModuleLoader:ImportModule("DP_EnchantWindow")
+---@type DP_CustomColors
+local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
 
 local L = LibStub("AceLocale-3.0"):GetLocale("DisenchanterPlus")
 
@@ -20,8 +20,10 @@ DisenchanterPlus.DEBUG_ELEVATED = "|cffebf441[ELEVATED]|r"
 DisenchanterPlus.DEBUG_INFO = "|cff00bc32[INFO]|r"
 DisenchanterPlus.DEBUG_DEVELOP = "|cff7c83ff[DEVELOP]|r"
 DisenchanterPlus.DEBUG_SPAM = "|cffff8484[SPAM]|r"
-local AddonColor = "ffed6bff"
-local AddonVersion = "2.0.1.2"
+local AddonColor = "FFED6BFF"
+local AddonColorDark = "EE75277F"
+local AddonWindowBackgroundColor = "EE212121"
+local AddonVersion = "2.0.1.3"
 
 BINDING_NAME_DISENCHANTER_PLUS_ACCEPT_DISENCHANT = L["Accept disenchant"]
 BINDING_NAME_DISENCHANTER_PLUS_CANCEL_DISENCHANT = L["Cancel disenchant"]
@@ -149,6 +151,25 @@ end
 ---Gets addon color
 function DisenchanterPlus:GetAddonColor()
   return AddonColor
+end
+
+function DisenchanterPlus:GetAddonColorDark()
+  return AddonColorDark
+end
+
+function DisenchanterPlus:GetAddonWindowBackgroundColor()
+  return AddonWindowBackgroundColor
+end
+
+---Get addon dark color as CreateColor (FFA033AE converted to RGB)
+function DisenchanterPlus:GetAddonColorDarkRGB()
+  local colorDark = DP_CustomColors:HexToRgb(DisenchanterPlus:GetAddonColorDark(), true)
+  return CreateColor(colorDark.r, colorDark.g, colorDark.b, colorDark.a)
+end
+
+function DisenchanterPlus:GetAddonWindowBackgroundColorRGB()
+  local colorDark = DP_CustomColors:HexToRgb(DisenchanterPlus:GetAddonWindowBackgroundColor(), true)
+  return CreateColor(colorDark.r, colorDark.g, colorDark.b, colorDark.a)
 end
 
 function DisenchanterPlus:GetAddonVersion()

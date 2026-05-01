@@ -288,9 +288,6 @@ end
 
 ---Open disenchant window
 function DP_DisenchantProcess:OpenDisenchantWindow()
-  print(disenchanting)
-  print(itemToDisenchant)
-
   if InCombatLockdown() or UnitAffectingCombat("player") or disenchanting or itemToDisenchant then return end
 
   --local disenchantIsKnown = IsSpellKnown(disenchantSpellID)

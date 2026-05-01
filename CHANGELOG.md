@@ -1,3 +1,7 @@
+## **Version 2.0.1.3**
+
+- Removed unnecessary log
+
 ## **Version 2.0.1.2**
 
 - Fixed disenchant window not reopening after closing with Escape key.
