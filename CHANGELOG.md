@@ -1,3 +1,7 @@
+## **Version 2.0.1.5**
+
+- Minor UI and window overlap improvements
+
 ## **Version 2.0.1.4**
 
 - Fixed UI rendering and window layering issues

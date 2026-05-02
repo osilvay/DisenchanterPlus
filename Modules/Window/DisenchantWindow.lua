@@ -38,10 +38,10 @@ local DEFAULT_DIALOG_BACKDROP = {
   tileSize = 24,
   edgeSize = 24,
   insets = {
-    left = 1,
-    right = 1,
-    top = 1,
-    bottom = 1,
+    left = 4,
+    right = 4,
+    top = 4,
+    bottom = 4,
   },
 }
 local CUSTOM_DIALOG_BACKDROP = {
@@ -74,7 +74,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   -- base frame ******************************************************************************************
   DisenchanterPlusBaseFrame = CreateFrame("Frame", "DisenchanterPlus_AutoDisenchant", UIParent, BackdropTemplateMixin and "BackdropTemplate")
   DisenchanterPlusBaseFrame:SetPoint("CENTER", UIParent, "CENTER", xOffset, yOffset)
-  DisenchanterPlusBaseFrame:SetFrameStrata("HIGH")
+  DisenchanterPlusBaseFrame:SetFrameStrata("MEDIUM")
   DisenchanterPlusBaseFrame:SetFrameLevel(0)
   DisenchanterPlusBaseFrame:SetSize(424, 190)
   DisenchanterPlusBaseFrame:SetMovable(true)
@@ -83,8 +83,8 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   DisenchanterPlusBaseFrame:SetScript("OnMouseUp", DP_DisenchantWindow.OnDragStop)
 
   DisenchanterPlusBaseFrame:SetBackdrop(DEFAULT_DIALOG_BACKDROP)
-  --DisenchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, 0)
-  DisenchanterPlusBaseFrame:SetBackdropBorderColor(0.6, 0.6, 0.6, 1)
+  DisenchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, 0)
+  DisenchanterPlusBaseFrame:SetBackdropBorderColor(0.8, 0.8, 0.8, 1)
   DisenchanterPlusBaseFrame:SetScript("OnHide", function()
     -- Sincronizar estado cuando se oculta la ventana
     windowOpened = false
@@ -125,9 +125,9 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   DisenchanterPlusBaseFrame.windowBackground = windowBackground
 
   -- texts
-  local titleText = titleBar:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+  local titleText = DisenchanterPlusBaseFrame:CreateFontString(nil, nil, "GameFontNormalLarge")
   titleText:SetTextColor(0.8, 0.8, 0.8)
-  titleText:SetPoint("LEFT", titleBar, 20, -2)
+  titleText:SetPoint("TOPLEFT", DisenchanterPlusBaseFrame, 20, -10)
   titleText:SetText(DisenchanterPlus:DP_i18n("Auto disenchant"))
   DisenchanterPlusBaseFrame.titleText = titleText
 
@@ -361,7 +361,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   -- no button ******************************************************************************************
   local noButton = CreateFrame("Button", "AutoDisenchant_NoButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
   noButton:SetEnabled(false)
-  noButton:SetSize(95, 22)
+  noButton:SetSize(95, 26)
   noButton:SetPoint("BOTTOMRIGHT", DisenchanterPlusBaseFrame, -130, 20)
   noButton:SetFrameLevel(2)
   noButton:SetScript("OnEnter", function(current)
@@ -399,7 +399,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   -- yes button ******************************************************************************************
   local yesButton = CreateFrame("Button", "AutoDisenchant_YesButton", DisenchanterPlusBaseFrame, "SecureActionButtonTemplate")
   yesButton:SetEnabled(false)
-  yesButton:SetSize(100, 22)
+  yesButton:SetSize(100, 26)
   yesButton:SetPoint("BOTTOMRIGHT", DisenchanterPlusBaseFrame, -20, 20)
   yesButton:SetFrameLevel(2)
 
@@ -450,7 +450,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   -- ignore button ******************************************************************************************
   local ignoreButton = CreateFrame("Button", "AutoDisenchant_IgnoreButton", DisenchanterPlusBaseFrame, "UIPanelButtonTemplate")
   ignoreButton:SetEnabled(false)
-  ignoreButton:SetSize(90, 22)
+  ignoreButton:SetSize(90, 26)
   ignoreButton:SetPoint("BOTTOMLEFT", DisenchanterPlusBaseFrame, 20, 20)
   ignoreButton:SetFrameLevel(2)
   ignoreButton:SetScript("OnEnter", function(current)
@@ -487,7 +487,7 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   -- clear permanent button ******************************************************************************************
   --local clearPermanentButton = CreateFrame("Button", "AutoDisenchant_ClearIgnoredButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "BackdropTemplate")
   local clearPermanentButton = CreateFrame("Button", "AutoDisenchant_ClearIgnoredButton", DisenchanterPlusBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
-  clearPermanentButton:SetSize(32, 22)
+  clearPermanentButton:SetSize(32, 26)
   clearPermanentButton:SetPoint("BOTTOMLEFT", DisenchanterPlusBaseFrame, 120, 20)
   clearPermanentButton:SetFrameLevel(2)
   clearPermanentButton:SetScript("OnEnter", function(current)
@@ -514,62 +514,6 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   clearPermanentButton.text = clearPermanentText
 
   clearPermanentButton:Hide()
-
-  --[[
-  -- progress bar ******************************************************************************************
-  local fullBarWidth = 284
-  local currentBarWidth = 50
-
-  local progressBar = CreateFrame("Button", "AutoDisenchant_ProgressBar", DisenchanterPlusBaseFrame)
-  progressBar:SetPoint("BOTTOMLEFT", DisenchanterPlusBaseFrame, 75, 50)
-  progressBar:SetSize(353044, 16)
-  progressBar:SetMovable(false)
-  progressBar:SetFrameStrata("MEDIUM")
-  progressBar:SetFrameLevel(1)
-
-  local percentProgressBarText = progressBar:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-  percentProgressBarText:SetTextColor(1, 1, 1)
-  percentProgressBarText:SetPoint("LEFT", progressBar, (fullBarWidth / 2) - 15, 0)
-  percentProgressBarText:SetText(tostring(0) .. " %")
-  percentProgressBarText:SetDrawLayer("OVERLAY", 6)
-  percentProgressBarText:SetShadowColor(0, 0, 0, 1)
-  percentProgressBarText:SetJustifyH("CENTER")
-  percentProgressBarText:SetWidth(48)
-  progressBar.percentProgressBarText = percentProgressBarText
-
-  local progressBarTextureEmpty = progressBar:CreateTexture(nil, "OVERLAY")
-  progressBarTextureEmpty:SetTexture("Interface\\Addons\\DisenchanterPlus\\Images\\Textures\\progressbar")
-  progressBarTextureEmpty:SetDrawLayer("OVERLAY", 4)
-  progressBarTextureEmpty:SetHeight(14)
-  progressBarTextureEmpty:SetWidth(fullBarWidth)
-  progressBarTextureEmpty:SetPoint("LEFT", progressBar, 0, 0)
-  progressBarTextureEmpty:SetColorTexture(0.1, 0.3, 0.1, 0.6)
-  progressBar.textureEmpty = progressBarTextureEmpty
-
-  local progressBarTextureFill = progressBar:CreateTexture(nil, "OVERLAY")
-  progressBarTextureFill:SetTexture("Interface\\Addons\\DisenchanterPlus\\Images\\Textures\\progressbar")
-  progressBarTextureFill:SetDrawLayer("OVERLAY", 5)
-  progressBarTextureFill:SetPoint("LEFT", progressBar, 0, 0)
-  progressBarTextureFill:SetHeight(14)
-  progressBarTextureFill:SetWidth(currentBarWidth)
-  progressBarTextureFill:SetColorTexture(0.3, 0.9, 0.2, 0.7)
-  progressBar.textureFill = progressBarTextureFill
-
-  local minProgressBarText = progressBar:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-  minProgressBarText:SetTextColor(1, 0.8, 0.3)
-  minProgressBarText:SetPoint("LEFT", progressBar, -35, 0)
-  minProgressBarText:SetText(tostring(0))
-  minProgressBarText:SetJustifyH("RIGHT")
-  progressBar.minProgressBarText = minProgressBarText
-
-  local maxProgressBarText = progressBar:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-  maxProgressBarText:SetTextColor(1, 0.8, 0.3)
-  maxProgressBarText:SetPoint("LEFT", progressBar, fullBarWidth + 15, 0)
-  maxProgressBarText:SetText(tostring(0))
-  minProgressBarText:SetJustifyH("LEFT")
-  progressBar.maxProgressBarText = maxProgressBarText
-  DisenchanterPlusBaseFrame.progressBar = progressBar
-]]
 
   DisenchanterPlusBaseFrame:Hide()
   return DisenchanterPlusBaseFrame

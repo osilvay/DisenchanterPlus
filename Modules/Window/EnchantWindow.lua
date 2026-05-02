@@ -39,10 +39,10 @@ local DEFAULT_DIALOG_BACKDROP    = {
   tileSize = 24,
   edgeSize = 24,
   insets = {
-    left = 1,
-    right = 1,
-    top = 1,
-    bottom = 1,
+    left = 4,
+    right = 4,
+    top = 4,
+    bottom = 4,
   },
 }
 local CUSTOM_DIALOG_BACKDROP     = {
@@ -99,7 +99,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
 
   EnchanterPlusBaseFrame:SetBackdrop(DEFAULT_DIALOG_BACKDROP)
   EnchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, 0)
-  EnchanterPlusBaseFrame:SetBackdropBorderColor(0.3, 0.3, 0.3, 1)
+  EnchanterPlusBaseFrame:SetBackdropBorderColor(0.8, 0.8, 0.8, 1)
   EnchanterPlusBaseFrame:SetScript("OnHide", function()
     -- Sincronizar estado cuando se oculta la ventana
     windowOpened = false
@@ -139,9 +139,9 @@ function DP_EnchantWindow:CreateEnchantWindow()
   EnchanterPlusBaseFrame.windowBackground = windowBackground
 
   -- texts
-  local titleText = titleBar:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+  local titleText = EnchanterPlusBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
   titleText:SetTextColor(0.8, 0.8, 0.8)
-  titleText:SetPoint("LEFT", titleBar, 20, -2)
+  titleText:SetPoint("TOPLEFT", EnchanterPlusBaseFrame, 20, -10)
   titleText:SetText(DisenchanterPlus:DP_i18n("Item enchanter"))
   EnchanterPlusBaseFrame.titleText = titleText
 
@@ -219,12 +219,12 @@ function DP_EnchantWindow:CreateEnchantWindow()
   -- yes button ******************************************************************************************
   local yesButton = CreateFrame("Button", "EnchantWindow_YesButton", EnchanterPlusBaseFrame, "SecureActionButtonTemplate")
   yesButton:SetEnabled(false)
-  yesButton:SetSize(100, 22)
+  yesButton:SetSize(100, 26)
   yesButton:SetPoint("BOTTOMRIGHT", EnchanterPlusBaseFrame, -20, 20)
   yesButton:SetFrameLevel(2)
 
   local yesDummyButton = CreateFrame("Button", "EnchantWindow_YesDummyButton", EnchanterPlusBaseFrame, "UIPanelButtonTemplate")
-  yesDummyButton:SetSize(100, 22)
+  yesDummyButton:SetSize(100, 26)
   yesDummyButton:SetPoint("BOTTOMRIGHT", EnchanterPlusBaseFrame, -20, 20)
   yesDummyButton:Hide()
 
@@ -880,6 +880,18 @@ function DP_EnchantWindow:PopulateItemList(enchant)
       acceptItemText:SetTextColor(1, 1, 1, 0.1)
       acceptItemButton.text = acceptItemText
 
+      -- clickeable item text button (invisible overlay)
+      local itemTextButton = CreateFrame("Button", "EnchantWindow_ItemTextButton" .. itemNum, itemLineFrame)
+      itemTextButton.lineID = itemNum
+      itemTextButton:SetSize(240, 32)
+      itemTextButton:SetPoint("LEFT", itemLineFrame, 10, 0)
+      itemTextButton:SetScript("OnClick", function(current)
+        if EnchanterPlusBaseFrame.tabScrollContentFrame2.line and EnchanterPlusBaseFrame.tabScrollContentFrame2.line[current.lineID] then
+          EnchanterPlusBaseFrame.tabScrollContentFrame2.line[current.lineID].acceptItemButton:Click()
+        end
+      end)
+      itemLineFrame.itemTextButton = itemTextButton
+
       -- item text
       local itemLineText = itemLineFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
       ---@cast itemLineText EnchantLineText
@@ -925,6 +937,9 @@ function DP_EnchantWindow:PopulateItemList(enchant)
       acceptItemButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept_a:24:24|t")
       acceptItemButton.lineID = itemNum
       acceptItemButton.numAvailable = lineInfo.NumAvailable or 0
+
+      local itemTextButton = itemLineFrame.itemTextButton
+      itemTextButton.lineID = itemNum
 
       local itemLineText = itemLineFrame.itemLineText
       itemLineText.lineID = itemNum

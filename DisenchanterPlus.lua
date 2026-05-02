@@ -23,7 +23,7 @@ DisenchanterPlus.DEBUG_SPAM = "|cffff8484[SPAM]|r"
 local AddonColor = "FFED6BFF"
 local AddonColorDark = "FF75277F"
 local AddonWindowBackgroundColor = "FF212121"
-local AddonVersion = "2.0.1.4"
+local AddonVersion = "2.0.1.5"
 
 BINDING_NAME_DISENCHANTER_PLUS_ACCEPT_DISENCHANT = L["Accept disenchant"]
 BINDING_NAME_DISENCHANTER_PLUS_CANCEL_DISENCHANT = L["Cancel disenchant"]

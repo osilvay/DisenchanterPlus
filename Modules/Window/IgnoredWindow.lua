@@ -26,10 +26,10 @@ local DEFAULT_DIALOG_BACKDROP = {
   tileSize = 24,
   edgeSize = 24,
   insets = {
-    left = 5,
-    right = 5,
-    top = 5,
-    bottom = 5,
+    left = 4,
+    right = 4,
+    top = 4,
+    bottom = 4,
   },
 }
 local CUSTOM_DIALOG_BACKDROP = {
@@ -72,12 +72,21 @@ function DP_IgnoredWindow:CreateIgnoredWindow()
   end)
 
   IgnoredWindowBaseFrame:SetBackdrop(DEFAULT_DIALOG_BACKDROP)
-  IgnoredWindowBaseFrame:SetBackdropColor(0, 0, 0, textFrameBgColorAlpha)
+  IgnoredWindowBaseFrame:SetBackdropColor(0, 0, 0, 0)
+  IgnoredWindowBaseFrame:SetBackdropBorderColor(0.8, 0.8, 0.8, 1)
+
+  local windowBackground = IgnoredWindowBaseFrame:CreateTexture(nil, "BACKGROUND")
+  windowBackground:SetDrawLayer("BACKGROUND", 1)
+  windowBackground:SetPoint("TOPLEFT", IgnoredWindowBaseFrame, 4, -4)
+  windowBackground:SetPoint("BOTTOMRIGHT", IgnoredWindowBaseFrame, -4, 4)
+  windowBackground:SetColorTexture(DisenchanterPlus:GetAddonWindowBackgroundColorRGB():GetRGB())
+  windowBackground:SetAlpha(0.8)
+  IgnoredWindowBaseFrame.windowBackground = windowBackground
 
   -- texts
-  local titleText = IgnoredWindowBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-  titleText:SetTextColor(1, 1, 1)
-  titleText:SetPoint("TOPLEFT", IgnoredWindowBaseFrame, 20, -20)
+  local titleText = IgnoredWindowBaseFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+  titleText:SetTextColor(0.8, 0.8, 0.8)
+  titleText:SetPoint("TOPLEFT", IgnoredWindowBaseFrame, 20, -10)
   titleText:SetText(DisenchanterPlus:DP_i18n("Items ignored"))
   IgnoredWindowBaseFrame.titleText = titleText
 
@@ -89,8 +98,9 @@ function DP_IgnoredWindow:CreateIgnoredWindow()
 
   -- close button ******************************************************************************************
   local closeButton = CreateFrame("Button", "Ignored_SettingsButton", IgnoredWindowBaseFrame, BackdropTemplateMixin and "UIPanelButtonTemplate")
-  closeButton:SetSize(32, 22)
-  closeButton:SetPoint("TOPRIGHT", IgnoredWindowBaseFrame, -10, -10)
+  closeButton:SetSize(32, 26)
+  closeButton:SetPoint("TOPRIGHT", IgnoredWindowBaseFrame, -10, -8)
+
   closeButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(DisenchanterPlus:DP_i18n("Close window."), nil, nil, nil, nil, true)
