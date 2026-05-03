@@ -240,6 +240,7 @@ function DP_TBCDisenchantTable:GenerateDisenchantTable()
     local rareEntry = {
       MinILevel = minItemLevel,
       MaxILevel = maxItemLevel,
+      IsTBC = isTbc,
       ItemIDs = {}
     }
     if shardData ~= nil then
@@ -260,6 +261,7 @@ function DP_TBCDisenchantTable:GenerateDisenchantTable()
     local epicEntry = {
       MinILevel = minItemLevel,
       MaxILevel = maxItemLevel,
+      IsTBC = isTbc,
       ItemIDs = {}
     }
     if shardData ~= nil then
@@ -277,6 +279,7 @@ function DP_TBCDisenchantTable:GenerateDisenchantTable()
     table.insert(epicEquipment, epicEntry)
   end
 
+  --DisenchanterPlus:Dump(rareEquipment)
   return {
     UNCOMMON = {
       [armor] = uncommonArmors,

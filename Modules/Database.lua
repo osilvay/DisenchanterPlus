@@ -146,7 +146,8 @@ function DP_Database:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel,
   --DisenchanterPlus:Debug("itemMinLevel " .. tostring(itemMinLevel))
   --DisenchanterPlus:Debug("itemQuality " .. tostring(itemQuality))
 
-  if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
+  if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or
+      DisenchanterPlus.IsEraSeasonal then
     -- classic_era
     return DP_ClassicDisenchantTable:CheckSkillLevelForItem()
   elseif DisenchanterPlus.IsTBC then
@@ -159,7 +160,8 @@ end
 ---Get expected disenchant data
 ---@return table
 function DP_Database:GetExpectedDisenchantData()
-  if DisenchanterPlus.IsClassic or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsHardcore then
+  if DisenchanterPlus.IsClassic or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal or
+      DisenchanterPlus.IsHardcore then
     return DP_ClassicDisenchantTable:GenerateDisenchantTable()
   elseif DisenchanterPlus.IsTBC then
     return DP_TBCDisenchantTable:GenerateDisenchantTable()

@@ -45,7 +45,6 @@ function DP_EnchantingTooltip:ShowTooltip(itemInfo)
   local _, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
 
   --DisenchanterPlus:Debug(string.format("itemQuality = %s - itemType = %s", tostring(itemQuality), tostring(itemType)))
-
   if itemType == DisenchanterPlus:DP_i18n("Armor") or itemType == DisenchanterPlus:DP_i18n("Weapon") then
     isItem = true
   end
@@ -187,11 +186,14 @@ end
 ---@param itemID number
 ---@return table
 function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
-  local _, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
+  local _, _, itemQuality, itemLevel, itemMinLevel, itemType, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
   local essencesData = {}
 
   local tbcCheck = false
-  if DisenchanterPlus.IsTBC and itemLevel >= 81 then tbcCheck = true end
+
+  if DisenchanterPlus.IsTBC and itemLevel >= 81 then
+    tbcCheck = true
+  end
 
   if itemQuality == 2 then
     essencesData = PercentByQualityAndLevel["UNCOMMON"][itemType]
@@ -200,13 +202,13 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
   elseif itemQuality == 4 then
     essencesData = PercentByQualityAndLevel["EPIC"][DisenchanterPlus:DP_i18n("All")]
   end
+  --DisenchanterPlus:Dump(essencesData)
+
   if essencesData == nil then return {} end
   local result = {}
   --DisenchanterPlus:Debug(string.format("itemLevel = %s, itemMinLevel = %s", tostring(itemLevel), tostring(itemMinLevel)))
   --DisenchanterPlus:Debug(string.format("itemLevel = %s", tostring(itemLevel)))
   for _, currentData in pairs(essencesData) do
-    --DisenchanterPlus:Debug(string.format("MinILevel = %s, MaxILevel = %s", tostring(currentData.MinILevel), tostring(currentData.MaxILevel)))
-
     local levelToCheck
     if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra
         or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsTBC then
@@ -214,8 +216,15 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
       levelToCheck = (itemMinLevel > 0) and itemMinLevel or itemLevel
     end
 
-    if levelToCheck >= currentData.MinILevel and levelToCheck <= currentData.MaxILevel and (tbcCheck == currentData.IsTBC) then
+    if levelToCheck >= currentData.MinILevel and levelToCheck <= currentData.MaxILevel then
+      --DisenchanterPlus:Debug(string.format("itemLevel %s (%s) : MinILevel = %s, MaxILevel = %s", tostring(levelToCheck), tostring(tbcCheck), tostring(currentData.MinILevel), tostring(currentData.MaxILevel)))
+      --DisenchanterPlus:Debug(string.format("IsTBC = %s", tostring(currentData.IsTBC)))
+    end
+
+    if levelToCheck >= currentData.MinILevel and levelToCheck <= currentData.MaxILevel and
+        (tbcCheck == currentData.IsTBC) then
       --DisenchanterPlus:Dump(currentData.ItemIDs)
+
       for essenceItemID, currentEssenceData in pairs(currentData.ItemIDs) do
         local essenceItemName, essenceItemLink, essenceItemQuality, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(essenceItemID)
         local auctionatorPrice
@@ -230,6 +239,7 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
           end
         end
 
+        --DisenchanterPlus:Debug("Percent : " .. tostring(currentEssenceData.Percent))
         if currentEssenceData.Percent > 0 then
           local essenceToAdd = {
             ItemID = essenceItemID,

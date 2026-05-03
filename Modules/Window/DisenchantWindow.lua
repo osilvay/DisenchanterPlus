@@ -534,7 +534,9 @@ function DP_DisenchantWindow:OpenWindow(bagItems, tradeskill)
   end
 
   if bagItems ~= nil then
-    DP_DisenchantWindow:PopulateItem(bagItems, tradeskill)
+    C_Timer.After(0.2, function()
+      DP_DisenchantWindow:PopulateItem(bagItems, tradeskill)
+    end)
   end
 
   --DisenchanterPlus:Debug(tostring(windowOpened))
@@ -612,6 +614,8 @@ function DP_DisenchantWindow:CloseWindow()
   itemToDisenchant = nil
   -- Limpiar estado en DisenchantProcess
   DP_DisenchantProcess:ResetItemState()
+  DP_DisenchantWindow:RemoveItemFromWindow()
+
   DisenchanterPlusBaseFrame.yesButton:SetAttribute("target-bag", nil)
   DisenchanterPlusBaseFrame.yesButton:SetAttribute("target-slot", nil)
   DisenchanterPlusBaseFrame.yesButton:SetAttribute("spell", nil)
@@ -670,30 +674,35 @@ function DP_DisenchantWindow:PopulateItem(itemInfo, tradeskill)
     DisenchanterPlusBaseFrame.noButton:SetEnabled(true)
     DisenchanterPlusBaseFrame.ignoreButton:SetEnabled(true)
   else
-    DisenchanterPlusBaseFrame.item:SetNormalTexture(unknownSlot)
-    DisenchanterPlusBaseFrame.item.text:SetText("")
-
-    local footText = "|cffffc700" .. DisenchanterPlus:DP_i18n("No item found to disenchant.") .. "|r"
-    local autoDisenchantEnabled = DP_DisenchantProcess:IsProcessRunning()
-    if not autoDisenchantEnabled then
-      footText = "|cffffc700" .. DisenchanterPlus:DP_i18n("Auto disenchant process paused.") .. "|r"
-    end
-    if DP_CustomFunctions:TableIsEmpty(tradeskill) then
-      footText = "|cffff033d" .. DisenchanterPlus:DP_i18n("You don't have the enchanting skill.") .. "|r"
-    end
-
-    DisenchanterPlusBaseFrame.footText:SetText(footText)
-    DisenchanterPlusBaseFrame.yesButton:SetAttribute("target-bag", nil)
-    DisenchanterPlusBaseFrame.yesButton:SetAttribute("target-slot", nil)
-    DisenchanterPlusBaseFrame.yesButton:SetAttribute("spell", nil)
-    itemToDisenchant = nil
-
-    local disabledTexture = DisenchanterPlusBaseFrame.yesButton:CreateTexture(nil, nil, "UIPanelButtonDisabledTexture")
-    DisenchanterPlusBaseFrame.yesButton:SetDisabledTexture(disabledTexture)
-    DisenchanterPlusBaseFrame.yesButton:SetEnabled(false)
-    DisenchanterPlusBaseFrame.noButton:SetEnabled(false)
-    DisenchanterPlusBaseFrame.ignoreButton:SetEnabled(false)
+    DP_DisenchantWindow:RemoveItemFromWindow()
   end
+end
+
+---Remove item from window
+function DP_DisenchantWindow:RemoveItemFromWindow()
+  DisenchanterPlusBaseFrame.item:SetNormalTexture(unknownSlot)
+  DisenchanterPlusBaseFrame.item.text:SetText("")
+
+  local footText = "|cffffc700" .. DisenchanterPlus:DP_i18n("No item found to disenchant.") .. "|r"
+  local autoDisenchantEnabled = DP_DisenchantProcess:IsProcessRunning()
+  if not autoDisenchantEnabled then
+    footText = "|cffffc700" .. DisenchanterPlus:DP_i18n("Auto disenchant process paused.") .. "|r"
+  end
+  if DP_CustomFunctions:TableIsEmpty(tradeskill) then
+    footText = "|cffff033d" .. DisenchanterPlus:DP_i18n("You don't have the enchanting skill.") .. "|r"
+  end
+
+  DisenchanterPlusBaseFrame.footText:SetText(footText)
+  DisenchanterPlusBaseFrame.yesButton:SetAttribute("target-bag", nil)
+  DisenchanterPlusBaseFrame.yesButton:SetAttribute("target-slot", nil)
+  DisenchanterPlusBaseFrame.yesButton:SetAttribute("spell", nil)
+  itemToDisenchant = nil
+
+  local disabledTexture = DisenchanterPlusBaseFrame.yesButton:CreateTexture(nil, nil, "UIPanelButtonDisabledTexture")
+  DisenchanterPlusBaseFrame.yesButton:SetDisabledTexture(disabledTexture)
+  DisenchanterPlusBaseFrame.yesButton:SetEnabled(false)
+  DisenchanterPlusBaseFrame.noButton:SetEnabled(false)
+  DisenchanterPlusBaseFrame.ignoreButton:SetEnabled(false)
 end
 
 function DP_DisenchantWindow:DisableButtons()
@@ -750,34 +759,6 @@ function DP_DisenchantWindow:RunKeybindIgnoreDisenchant()
     DP_DisenchantProcess:AddPermanentIgnoredItem(itemToDisenchant)
   end
 end
-
---[[
-function DP_DisenchantWindow:RedrawQualities()
-  if DisenchanterPlus.db.char.general.showItemQuality then
-    local qualities = DisenchanterPlus.db.char.general.itemQuality
-    local uncommonIconString = uncommonIcon
-    if qualities["2"] == nil or qualities["2"] then uncommonIconString = uncommonIconFill end
-
-    local rareIconString = rareIcon
-    if qualities["3"] == nil or qualities["3"] then rareIconString = rareIconFill end
-
-    local epicIconString = epicIcon
-    if qualities["4"] == nil or qualities["4"] then epicIconString = epicIconFill end
-    DisenchanterPlusBaseFrame.qualitiesText:SetText(uncommonIconString .. " " .. rareIconString .. " " .. epicIconString)
-  else
-    DisenchanterPlusBaseFrame.qualitiesText:SetText("")
-  end
-end
-
-function DP_DisenchantWindow:RedrawQualitiesTooltip()
-  local qualities = DisenchanterPlus.db.char.general.itemQuality
-  local tooltipString = DisenchanterPlus:DP_i18n("Qualities") .. " :"
-  if qualities["2"] == nil or qualities["2"] then tooltipString = tooltipString .. " |cff1eff00" .. string.lower(DisenchanterPlus:DP_i18n("Uncommon")) .. "|r" end
-  if qualities["3"] == nil or qualities["3"] then tooltipString = tooltipString .. " |cff0070dd" .. string.lower(DisenchanterPlus:DP_i18n("Rare")) .. "|r" end
-  if qualities["4"] == nil or qualities["4"] then tooltipString = tooltipString .. " |cffa335ee" .. string.lower(DisenchanterPlus:DP_i18n("Epic")) .. "|r" end
-  return tooltipString
-end
-]]
 
 ---Update keybindings
 function DP_DisenchantWindow:UpdateKeybindings()

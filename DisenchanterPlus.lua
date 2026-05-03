@@ -63,9 +63,7 @@ end
 
 ---Info message
 function DisenchanterPlus:Info(message)
-  if DisenchanterPlus:IsDebugEnabled() then
-    DisenchanterPlus:Print("|cff86f0fc[INFO]|r " .. message)
-  end
+  DisenchanterPlus:Print("|cff86f0fc[INFO]|r " .. message)
 end
 
 ---Debug message
@@ -117,7 +115,7 @@ end
 ---Prints message
 ---@param message string
 function DisenchanterPlus:Print(message)
-  print(string.format("|cffe1e1f1Disenchanter|r |c%sPlus|r: %s", DisenchanterPlus:GetAddonColor(), message))
+  print(string.format("|c%sDP|r: %s", DisenchanterPlus:GetAddonColor(), message))
 end
 
 local cachedTitle
