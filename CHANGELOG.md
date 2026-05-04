@@ -1,5 +1,9 @@
 ## **Version 2.0.1.5**
 
+- Fixed disenchant table for rare and epic items
+
+## **Version 2.0.1.5**
+
 - Minor UI and window overlap improvements
 
 ## **Version 2.0.1.4**
