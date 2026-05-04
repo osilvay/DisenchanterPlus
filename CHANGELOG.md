@@ -1,6 +1,6 @@
-## **Version 2.0.1.5**
+## **Version 2.0.1.6**
 
-- Fixed disenchant table for rare and epic items
+- Fixed disenchant table for rare and epic items (TBC)
 
 ## **Version 2.0.1.5**
 
