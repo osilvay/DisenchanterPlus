@@ -12,7 +12,8 @@
 DisenchanterPlus/
 ├── Bindings.xml                    # Definición de keybindings
 ├── DisenchanterPlus.lua            # Archivo principal (nucleo del addon)
-├── DisenchanterPlus-Classic.toc    # Tabla de contenidos (TOC)
+├── DisenchanterPlus-Classic.toc    # Tabla de contenidos (TOC) para Classic Era/TBC
+├── DisenchanterPlus_Camelot.toc    # Tabla de contenidos (TOC) para Classic WoW Forever 1.60.x
 ├── embeds.xml                      # Inclusión de librerías Ace3
 ├── pkgmeta.yaml                    # Configuración del empaquetador
 ├── CHANGELOG.md                    # Historial de cambios
@@ -102,10 +103,11 @@ El addon proporciona métodos para diferentes niveles de logging coloreado:
 ### Propiedades de Detección de Cliente
 
 ```lua
-DisenchanterPlus.IsMainline      -- Retail/Mainline
+DisenchanterPlus.IsMainline      -- Retail/Mainline (excluye Forever)
+DisenchanterPlus.IsForever       -- Classic WoW Forever (build 1.60.x, reporta project ID Mainline)
 DisenchanterPlus.IsWotlk         -- WotLK Classic
 DisenchanterPlus.IsTBC           -- Burning Crusade Classic
-DisenchanterPlus.IsClassic       -- Classic Era
+DisenchanterPlus.IsClassic       -- Classic Era (incluye Forever)
 DisenchanterPlus.IsEra           -- Classic Era (no estacional)
 DisenchanterPlus.IsEraSeasonal   -- Classic Era estacional (SoD)
 DisenchanterPlus.IsHardcore      -- Realm Hardcore
@@ -836,7 +838,7 @@ El archivo `embeds.xml` incluye todas estas librerías en el orden correcto de d
 El archivo Table of Contents que WoW lee para cargar el addon:
 
 ```
-## Interface: 20505                    # Classic WoW build 2.05.05
+## Interface: 20505                    # Interface TBC (2.5.5). Forever usa DisenchanterPlus_Camelot.toc (16001)
 ## Title: |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v2.0.1.6|r
 ## Version: Version 2.0.1.6
 ## Notes: Disenchanter tool for wow classic era

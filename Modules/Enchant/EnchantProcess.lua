@@ -63,10 +63,31 @@ function DP_EnchantProcess:SetCraftingWindowOpen(status)
   IsCraftingWindowOpen = status
 end
 
+---Is the currently open profession Enchanting (Forever / modern clients)
+---@return boolean
+function DP_EnchantProcess:IsEnchantingProfessionOpen()
+  if not (C_TradeSkillUI and C_TradeSkillUI.GetBaseProfessionInfo) then
+    return false
+  end
+  local professionInfo = C_TradeSkillUI.GetBaseProfessionInfo()
+  if professionInfo == nil then
+    return false
+  end
+  return professionInfo.professionName == DisenchanterPlus:DP_i18n("Enchanting")
+end
+
 ---Craft show event
 function DP_EnchantProcess:CraftShow()
   if not DisenchanterPlus.db.char.general.enchantEnabled then return end
-  if not IsCorrectTradeSkill then
+
+  local isCorrectTradeSkill = IsCorrectTradeSkill
+  if DisenchanterPlus.IsForever then
+    -- Forever opens professions through C_TradeSkillUI.OpenTradeSkill() instead of
+    -- casting the profession spell, so detect the open profession directly.
+    isCorrectTradeSkill = DP_EnchantProcess:IsEnchantingProfessionOpen()
+  end
+
+  if not isCorrectTradeSkill then
     if DP_EnchantProcess:IsCraftingWindowOpen() then
       DP_EnchantProcess:CraftClose()
     end

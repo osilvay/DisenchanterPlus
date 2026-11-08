@@ -34,6 +34,7 @@ The addon provides the following slash commands:
 
 ### Supported Versions
 
+- **Classic WoW Forever 1.60.1** (uses `DisenchanterPlus_Camelot.toc`, Interface `16001`)
 - **Classic WoW** (Season of Discovery, Classic Hardcore, Classic Anniversary)
 
 ### Requirements
@@ -64,6 +65,12 @@ World of Warcraft/_classic_era_/Interface/AddOns/
 
 ```
 World of Warcraft/_anniversary_/Interface/AddOns/
+```
+
+**For Classic WoW Forever 1.60.1:**
+
+```
+World of Warcraft/Interface/AddOns/
 ```
 
 ### Step 3: Restart

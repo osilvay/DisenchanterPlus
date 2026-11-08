@@ -4,7 +4,10 @@ ignore:
   - Doc
   - Patches
   - Release
+  - Sources
+  - CONTEXT.md
   - .gitignore
+  - .vscode
   - .version
   - DisenchanterPlus.toc
   - packager.bat

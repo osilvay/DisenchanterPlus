@@ -454,11 +454,21 @@ function DP_EnchantWindow.OnDragStop()
 end
 
 function DP_EnchantWindow:DisableButtons()
-  if not EnchanterPlusBaseFrame then return end
+  if not EnchanterPlusBaseFrame or not EnchanterPlusBaseFrame.yesButton then return end
+  EnchanterPlusBaseFrame.yesButton:SetEnabled(false)
 end
 
 function DP_EnchantWindow:EnableButtons()
-  if not EnchanterPlusBaseFrame then return end
+  if not EnchanterPlusBaseFrame or not EnchanterPlusBaseFrame.yesButton then return end
+  DP_EnchantWindow:CheckReadyToEnchant()
+end
+
+---Run the "confirm enchant" keybind by clicking the secure action button
+function DP_EnchantWindow:RunKeybindConfirmEnchant()
+  if not EnchanterPlusBaseFrame or not EnchanterPlusBaseFrame.yesButton then return end
+  if EnchanterPlusBaseFrame.yesButton:IsEnabled() then
+    EnchanterPlusBaseFrame.yesButton:Click("LeftButton")
+  end
 end
 
 ---Populate enchant list

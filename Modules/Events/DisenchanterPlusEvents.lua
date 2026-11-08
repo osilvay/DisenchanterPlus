@@ -25,7 +25,12 @@ function DP_DisenchanterPlusEvents:Initialize()
   DisenchanterPlus:RegisterEvent("PLAYER_REGEN_DISABLED", _DP_DisenchanterPlusEvents.PlayerRegenDisabled)
   DisenchanterPlus:RegisterEvent("PLAYER_REGEN_ENABLED", _DP_DisenchanterPlusEvents.PlayerRegenEnabled)
 
-  if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
+  if DisenchanterPlus.IsForever then
+    -- Forever / modern client: professions fire TRADE_SKILL_SHOW / TRADE_SKILL_CLOSE.
+    -- CRAFT_SHOW / CRAFT_CLOSE are only internal routing events there.
+    DisenchanterPlus:RegisterEvent("TRADE_SKILL_SHOW", _DP_DisenchanterPlusEvents.TradeSkillShow)
+    DisenchanterPlus:RegisterEvent("TRADE_SKILL_CLOSE", _DP_DisenchanterPlusEvents.TradeSkillClose)
+  elseif DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
     -- classic_era
     DisenchanterPlus:RegisterEvent("CRAFT_SHOW", _DP_DisenchanterPlusEvents.CraftShow)
     DisenchanterPlus:RegisterEvent("CRAFT_CLOSE", _DP_DisenchanterPlusEvents.CraftClose)
@@ -91,5 +96,15 @@ function _DP_DisenchanterPlusEvents.CraftShow(_)
 end
 
 function _DP_DisenchanterPlusEvents.CraftClose(_)
+  DP_EnchantProcess:CraftClose()
+end
+
+function _DP_DisenchanterPlusEvents.TradeSkillShow(_)
+  C_Timer.After(0.5, function()
+    DP_EnchantProcess:CraftShow()
+  end)
+end
+
+function _DP_DisenchanterPlusEvents.TradeSkillClose(_)
   DP_EnchantProcess:CraftClose()
 end

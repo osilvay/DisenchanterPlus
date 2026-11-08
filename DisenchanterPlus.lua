@@ -10,6 +10,9 @@ local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
 ---@type DP_DisenchantWindow
 local DP_DisenchantWindow = DP_ModuleLoader:ImportModule("DP_DisenchantWindow")
 
+---@type DP_EnchantWindow
+local DP_EnchantWindow = DP_ModuleLoader:ImportModule("DP_EnchantWindow")
+
 ---@type DP_CustomColors
 local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
 
@@ -126,14 +129,21 @@ function DisenchanterPlus:GetAddonVersionInfo()
     cachedTitle = title
   end
   -- %d = digit, %p = punctuation character, %x = hexadecimal digits.
-  local major, minor, patch, _ = string.match(cachedTitle, "(%d+)%p(%d+)%p(%d+)")
-  return tonumber(major), tonumber(minor), tonumber(patch)
+  local major, minor, patch, build = string.match(cachedTitle, "(%d+)%p(%d+)%p(%d+)%p(%d+)")
+  if not major then
+    major, minor, patch = string.match(cachedTitle, "(%d+)%p(%d+)%p(%d+)")
+  end
+  return tonumber(major), tonumber(minor), tonumber(patch), tonumber(build)
 end
 
 ---Get addon version string
 function DisenchanterPlus:GetAddonVersionString()
-  local major, minor, patch = DisenchanterPlus:GetAddonVersionInfo()
-  return "v" .. tostring(major) .. "." .. tostring(minor) .. "." .. tostring(patch)
+  local major, minor, patch, build = DisenchanterPlus:GetAddonVersionInfo()
+  local version = "v" .. tostring(major) .. "." .. tostring(minor) .. "." .. tostring(patch)
+  if build ~= nil then
+    version = version .. "." .. tostring(build)
+  end
+  return version
 end
 
 ---Return addon colored
@@ -185,7 +195,7 @@ end
 function DisenchanterPlus:RunKeybindAcceptDisenchant()
   if not DisenchanterPlus.started then return end
   --DisenchanterPlus:Debug("Run accept disenchant")
-  --DP_DisenchantWindow:RunKeybindAcceptDisenchant()
+  DP_DisenchantWindow:RunKeybindAcceptDisenchant()
 end
 
 function DisenchanterPlus:RunKeybindCancelDisenchant()
@@ -202,6 +212,6 @@ end
 
 function DisenchanterPlus:RunKeybindConfirmEnchant()
   if not DisenchanterPlus.started then return end
-  --DisenchanterPlus:Debug("Run ignore disenchant")
-  --DP_EnchantWindow:RunKeybindConfirmEnchant()
+  --DisenchanterPlus:Debug("Run confirm enchant")
+  DP_EnchantWindow:RunKeybindConfirmEnchant()
 end

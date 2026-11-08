@@ -28,6 +28,9 @@ local DP_IgnoredWindow = DP_ModuleLoader:ImportModule("DP_IgnoredWindow")
 ---@type DP_EnchantProcess
 local DP_EnchantProcess = DP_ModuleLoader:ImportModule("DP_EnchantProcess")
 
+---@type DP_TradeSkillCheck
+local DP_TradeSkillCheck = DP_ModuleLoader:ImportModule("DP_TradeSkillCheck")
+
 local LibStub = LibStub
 --local AceGUI = LibStub("AceGUI-3.0")
 
@@ -688,6 +691,7 @@ function DP_DisenchantWindow:RemoveItemFromWindow()
   if not autoDisenchantEnabled then
     footText = "|cffffc700" .. DisenchanterPlus:DP_i18n("Auto disenchant process paused.") .. "|r"
   end
+  local tradeskill = DP_TradeSkillCheck:GetTradeSkill()
   if DP_CustomFunctions:TableIsEmpty(tradeskill) then
     footText = "|cffff033d" .. DisenchanterPlus:DP_i18n("You don't have the enchanting skill.") .. "|r"
   end
@@ -744,6 +748,10 @@ function DP_DisenchantWindow:GetItemToDisenchant()
 end
 
 function DP_DisenchantWindow:RunKeybindAcceptDisenchant()
+  if not DisenchanterPlusBaseFrame or not DisenchanterPlusBaseFrame.yesButton then return end
+  if DisenchanterPlusBaseFrame.yesButton:IsEnabled() then
+    DisenchanterPlusBaseFrame.yesButton:Click("LeftButton")
+  end
 end
 
 function DP_DisenchantWindow:RunKeybindCancelDisenchant()

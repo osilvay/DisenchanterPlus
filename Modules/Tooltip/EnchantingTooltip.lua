@@ -222,7 +222,7 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
     end
 
     if levelToCheck >= currentData.MinILevel and levelToCheck <= currentData.MaxILevel and
-        (tbcCheck == currentData.IsTBC) then
+        (tbcCheck == (currentData.IsTBC or false)) then
       --DisenchanterPlus:Dump(currentData.ItemIDs)
 
       for essenceItemID, currentEssenceData in pairs(currentData.ItemIDs) do
