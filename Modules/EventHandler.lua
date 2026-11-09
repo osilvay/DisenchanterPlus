@@ -1,15 +1,10 @@
 ---@class DP_EventHandler
 local DP_EventHandler = DP_ModuleLoader:CreateModule("DP_EventHandler")
-local _DP_EventHandler = {}
 
 ---@type DP_Init
 local DP_Init = DP_ModuleLoader:ImportModule("DP_Init")
 
-function DP_EventHandler:RegisterEarlyEvents()
-  DisenchanterPlus:RegisterEvent("PLAYER_LOGIN", _DP_EventHandler.PlayerLogin)
-end
-
-function _DP_EventHandler:PlayerLogin()
+function DP_EventHandler:PlayerLogin()
   -- Check config exists
   if not DisenchanterPlus.db or not DisenchanterPlusDB then
     DisenchanterPlus:Error("Config DB from saved variables is not loaded and initialized. Please report this issue.")

@@ -44,12 +44,14 @@ function DisenchanterPlus:OnInitialize()
 
   -- Inicializar valores por defecto si no existen
   DisenchanterPlus.db.profile.minimap.hide = DisenchanterPlus.db.profile.minimap.hide or false
-
-  DP_EventHandler:RegisterEarlyEvents()
 end
 
 ---On enable addon
 function DisenchanterPlus:OnEnable()
+  -- Se ejecuta en PLAYER_LOGIN (AceAddon). No registramos PLAYER_LOGIN a mano
+  -- en OnInitialize porque eso adelantaba el frame de AceEvent por delante del
+  -- factory de oUF de ElvUI y rompía la inicialización de ElvUI_BenikUI.
+  DP_EventHandler:PlayerLogin()
 end
 
 ---Error message
