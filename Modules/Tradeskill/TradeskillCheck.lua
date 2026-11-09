@@ -32,7 +32,7 @@ function DP_TradeSkillCheck:GetTradeSkill()
       end
     end
   elseif DisenchanterPlus.IsClassic or DisenchanterPlus.IsEra
-      or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsHardcore then
+      or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsTBC then
     for tradeSkillIndex = 1, GetNumSkillLines() do
       local tradeSkillName, isHeader, _, tradeSkillRank, _, _, _, _, _, _, _, _, _ = GetSkillLineInfo(tradeSkillIndex)
       if not isHeader then
@@ -85,7 +85,7 @@ function DP_TradeSkillCheck:GetTradeSkillLines()
     -- Forever / modern client
     return DP_TradeSkillCheck:GetTradeSkillLinesForForever()
   elseif DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore
-      or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
+      or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsTBC then
     -- classic_era
     return DP_TradeSkillCheck:GetTradeSkillLinesForClassic()
   end

@@ -1,8 +1,8 @@
 # DisenchanterPlus - Análisis Completo de Arquitectura
 
-**Versión del Addon**: 3.0.0.1  
+**Versión del Addon**: 3.0.0.2  
 **Fecha de Análisis**: 3 de mayo de 2026  
-**Plataformas Soportadas**: Classic WoW Forever (Camelot 1.60.x)
+**Plataformas Soportadas**: Classic WoW Forever (Camelot 1.60.x), Classic TBC (interface 20505 y 20506)
 
 ---
 
@@ -20,6 +20,7 @@ DisenchanterPlus/
 ├── Bindings.xml                    # Definición de keybindings
 ├── DisenchanterPlus.lua            # Archivo principal (nucleo del addon)
 ├── DisenchanterPlus_Camelot.toc    # Tabla de contenidos (TOC) para Classic WoW Forever 1.60.x
+├── DisenchanterPlus_TBC.toc        # Tabla de contenidos (TOC) para Classic TBC (20505, 20506)
 ├── embeds.xml                      # Inclusión de librerías Ace3
 ├── pkgmeta.yaml                    # Configuración del empaquetador
 ├── CHANGELOG.md                    # Historial de cambios
@@ -831,14 +832,16 @@ El archivo `embeds.xml` incluye todas estas librerías en el orden correcto de d
 
 ## 7. ARCHIVOS DE CONFIGURACIÓN
 
-### 7.1 DisenchanterPlus_Camelot.toc
+### 7.1 DisenchanterPlus_Camelot.toc y DisenchanterPlus_TBC.toc
 
-El archivo Table of Contents que WoW lee para cargar el addon en Classic WoW Forever (Camelot):
+Los archivos Table of Contents que WoW lee para cargar el addon. Cada flavor tiene su propio TOC:
+
+- `DisenchanterPlus_Camelot.toc`: Classic WoW Forever (Camelot) 1.60.x
 
 ```
 ## Interface: 16001                    # Interface Forever (1.60.x)
-## Title: |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v3.0.0.1|r
-## Version: 3.0.0.1
+## Title: |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v3.0.0.2|r
+## Version: 3.0.0.2
 ## Notes: Disenchanter tool for wow classic era
 ## Author: osilvay
 ## SavedVariables: DisenchanterPlusDB  # Clave de BD persistente
@@ -872,8 +875,13 @@ ignore: # Archivos a excluir
   - .version
   - DisenchanterPlus.toc
   - packager.bat
-  - packagerExclusions.lst
+  - packagerExclusions-*.lst
 ```
+
+`packager.bat` y `packager.sh` generan dos ZIP en `Release/`, uno por flavor, cada uno con su lista de exclusiones:
+
+- `DisenchanterPlus-v<Build>-camelot.zip` usa `packagerExclusions-Camelot.lst` (excluye `DisenchanterPlus_TBC.toc`).
+- `DisenchanterPlus-v<Build>-tbc.zip` usa `packagerExclusions-TBC.lst` (excluye `DisenchanterPlus_Camelot.toc`).
 
 ### 7.3 Bindings.xml
 

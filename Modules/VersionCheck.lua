@@ -16,6 +16,10 @@ DisenchanterPlus.IsMainline = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and not Dis
 ---@type boolean
 DisenchanterPlus.IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC or DisenchanterPlus.IsForever
 
+--- Addon is running on Classic TBC client (interface 20505 and 20506 share this project ID)
+---@type boolean
+DisenchanterPlus.IsTBC = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+
 local hasActiveSeason = C_Seasons ~= nil and C_Seasons.HasActiveSeason ~= nil and C_Seasons.HasActiveSeason() or false
 
 --- Addon is running on Classic "Vanilla" client and on Era realm (non-seasonal)

@@ -990,7 +990,7 @@ function DP_EnchantWindow:CheckReadyToEnchant()
 
   local macro = ""
   if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra
-      or DisenchanterPlus.IsEraSeasonal then
+      or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsTBC then
     macro = string.format("/cast %s\n/use %s\n/click StaticPopup1Button1\n", enchant, itemName)
   end
 

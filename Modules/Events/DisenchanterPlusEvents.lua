@@ -30,7 +30,7 @@ function DP_DisenchanterPlusEvents:Initialize()
     -- CRAFT_SHOW / CRAFT_CLOSE are only internal routing events there.
     DisenchanterPlus:RegisterEvent("TRADE_SKILL_SHOW", _DP_DisenchanterPlusEvents.TradeSkillShow)
     DisenchanterPlus:RegisterEvent("TRADE_SKILL_CLOSE", _DP_DisenchanterPlusEvents.TradeSkillClose)
-  elseif DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
+  elseif DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsTBC then
     -- classic_era
     DisenchanterPlus:RegisterEvent("CRAFT_SHOW", _DP_DisenchanterPlusEvents.CraftShow)
     DisenchanterPlus:RegisterEvent("CRAFT_CLOSE", _DP_DisenchanterPlusEvents.CraftClose)

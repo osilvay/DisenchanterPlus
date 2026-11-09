@@ -7,6 +7,9 @@ local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
 ---@type DP_ClassicDisenchantTable
 local DP_ClassicDisenchantTable = DP_ModuleLoader:ImportModule("DP_ClassicDisenchantTable")
 
+---@type DP_TBCDisenchantTable
+local DP_TBCDisenchantTable = DP_ModuleLoader:ImportModule("DP_TBCDisenchantTable")
+
 ---@type DP_EnchantPatterns
 local DP_EnchantPatterns = DP_ModuleLoader:ImportModule("DP_EnchantPatterns")
 
@@ -87,6 +90,9 @@ function DP_Database:Initialize()
   if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
     -- classic_era
     DP_ClassicDisenchantTable:Initialize()
+  elseif DisenchanterPlus.IsTBC then
+    -- tbc
+    DP_TBCDisenchantTable:Initialize()
   end
   DP_EnchantPatterns:Initialize()
 end
@@ -107,6 +113,9 @@ function DP_Database:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel,
       DisenchanterPlus.IsEraSeasonal then
     -- classic_era
     return DP_ClassicDisenchantTable:CheckSkillLevelForItem()
+  elseif DisenchanterPlus.IsTBC then
+    -- tbc
+    return DP_TBCDisenchantTable:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel, itemQuality)
   end
   return false
 end
@@ -117,6 +126,9 @@ function DP_Database:GetExpectedDisenchantData()
   if DisenchanterPlus.IsClassic or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal or
       DisenchanterPlus.IsHardcore then
     return DP_ClassicDisenchantTable:GenerateDisenchantTable()
+  elseif DisenchanterPlus.IsTBC then
+    -- tbc
+    return DP_TBCDisenchantTable:GenerateDisenchantTable()
   end
   return {}
 end

@@ -1,3 +1,9 @@
+## **Version 3.0.0.2**
+
+- Restored TBC Classic support (interface 20505 and 20506) on the same branch, using `DisenchanterPlus_TBC.toc`
+- TBC client detection by project ID (`WOW_PROJECT_BURNING_CRUSADE_CLASSIC`), so both interface numbers share the same code
+- Restored the TBC disenchant table and the TBC branches in the database, tooltip, tradeskill and enchant window
+
 ## **Version 3.0.0.1**
 
 - Fixed enchanting window showing another profession's recipes (e.g. Tailoring) when that profession was open

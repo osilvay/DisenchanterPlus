@@ -205,6 +205,9 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
   local _, _, itemQuality, itemLevel, itemMinLevel, itemType, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(itemID)
   local essencesData = {}
 
+  -- TBC splits the disenchant table by IsTBC (Outland entries); other clients ignore that flag
+  local tbcCheck = DisenchanterPlus.IsTBC and itemLevel >= 81
+
   if itemQuality == 2 then
     essencesData = PercentByQualityAndLevel["UNCOMMON"][itemType]
   elseif itemQuality == 3 then
@@ -221,12 +224,13 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
   for _, currentData in pairs(essencesData) do
     local levelToCheck
     if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra
-        or DisenchanterPlus.IsEraSeasonal then
-      -- classic_era
+        or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsTBC then
+      -- classic_era / tbc
       levelToCheck = (itemMinLevel > 0) and itemMinLevel or itemLevel
     end
 
-    if levelToCheck >= currentData.MinILevel and levelToCheck <= currentData.MaxILevel then
+    if levelToCheck >= currentData.MinILevel and levelToCheck <= currentData.MaxILevel
+        and (not DisenchanterPlus.IsTBC or tbcCheck == currentData.IsTBC) then
       --DisenchanterPlus:Dump(currentData.ItemIDs)
 
       for essenceItemID, currentEssenceData in pairs(currentData.ItemIDs) do

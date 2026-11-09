@@ -1,0 +1,14 @@
+.vscode
+.gitignore
+.version
+.git
+Doc
+Release
+packager.bat
+packager.sh
+pkgmeta.yaml
+*.zip
+*.lst
+Sources
+CONTEXT.md
+DisenchanterPlus_Camelot.toc

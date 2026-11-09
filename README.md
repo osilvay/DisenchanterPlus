@@ -35,6 +35,7 @@ The addon provides the following slash commands:
 ### Supported Versions
 
 - **Classic WoW Forever 1.60.1** (uses `DisenchanterPlus_Camelot.toc`, Interface `16001`)
+- **Classic TBC** (uses `DisenchanterPlus_TBC.toc`, Interface `20505` and `20506`)
 - **Classic WoW** (Season of Discovery, Classic Hardcore, Classic Anniversary)
 
 ### Requirements
