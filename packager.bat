@@ -17,17 +17,17 @@ echo Build: %Build%
 echo Directory: %Directory%
 
 REM Define el nombre del archivo ZIP con la versión
-set "ClassicFilename=DisenchanterPlus-v%Build%-classic.zip"
+set "CamelotFilename=DisenchanterPlus-v%Build%-camelot.zip"
 
 REM Elimina el archivo ZIP anterior si existe
-del "%Directory%Release\%ClassicFilename%.zip"
+del "%Directory%\Release\%CamelotFilename%"
 
 REM Crea el archivo ZIP excluyendo archivos de la lista de exclusiones
-REM -x@packagerExclusions-Classic.lst: Excluye archivos especificados en el archivo de exclusiones
-REM -xr@packagerExclusions-Classic.lst: Excluye directorios especificados de manera recursiva
+REM -x@packagerExclusions-Camelot.lst: Excluye archivos especificados en el archivo de exclusiones
+REM -xr@packagerExclusions-Camelot.lst: Excluye directorios especificados de manera recursiva
 REM -tzip: Define el formato de compresión como ZIP
 REM -aoa: Sobrescribe archivos existentes (OverwriteAll)
-7z a -x@packagerExclusions-Classic.lst -xr@packagerExclusions-Classic.lst -tzip ".\Release\%ClassicFilename%" "%Directory%" -aoa
+7z a -x@packagerExclusions-Camelot.lst -xr@packagerExclusions-Camelot.lst -tzip ".\Release\%CamelotFilename%" "%Directory%" -aoa
 
 REM Mensaje de confirmación
-echo Paquete creado: %ClassicFilename%
+echo Paquete creado: %CamelotFilename%

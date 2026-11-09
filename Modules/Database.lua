@@ -7,9 +7,6 @@ local DP_CustomFunctions = DP_ModuleLoader:ImportModule("DP_CustomFunctions")
 ---@type DP_ClassicDisenchantTable
 local DP_ClassicDisenchantTable = DP_ModuleLoader:ImportModule("DP_ClassicDisenchantTable")
 
----@type DP_TBCDisenchantTable
-local DP_TBCDisenchantTable = DP_ModuleLoader:ImportModule("DP_TBCDisenchantTable")
-
 ---@type DP_EnchantPatterns
 local DP_EnchantPatterns = DP_ModuleLoader:ImportModule("DP_EnchantPatterns")
 
@@ -51,26 +48,6 @@ DisenchanterPlus.EnchantingItems = {
   small_prismatic_shard = 22448,
   large_prismatic_shard = 22449,
   void_crystal = 22450,
-  -- northrend
-  infinite_dust = 34054,
-  lesser_cosmic_essence = 34056,
-  greater_cosmic_essence = 34055,
-  small_dream_shard = 34053,
-  dream_shard = 34052,
-  abyss_crystal = 34057,
-  -- cataclysm
-  hypnotic_dust = 52555,
-  lesser_celestial_essence = 52718,
-  greater_celestial_essence = 52719,
-  small_heavenly_shard = 52720,
-  heavenly_shard = 52721,
-  maelstrom_crystal = 52722,
-  -- pandaria
-  spirit_dust = 0,
-  mysterious_essence = 0,
-  small_Ethereal_shard = 0,
-  ethereal_shard = 0,
-  sha_crystal = 0,
 }
 
 local enchantingItemType = {
@@ -80,8 +57,6 @@ local enchantingItemType = {
   [DisenchanterPlus.EnchantingItems.dream_dust]                = dust,
   [DisenchanterPlus.EnchantingItems.illusion_dust]             = dust,
   [DisenchanterPlus.EnchantingItems.arcane_dust]               = dust,
-  [DisenchanterPlus.EnchantingItems.infinite_dust]             = dust,
-  [DisenchanterPlus.EnchantingItems.hypnotic_dust]             = dust,
   [DisenchanterPlus.EnchantingItems.lesser_magic_essence]      = essence,
   [DisenchanterPlus.EnchantingItems.greater_magic_essence]     = essence,
   [DisenchanterPlus.EnchantingItems.lesser_astral_essence]     = essence,
@@ -94,10 +69,6 @@ local enchantingItemType = {
   [DisenchanterPlus.EnchantingItems.greater_eternal_essence]   = essence,
   [DisenchanterPlus.EnchantingItems.lesser_planar_essence]     = essence,
   [DisenchanterPlus.EnchantingItems.greater_planar_essence]    = essence,
-  [DisenchanterPlus.EnchantingItems.lesser_cosmic_essence]     = essence,
-  [DisenchanterPlus.EnchantingItems.greater_cosmic_essence]    = essence,
-  [DisenchanterPlus.EnchantingItems.lesser_celestial_essence]  = essence,
-  [DisenchanterPlus.EnchantingItems.greater_celestial_essence] = essence,
   [DisenchanterPlus.EnchantingItems.small_glimmering_shard]    = shard,
   [DisenchanterPlus.EnchantingItems.large_glimmering_shard]    = shard,
   [DisenchanterPlus.EnchantingItems.small_glowing_shard]       = shard,
@@ -108,28 +79,14 @@ local enchantingItemType = {
   [DisenchanterPlus.EnchantingItems.large_brilliant_shard]     = shard,
   [DisenchanterPlus.EnchantingItems.small_prismatic_shard]     = shard,
   [DisenchanterPlus.EnchantingItems.large_prismatic_shard]     = shard,
-  [DisenchanterPlus.EnchantingItems.small_dream_shard]         = shard,
-  [DisenchanterPlus.EnchantingItems.dream_shard]               = shard,
-  [DisenchanterPlus.EnchantingItems.small_heavenly_shard]      = shard,
-  [DisenchanterPlus.EnchantingItems.heavenly_shard]            = shard,
   [DisenchanterPlus.EnchantingItems.nexus_crystal]             = crystal,
-  [DisenchanterPlus.EnchantingItems.void_crystal]              = crystal,
-  [DisenchanterPlus.EnchantingItems.abyss_crystal]             = crystal,
-  [DisenchanterPlus.EnchantingItems.maelstrom_crystal]         = crystal,
-  [DisenchanterPlus.EnchantingItems.spirit_dust]               = dust,
-  [DisenchanterPlus.EnchantingItems.mysterious_essence]        = essence,
-  [DisenchanterPlus.EnchantingItems.small_Ethereal_shard]      = shard,
-  [DisenchanterPlus.EnchantingItems.ethereal_shard]            = shard,
-  [DisenchanterPlus.EnchantingItems.sha_crystal]               = crystal
+  [DisenchanterPlus.EnchantingItems.void_crystal]              = crystal
 }
 
 function DP_Database:Initialize()
   if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
     -- classic_era
     DP_ClassicDisenchantTable:Initialize()
-  elseif DisenchanterPlus.IsTBC then
-    -- tbc
-    DP_TBCDisenchantTable:Initialize()
   end
   DP_EnchantPatterns:Initialize()
 end
@@ -150,9 +107,6 @@ function DP_Database:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel,
       DisenchanterPlus.IsEraSeasonal then
     -- classic_era
     return DP_ClassicDisenchantTable:CheckSkillLevelForItem()
-  elseif DisenchanterPlus.IsTBC then
-    -- tbc
-    return DP_TBCDisenchantTable:CheckSkillLevelForItem(skillLevel, itemLevel, itemMinLevel, itemQuality)
   end
   return false
 end
@@ -163,8 +117,6 @@ function DP_Database:GetExpectedDisenchantData()
   if DisenchanterPlus.IsClassic or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal or
       DisenchanterPlus.IsHardcore then
     return DP_ClassicDisenchantTable:GenerateDisenchantTable()
-  elseif DisenchanterPlus.IsTBC then
-    return DP_TBCDisenchantTable:GenerateDisenchantTable()
   end
   return {}
 end

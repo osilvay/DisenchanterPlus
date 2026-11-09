@@ -1,3 +1,9 @@
+## **Version 3.0.0.0**
+
+- Added support for Classic WoW Forever (Camelot) 1.60.x
+- Fixed ElvUI_BenikUI error (`ElvUF_Player` was nil) by moving login initialization to `OnEnable`
+- Removed TBC Classic support (interface 20505, disenchant table and client branches)
+
 ## **Version 2.0.1.6**
 
 - Fixed disenchant table for rare and epic items (TBC)

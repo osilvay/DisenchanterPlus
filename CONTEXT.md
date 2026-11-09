@@ -1,8 +1,8 @@
 # DisenchanterPlus - Análisis Completo de Arquitectura
 
-**Versión del Addon**: 2.0.1.6  
+**Versión del Addon**: 3.0.0.0  
 **Fecha de Análisis**: 3 de mayo de 2026  
-**Plataformas Soportadas**: Classic WoW (Era, Hardcore, SoD), TBC Classic, WotLK Classic, Mainline
+**Plataformas Soportadas**: Classic WoW Forever (Camelot 1.60.x)
 
 ---
 
@@ -19,7 +19,6 @@
 DisenchanterPlus/
 ├── Bindings.xml                    # Definición de keybindings
 ├── DisenchanterPlus.lua            # Archivo principal (nucleo del addon)
-├── DisenchanterPlus-Classic.toc    # Tabla de contenidos (TOC) para Classic Era/TBC
 ├── DisenchanterPlus_Camelot.toc    # Tabla de contenidos (TOC) para Classic WoW Forever 1.60.x
 ├── embeds.xml                      # Inclusión de librerías Ace3
 ├── pkgmeta.yaml                    # Configuración del empaquetador
@@ -112,8 +111,6 @@ El addon proporciona métodos para diferentes niveles de logging coloreado:
 ```lua
 DisenchanterPlus.IsMainline      -- Retail/Mainline (excluye Forever)
 DisenchanterPlus.IsForever       -- Classic WoW Forever (build 1.60.x, reporta project ID Mainline)
-DisenchanterPlus.IsWotlk         -- WotLK Classic
-DisenchanterPlus.IsTBC           -- Burning Crusade Classic
 DisenchanterPlus.IsClassic       -- Classic Era (incluye Forever)
 DisenchanterPlus.IsEra           -- Classic Era (no estacional)
 DisenchanterPlus.IsEraSeasonal   -- Classic Era estacional (SoD)
@@ -655,7 +652,7 @@ Módulos utilitarios y de soporte para UI y funciones generales.
   - 13262 (Disenchant - Classic)
   - 7411, 7412, 7413 (Enchant spells)
   - 13920, 28029, 51313, 74258 (Otros encantamientos por expansión)
-- **Compatibilidad**: Maneja diferentes APIs según cliente (Classic, Cata+, Retail)
+- **Compatibilidad**: Maneja diferentes APIs según cliente (Forever/Camelot y Classic)
 
 ---
 
@@ -695,12 +692,6 @@ Tablas de datos de desencantamiento para cada expansión.
     }
   }
   ```
-
-#### **TBCDisenchantTable.lua**
-
-- **Clase**: `DP_TBCDisenchantTable`
-- **Contenido**: Tabla de materiales esperados para TBC Classic
-- **Incluye**: Planar Essence, Prismatic Shards, Void Crystal
 
 #### **EnchantPatterns.lua**
 
@@ -840,14 +831,14 @@ El archivo `embeds.xml` incluye todas estas librerías en el orden correcto de d
 
 ## 7. ARCHIVOS DE CONFIGURACIÓN
 
-### 7.1 DisenchanterPlus-Classic.toc
+### 7.1 DisenchanterPlus_Camelot.toc
 
-El archivo Table of Contents que WoW lee para cargar el addon:
+El archivo Table of Contents que WoW lee para cargar el addon en Classic WoW Forever (Camelot):
 
 ```
-## Interface: 20505                    # Interface TBC (2.5.5). Forever usa DisenchanterPlus_Camelot.toc (16001)
-## Title: |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v2.0.1.6|r
-## Version: Version 2.0.1.6
+## Interface: 16001                    # Interface Forever (1.60.x)
+## Title: |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v3.0.0.0|r
+## Version: 3.0.0.0
 ## Notes: Disenchanter tool for wow classic era
 ## Author: osilvay
 ## SavedVariables: DisenchanterPlusDB  # Clave de BD persistente
@@ -911,7 +902,7 @@ Define keybindings del addon:
 ```
 1. WoW Inicia Addon
    ↓
-2. Carga TOC (DisenchanterPlus-Classic.toc)
+2. Carga TOC (DisenchanterPlus_Camelot.toc)
    ├─ embeds.xml (Librerías Ace3)
    ├─ ModuleLoader.lua (Sistema de módulos)
    ├─ VersionCheck.lua (Detección cliente)
@@ -960,7 +951,7 @@ Define keybindings del addon:
    └─ (delay 1s) DP_EnchantProcess:Initialize()
    ↓
 8. Addon Listo
-   ├─ Print "Initialized v2.0.1.6"
+   ├─ Print "Initialized v3.0.0.0"
    ├─ Set DisenchanterPlus.started = true
    └─ Sistema esperando eventos WoW
 ```
@@ -1117,7 +1108,6 @@ DisenchanterPlus (Main)
 │       ├─→ DP_SlashCommands
 │       ├─→ DP_Database
 │       │   ├─→ DP_ClassicDisenchantTable
-│       │   ├─→ DP_TBCDisenchantTable
 │       │   └─→ DP_EnchantPatterns
 │       ├─→ DP_EnchantingTooltip
 │       │   ├─→ DP_Database
@@ -1254,7 +1244,6 @@ Contiene documentación interna y apuntes de desarrollo.
 | `DP_MinimapIcon` | `Modules/MinimapIcon.lua` | Icono del minimap |
 | `DP_Database` | `Modules/Database.lua` | Gestor de items de encantamiento |
 | `DP_ClassicDisenchantTable` | `Modules/Database/ClassicDisenchantTable.lua` | Tabla de desencantamiento Classic |
-| `DP_TBCDisenchantTable` | `Modules/Database/TBCDisenchantTable.lua` | Tabla de desencantamiento TBC |
 | `DP_EnchantPatterns` | `Modules/Database/EnchantPatterns.lua` | Patrones de encantamiento |
 | `DP_DisenchanterPlusEvents` | `Modules/Events/DisenchanterPlusEvents.lua` | Centralizador de eventos |
 | `DP_DisenchantProcess` | `Modules/Disenchant/DisenchantProcess.lua` | Lógica de desencantamiento |
@@ -1414,7 +1403,6 @@ El addon fue diseñado para ser extensible:
 
 1. Extender tablas de desencantamiento:
    - `DP_ClassicDisenchantTable`
-   - `DP_TBCDisenchantTable`
 2. Actualizar `DP_Database:GetEnchantingItemType()`
 
 ---

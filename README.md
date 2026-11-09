@@ -166,7 +166,7 @@ Found a bug? Report it on **[GitHub Issues](https://github.com/osilvay/Disenchan
 
 Please include:
 
-- Your WoW version (Classic Era, SoD, Cataclysm, etc.)
+- Your WoW version (Classic WoW Forever / Camelot 1.60.x)
 - Steps to reproduce the issue
 - Any error messages from the game console
 

@@ -13,7 +13,6 @@ local tradeSkillList = {
 ---Get tradeSkill
 ---@return table|nil
 function DP_TradeSkillCheck:GetTradeSkill()
-  local result
   if DisenchanterPlus.IsForever then
     -- Forever / modern client: the old GetNumSkillLines/GetSkillLineInfo globals were removed.
     -- GetProfessions() returns up to 7 profession indices and GetProfessionInfo() accepts them.
@@ -33,8 +32,7 @@ function DP_TradeSkillCheck:GetTradeSkill()
       end
     end
   elseif DisenchanterPlus.IsClassic or DisenchanterPlus.IsEra
-      or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsHardcore
-      or DisenchanterPlus.IsTBC then
+      or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsHardcore then
     for tradeSkillIndex = 1, GetNumSkillLines() do
       local tradeSkillName, isHeader, _, tradeSkillRank, _, _, _, _, _, _, _, _, _ = GetSkillLineInfo(tradeSkillIndex)
       if not isHeader then
@@ -48,26 +46,8 @@ function DP_TradeSkillCheck:GetTradeSkill()
         end
       end
     end
-  elseif DisenchanterPlus.IsCataclysm then
-    local profList = {}
-    local prof1, prof2, _, _, _, _ = GetProfessions();
-    table.insert(profList, prof1)
-    table.insert(profList, prof2)
-
-    for _, tradeSkillIndex in pairs(profList) do
-      local tradeSkillName, tradeSkillIcon, tradeSkillLevel, _, _, _, _, _, _, _ = GetProfessionInfo(tradeSkillIndex)
-      if tradeSkillName == DisenchanterPlus:DP_i18n("Enchanting") then
-        result = {
-          TradeSkillIndex = tradeSkillIndex,
-          Name = tradeSkillName,
-          Icon = tradeSkillIcon,
-          Level = tradeSkillLevel
-        }
-        break
-      end
-    end
   end
-  return result
+  return nil
 end
 
 ---Find proffesion by spellId
@@ -104,7 +84,7 @@ function DP_TradeSkillCheck:GetTradeSkillLines()
   if DisenchanterPlus.IsForever then
     -- Forever / modern client
     return DP_TradeSkillCheck:GetTradeSkillLinesForForever()
-  elseif DisenchanterPlus.IsClassic or DisenchanterPlus.IsTBC or DisenchanterPlus.IsHardcore
+  elseif DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore
       or DisenchanterPlus.IsEra or DisenchanterPlus.IsEraSeasonal then
     -- classic_era
     return DP_TradeSkillCheck:GetTradeSkillLinesForClassic()

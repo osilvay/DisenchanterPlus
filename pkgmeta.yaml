@@ -9,6 +9,6 @@ ignore:
   - .gitignore
   - .vscode
   - .version
-  - DisenchanterPlus.toc
   - packager.bat
-  - packagerExclusions.lst
+  - packager.sh
+  - packagerExclusions-*.lst

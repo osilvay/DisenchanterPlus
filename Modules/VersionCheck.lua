@@ -12,14 +12,6 @@ DisenchanterPlus.IsForever = (select(1, GetBuildInfo()) or ""):match("^1%.60%.")
 ---@type boolean
 DisenchanterPlus.IsMainline = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and not DisenchanterPlus.IsForever
 
---- Addon is running on Classic Wotlk client
----@type boolean
-DisenchanterPlus.IsWotlk = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
-
---- Addon is running on Classic TBC client
----@type boolean
-DisenchanterPlus.IsTBC = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
-
 --- Addon is running on Classic "Vanilla" client: Means Classic Era and its seasons like SoM. Forever uses the Classic (Era) profession and disenchant data.
 ---@type boolean
 DisenchanterPlus.IsClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC or DisenchanterPlus.IsForever

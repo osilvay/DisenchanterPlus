@@ -11,8 +11,9 @@ local classicDisenchantData = {}
 local expectedPercents = {}
 
 function DP_ClassicDisenchantTable:Initialize()
+  -- Nexus Crystal (fields 9-10) is only defined for the last two ranges (51-55 and 56-60).
   classicDisenchantData = {
-    { 5,  10, "1-2x", DisenchanterPlus.EnchantingItems.strange_dust,  "1-2x", DisenchanterPlus.EnchantingItems.lesser_magic_essence,    nil,  nil,                                                     nil,  nil },
+    { 1,  10, "1-2x", DisenchanterPlus.EnchantingItems.strange_dust,  "1-2x", DisenchanterPlus.EnchantingItems.lesser_magic_essence,    nil,  nil,                                                     nil,  nil },
     { 11, 15, "2-3x", DisenchanterPlus.EnchantingItems.strange_dust,  "1-2x", DisenchanterPlus.EnchantingItems.greater_magic_essence,   "1x", DisenchanterPlus.EnchantingItems.small_glimmering_shard, nil,  nil },
     { 16, 20, "4-6x", DisenchanterPlus.EnchantingItems.strange_dust,  "1-2x", DisenchanterPlus.EnchantingItems.lesser_astral_essence,   "1x", DisenchanterPlus.EnchantingItems.small_glimmering_shard, nil,  nil },
     { 21, 25, "1-2x", DisenchanterPlus.EnchantingItems.soul_dust,     "1-2x", DisenchanterPlus.EnchantingItems.greater_astral_essence,  "1x", DisenchanterPlus.EnchantingItems.large_glimmering_shard, nil,  nil },
@@ -22,7 +23,7 @@ function DP_ClassicDisenchantTable:Initialize()
     { 41, 45, "1-2x", DisenchanterPlus.EnchantingItems.dream_dust,    "1-2x", DisenchanterPlus.EnchantingItems.greater_nether_essence,  "1x", DisenchanterPlus.EnchantingItems.large_radiant_shard,    nil,  nil },
     { 46, 50, "2-5x", DisenchanterPlus.EnchantingItems.dream_dust,    "1-2x", DisenchanterPlus.EnchantingItems.lesser_eternal_essence,  "1x", DisenchanterPlus.EnchantingItems.small_brilliant_shard,  nil,  nil },
     { 51, 55, "1-2x", DisenchanterPlus.EnchantingItems.illusion_dust, "1-2x", DisenchanterPlus.EnchantingItems.greater_eternal_essence, "1x", DisenchanterPlus.EnchantingItems.large_brilliant_shard,  "1x", DisenchanterPlus.EnchantingItems.nexus_crystal },
-    { 55, 60, "2-5x", DisenchanterPlus.EnchantingItems.illusion_dust, "1-3x", DisenchanterPlus.EnchantingItems.greater_eternal_essence, "1x", DisenchanterPlus.EnchantingItems.large_brilliant_shard,  "1x", DisenchanterPlus.EnchantingItems.nexus_crystal }
+    { 56, 60, "2-5x", DisenchanterPlus.EnchantingItems.illusion_dust, "1-3x", DisenchanterPlus.EnchantingItems.greater_eternal_essence, "1x", DisenchanterPlus.EnchantingItems.large_brilliant_shard,  "1x", DisenchanterPlus.EnchantingItems.nexus_crystal }
   }
   expectedPercents = {
     UNCOMMON = {
@@ -37,10 +38,6 @@ function DP_ClassicDisenchantTable:Initialize()
       Shard = {
         [armor] = 5,
         [weapon] = 5
-      },
-      Crystal = {
-        [armor] = 0,
-        [weapon] = 0
       },
     },
     RARE = {
@@ -152,16 +149,6 @@ function DP_ClassicDisenchantTable:GenerateDisenchantTable()
       weaponEntry.ItemIDs[shardData] = {
         Percent = expectedPercents.UNCOMMON.Shard[weapon],
         QuantityText = shardText
-      }
-    end
-    if crystalData ~= nil then
-      armorEntry.ItemIDs[crystalData] = {
-        Percent = expectedPercents.UNCOMMON.Crystal[armor],
-        QuantityText = crystalText
-      }
-      weaponEntry.ItemIDs[crystalData] = {
-        Percent = expectedPercents.UNCOMMON.Crystal[weapon],
-        QuantityText = crystalText
       }
     end
     table.insert(uncommonArmors, armorEntry)
