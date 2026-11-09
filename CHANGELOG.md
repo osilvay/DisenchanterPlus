@@ -1,3 +1,8 @@
+## **Version 3.0.0.1**
+
+- Fixed enchanting window showing another profession's recipes (e.g. Tailoring) when that profession was open
+- Fixed `SetFont` error in the enchanting window (invalid `"NONE"` flag)
+
 ## **Version 3.0.0.0**
 
 - Added support for Classic WoW Forever (Camelot) 1.60.x

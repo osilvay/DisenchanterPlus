@@ -1,6 +1,6 @@
 # DisenchanterPlus - Análisis Completo de Arquitectura
 
-**Versión del Addon**: 3.0.0.0  
+**Versión del Addon**: 3.0.0.1  
 **Fecha de Análisis**: 3 de mayo de 2026  
 **Plataformas Soportadas**: Classic WoW Forever (Camelot 1.60.x)
 
@@ -837,8 +837,8 @@ El archivo Table of Contents que WoW lee para cargar el addon en Classic WoW For
 
 ```
 ## Interface: 16001                    # Interface Forever (1.60.x)
-## Title: |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v3.0.0.0|r
-## Version: 3.0.0.0
+## Title: |cffe1e1e1Disenchanter|r |cffed6bffPlus|r |cff9191a1v3.0.0.1|r
+## Version: 3.0.0.1
 ## Notes: Disenchanter tool for wow classic era
 ## Author: osilvay
 ## SavedVariables: DisenchanterPlusDB  # Clave de BD persistente
@@ -951,7 +951,7 @@ Define keybindings del addon:
    └─ (delay 1s) DP_EnchantProcess:Initialize()
    ↓
 8. Addon Listo
-   ├─ Print "Initialized v3.0.0.0"
+   ├─ Print "Initialized v3.0.0.1"
    ├─ Set DisenchanterPlus.started = true
    └─ Sistema esperando eventos WoW
 ```

@@ -662,7 +662,7 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
         enchantLineText:SetPoint("LEFT", enchantLineFrame, 10, 0)
 
         local fontPath, _, outline = GameFontNormal:GetFont()
-        enchantLineText:SetFont(fontPath, 15, "NONE" or "")
+        enchantLineText:SetFont(fontPath, 15, outline or "")
 
         enchantLineText:SetText(string.format("|c%s%s %s|r",
           DP_EnchantWindow:GetColorByCraftType(lineInfo.CraftType),
@@ -911,7 +911,7 @@ function DP_EnchantWindow:PopulateItemList(enchant)
       itemLineText:SetPoint("LEFT", itemLineFrame, 10, 0)
 
       local fontPath, _, outline = GameFontNormal:GetFont()
-      itemLineText:SetFont(fontPath, 15, "NONE" or "")
+      itemLineText:SetFont(fontPath, 15, outline or "")
 
       itemLineText:SetText(string.format("%s", lineInfo.ItemLink))
       itemLineText:SetJustifyH("LEFT")

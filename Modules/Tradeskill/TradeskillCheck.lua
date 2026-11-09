@@ -117,6 +117,12 @@ function DP_TradeSkillCheck:GetTradeSkillLinesForForever()
     return lines
   end
 
+  -- GetFilteredRecipeIDs() lists the recipes of whichever profession is open, so only read them when Enchanting is the open one.
+  local baseInfo = C_TradeSkillUI.GetBaseProfessionInfo and C_TradeSkillUI.GetBaseProfessionInfo()
+  if not baseInfo or baseInfo.professionName ~= DisenchanterPlus:DP_i18n("Enchanting") then
+    return lines
+  end
+
   local recipeIDs = C_TradeSkillUI.GetFilteredRecipeIDs()
   if not recipeIDs then
     return lines
@@ -173,6 +179,11 @@ end
 ---Get tradeskill lines for classic
 ---@return table
 function DP_TradeSkillCheck:GetTradeSkillLinesForClassic()
+  -- GetNumCrafts()/GetCraftInfo() read whichever craft window is open, so only read them when Enchanting is the open one.
+  if GetCraftDisplaySkillLine and GetCraftDisplaySkillLine() ~= DisenchanterPlus:DP_i18n("Enchanting") then
+    return {}
+  end
+
   DP_TradeSkillCheck.NumTradeSkills = function()
     return GetNumCrafts()
   end
