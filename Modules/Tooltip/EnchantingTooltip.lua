@@ -14,8 +14,24 @@ function DP_EnchantingTooltip:Initialize()
   PercentByQualityAndLevel = DP_Database:GetExpectedDisenchantData()
 
   if DisenchanterPlus.IsMainline then
-  else
-    GameTooltip:HookScript("OnTooltipSetItem", DP_EnchantingTooltip.OnGameTooltipSetItem)
+    return
+  end
+
+  local onTooltipSetItem = function(tooltip)
+    DP_EnchantingTooltip.OnGameTooltipSetItem(tooltip)
+  end
+
+  -- Forever belongs to the Mainline family, where GameTooltip no longer exposes the
+  -- OnTooltipSetItem script handler. Item tooltips must be extended with TooltipDataProcessor.
+  if DisenchanterPlus.IsForever and TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall
+      and Enum and Enum.TooltipDataType then
+    TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, function(tooltip)
+      if tooltip == GameTooltip then
+        onTooltipSetItem(tooltip)
+      end
+    end)
+  elseif GameTooltip then
+    GameTooltip:HookScript("OnTooltipSetItem", onTooltipSetItem)
   end
 end
 

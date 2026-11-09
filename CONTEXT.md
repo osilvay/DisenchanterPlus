@@ -6,6 +6,13 @@
 
 ---
 
+## 0. REGLAS DE TRABAJO (IMPORTANTE)
+
+- **NUNCA subir nada a git**: no hacer `git commit`, `git push`, `git tag` ni ninguna otra operación que escriba en el repositorio remoto o cree historial. El usuario gestiona git manualmente.
+- Se permite leer el estado del repositorio (`git status`, `git diff`, `git log`) para contexto, pero los cambios se dejan únicamente en el working tree.
+
+---
+
 ## 1. ESTRUCTURA GENERAL DEL ADDON
 
 ```
