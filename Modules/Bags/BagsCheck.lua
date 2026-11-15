@@ -143,6 +143,7 @@ function DP_BagsCheck:GetItemsInBags(equipLocation)
           if not equipLocation or equipLocation == itemEquipLoc or containerInfo.itemID == enchantingVellum then
             numItemsInBag = numItemsInBag + 1
             itemsInBags[tostring(containerInfo.itemID)] = {
+              ItemID = tostring(containerInfo.itemID),
               ItemName = realItemName,
               ItemIcon = itemTexture,
               ItemLink = containerInfo.hyperlink,

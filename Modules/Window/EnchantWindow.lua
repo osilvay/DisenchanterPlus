@@ -101,8 +101,18 @@ function DP_EnchantWindow:CreateEnchantWindow()
   EnchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, 0)
   EnchanterPlusBaseFrame:SetBackdropBorderColor(0.8, 0.8, 0.8, 1)
   EnchanterPlusBaseFrame:SetScript("OnHide", function()
-    -- Sincronizar estado cuando se oculta la ventana
-    windowOpened = false
+    -- La ventana tambien se puede ocultar con Escape (UISpecialFrames), no solo con CloseWindow.
+    -- Si no se sincroniza el proceso, IsCraftingWindowOpen queda en true y la ventana no
+    -- vuelve a abrirse hasta cerrar y reabrir la profesion.
+    if windowOpened then
+      windowOpened = false
+      enchantSelected = nil
+      lastEnchantCurrent = nil
+      itemSelected = nil
+      lastItemCurrent = nil
+      DP_EnchantProcess:SetCraftingWindowOpen(false)
+      DP_EnchantWindow:DisableEnchantButton()
+    end
 
     -- Remover de UISpecialFrames cuando se oculta
     for i, frameName in ipairs(UISpecialFrames) do
@@ -235,9 +245,17 @@ function DP_EnchantWindow:CreateEnchantWindow()
   local disabledTexture = yesDummyButton:CreateTexture(nil, nil, "UIPanelButtonDisabledTexture")
   yesButton:SetDisabledTexture(disabledTexture)
 
+  -- Registrar los dos eventos es lo mismo que hace el boton de desencantamiento (probado).
+  -- El cliente decide cual de los dos ejecuta la accion segun el CVar
+  -- "ActionButtonUseKeyDown", asi que registrar solo uno puede dejar el boton sin efecto.
   yesButton:RegisterForClicks("LeftButtonUp", "LeftButtonDown")
-  yesButton:SetAttribute("type", "macro")
-  yesButton:SetAttribute("macrotext", "")
+  -- Accion segura "spell" + target-bag/target-slot: el cliente castea el encantamiento
+  -- y despues usa el item seleccionado, igual que el boton de desencantamiento.
+  yesButton:SetAttribute("type", "spell")
+  yesButton:SetAttribute("spell", "")
+  -- Manejador original del template (SecureActionButton_OnClick). En los clientes modernos
+  -- el boton usa un OnClick propio y hay que poder volver a este al cambiar la seleccion.
+  yesButton.secureOnClick = yesButton:GetScript("OnClick") or SecureActionButton_OnClick
 
   DP_EnchantWindow:UpdateKeybindings()
 
@@ -257,8 +275,14 @@ function DP_EnchantWindow:CreateEnchantWindow()
     yesButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept_a:14:14|t " .. DisenchanterPlus:DP_i18n("Enchant"))
   end)
   yesButton:SetScript("PreClick", function(current)
+    DisenchanterPlus:Debug("Boton Enchant pulsado (enchanting=" .. tostring(enchanting) .. ")")
     if not enchanting then
-      DP_EnchantWindow:DisableEnchantButton()
+      -- No deshabilitar el boton aqui: el cliente puede ejecutar la accion segura en el
+      -- evento de soltar el boton, y un boton deshabilitado no recibe ese evento (el clic
+      -- se quedaba "sin hacer nada"). Se deshabilita un momento despues del clic.
+      C_Timer.After(0.2, function()
+        DP_EnchantWindow:DisableEnchantButton()
+      end)
       C_Timer.After(5.5, function()
         local lastSelectedEnchant
         if lastEnchantCurrent and lastItemCurrent and EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID] then
@@ -282,9 +306,9 @@ function DP_EnchantWindow:CreateEnchantWindow()
 
   -- craft buttons ******************************************************************************************
   DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftTrivialButton", "trivial", DisenchanterPlus:DP_i18n("Trivial"), "4", -80, -10)
-  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftTrivialButton", "easy", DisenchanterPlus:DP_i18n("Easy"), "3", -105, -10)
-  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftTrivialButton", "medium", DisenchanterPlus:DP_i18n("Medium"), "2", -130, -10)
-  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftTrivialButton", "optimal", DisenchanterPlus:DP_i18n("Optimal"), "1", -155, -10)
+  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftEasyButton", "easy", DisenchanterPlus:DP_i18n("Easy"), "3", -105, -10)
+  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftMediumButton", "medium", DisenchanterPlus:DP_i18n("Medium"), "2", -130, -10)
+  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftOptimalButton", "optimal", DisenchanterPlus:DP_i18n("Optimal"), "1", -155, -10)
 
   -- custom buttons
   DP_CustomFrames:DrawCustomCleanButton("5", "EnchantWindow_ShowWithMatsButton", EnchanterPlusBaseFrame, "eye", "eye_off",
@@ -340,7 +364,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
   tabScrollFrame1:SetSize(275, 205)
 
   local tabScrollContentFrame1 = CreateFrame("Frame", "EnchantWindow_EnchantList", EnchanterPlusBaseFrame)
-  tabScrollContentFrame1:SetPoint("CENTER", tabScrollFrame1, "CENTER", 0, 0)
+  tabScrollContentFrame1:SetPoint("TOPLEFT", tabScrollFrame1, "TOPLEFT", 0, 0)
   tabScrollContentFrame1:SetSize(275, 205)
   tabScrollFrame1:SetScrollChild(tabScrollContentFrame1)
   EnchanterPlusBaseFrame.tabScrollContentFrame1 = tabScrollContentFrame1
@@ -359,7 +383,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
   tabScrollFrame2:SetSize(275, 205)
 
   local tabScrollContentFrame2 = CreateFrame("Frame", "EnchantWindow_ItemList", EnchanterPlusBaseFrame)
-  tabScrollContentFrame2:SetPoint("CENTER", tabScrollFrame2, "CENTER", 0, 0)
+  tabScrollContentFrame2:SetPoint("TOPLEFT", tabScrollFrame2, "TOPLEFT", 0, 0)
   tabScrollContentFrame2:SetSize(275, 205)
   tabScrollFrame2:SetScrollChild(tabScrollContentFrame2)
   EnchanterPlusBaseFrame.tabScrollContentFrame2 = tabScrollContentFrame2
@@ -382,6 +406,8 @@ function DP_EnchantWindow:OpenWindow()
   -- Permitir abrir si no está visible (en lugar de solo verificar windowOpened)
   if not EnchanterPlusBaseFrame:IsVisible() then
     C_Timer.After(0.2, function()
+      -- Si la profesion se cerro antes de que se mostrara la ventana, no mostrarla.
+      if not DP_EnchantProcess:IsCraftingWindowOpen() then return end
       EnchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, textFrameBgColorAlpha)
       EnchanterPlusBaseFrame:Show()
       EnchanterPlusBaseFrame.settingsButton:Show()
@@ -403,6 +429,12 @@ end
 
 function DP_EnchantWindow:IsWindowOpened()
   return windowOpened
+end
+
+---Is an enchant being cast from this window (used to auto confirm replacement dialogs)
+---@return boolean
+function DP_EnchantWindow:IsEnchanting()
+  return enchanting
 end
 
 ---Close window
@@ -592,6 +624,9 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
             end
             enchantSelected = current.lineID
             lastEnchantCurrent = current
+            -- Al cambiar de encantamiento el macro del boton "Enchant" todavia apunta al
+            -- encantamiento/item anterior: hay que deshabilitarlo hasta elegir un item.
+            DP_EnchantWindow:DisableEnchantButton()
             if current.numAvailable and current.numAvailable > 0 then
               current.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept_c:24:24|t")
               itemSelected    = nil
@@ -736,6 +771,10 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
   EnchanterPlusBaseFrame.tabScrollContentFrame1:Show()
   numLinesInEnchantContainer = DP_CustomFunctions:TableLength(EnchanterPlusBaseFrame.tabScrollContentFrame1.line)
 
+  -- El scroll child debe crecer con las filas; si no, las listas largas no se pueden scrollear.
+  local enchantListHeight = offsetV * math.max(numLinesInEnchantContainer - 1, 0) + 32 + 8
+  EnchanterPlusBaseFrame.tabScrollContentFrame1:SetHeight(math.max(205, enchantListHeight))
+
   if lastSelectedEnchant ~= nil and not lastSelectedEnchantFound then
     enchantSelected = nil
     lastEnchantCurrent = nil
@@ -757,7 +796,7 @@ end
 ---@param craftType string
 ---@return string
 function DP_EnchantWindow:GetColorByCraftType(craftType)
-  if not craftType == nil or craftType == "trivial" then
+  if craftType == nil or craftType == "trivial" then
     return trivial
   elseif craftType == "easy" then
     return easy
@@ -799,7 +838,10 @@ function DP_EnchantWindow:PopulateItemList(enchant)
       itemContainerLines[tostring(i)]:Hide()
     end
   end
-  if not enchant then return end
+  if not enchant then
+    EnchanterPlusBaseFrame.tabScrollContentFrame2:SetHeight(205)
+    return
+  end
 
   local equipLocations = DP_EnchantWindow:GetEquipLocationFromEnchant(enchant)
   if equipLocations then
@@ -810,6 +852,7 @@ function DP_EnchantWindow:PopulateItemList(enchant)
   end
 
   if DP_CustomFunctions:TableIsEmpty(totalItemsInBags) then
+    EnchanterPlusBaseFrame.tabScrollContentFrame2:SetHeight(205)
     EnchanterPlusBaseFrame.footText:SetText("|cffff650a" .. DisenchanterPlus:DP_i18n("There are no items for this enchantment.") .. "|r")
     return
   end
@@ -820,6 +863,8 @@ function DP_EnchantWindow:PopulateItemList(enchant)
       itemLineFrame.itemCorrect = false
       itemLineFrame.itemID = lineInfo.ItemID
       itemLineFrame.itemName = lineInfo.ItemName
+      itemLineFrame.itemBag = lineInfo.BagIndex
+      itemLineFrame.itemSlot = lineInfo.Slot
 
       itemLineFrame:SetPoint("TOPLEFT", EnchanterPlusBaseFrame.tabScrollContentFrame2, "TOPLEFT", 0, -(offsetV * (itemNum - 1)))
       itemLineFrame:SetSize(310, 32)
@@ -941,6 +986,8 @@ function DP_EnchantWindow:PopulateItemList(enchant)
       itemLineFrame.itemCorrect = false
       itemLineFrame.itemID = lineInfo.ItemID
       itemLineFrame.itemName = lineInfo.ItemName
+      itemLineFrame.itemBag = lineInfo.BagIndex
+      itemLineFrame.itemSlot = lineInfo.Slot
 
       local acceptItemButton = itemLineFrame.acceptItemButton
       acceptItemButton.text:SetTextColor(1, 1, 1, 0.1)
@@ -966,6 +1013,10 @@ function DP_EnchantWindow:PopulateItemList(enchant)
   EnchanterPlusBaseFrame.tabScrollContentFrame2:Show()
   numLinesInItemContainer = DP_CustomFunctions:TableLength(EnchanterPlusBaseFrame.tabScrollContentFrame2.line)
 
+  -- El scroll child debe crecer con las filas; si no, las listas largas no se pueden scrollear.
+  local itemListHeight = offsetV * math.max(numLinesInItemContainer - 1, 0) + 32 + 8
+  EnchanterPlusBaseFrame.tabScrollContentFrame2:SetHeight(math.max(205, itemListHeight))
+
   EnchanterPlusBaseFrame.footText:SetText("|cffffc700" .. DisenchanterPlus:DP_i18n("Select an item from the right list.") .. "|r")
 end
 
@@ -984,17 +1035,62 @@ function DP_EnchantWindow:CheckReadyToEnchant()
     return
   end
 
-  local enchant = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID].enchant
-  local craftIndex = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID].index
-  local itemName = EnchanterPlusBaseFrame.tabScrollContentFrame2.line[lastItemCurrent.lineID].itemName
+  local enchantLine = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID]
+  local enchant = enchantLine.enchant
+  local recipeID = enchantLine.index
+  local itemInfo = EnchanterPlusBaseFrame.tabScrollContentFrame2.line[lastItemCurrent.lineID]
+  local itemName = itemInfo.itemName
 
-  local macro = ""
-  if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra
-      or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsTBC then
-    macro = string.format("/cast %s\n/use %s\n/click StaticPopup1Button1\n", enchant, itemName)
+  local yesButton = EnchanterPlusBaseFrame.yesButton
+  if not yesButton then return end
+
+  -- Hay dos formas de aplicar el encantamiento y el boton tiene que usar la que soporta el
+  -- cliente en el que esta corriendo el addon:
+  --   * Clasico: el encantamiento es un hechizo del libro; se castea y despues se usa el item.
+  --     Se hace con una accion segura (type="spell" + target-bag/target-slot, igual que el
+  --     boton de desencantamiento).
+  --   * Cliente moderno (UI de profesiones con C_TradeSkillUI): el encantamiento no es un
+  --     hechizo casteable desde el addon; se aplica con C_TradeSkillUI.CraftEnchant, que es
+  --     exactamente lo que hace el boton "Crear" de la ventana de profesion.
+  -- La confirmacion de "reemplazar encantamiento" la resuelve DP_EnchantProcess aceptando
+  -- el popup en el mismo frame en que el cliente lo muestra.
+  if DP_EnchantWindow:ShouldUseCraftEnchant(recipeID) then
+    -- Con un OnClick propio basta un evento: si se registran los dos, CraftEnchant se
+    -- llamaria dos veces por clic.
+    yesButton:RegisterForClicks("LeftButtonUp")
+    yesButton:SetScript("OnClick", function()
+      DP_EnchantWindow:CraftEnchantOnItem(recipeID, itemInfo.itemBag, itemInfo.itemSlot)
+    end)
+    yesButton:SetAttribute("type", nil)
+    yesButton:SetAttribute("spell", nil)
+    yesButton:SetAttribute("macrotext", nil)
+    yesButton:SetAttribute("target-bag", nil)
+    yesButton:SetAttribute("target-slot", nil)
+    yesButton:SetAttribute("target-item", nil)
+    DisenchanterPlus:Debug(string.format("Enchant button: CraftEnchant(recipeID=%s, bag=%s, slot=%s)",
+      tostring(recipeID), tostring(itemInfo.itemBag), tostring(itemInfo.itemSlot)))
+  elseif itemInfo.itemBag ~= nil and itemInfo.itemSlot ~= nil then
+    yesButton:RegisterForClicks("LeftButtonUp", "LeftButtonDown")
+    yesButton:SetScript("OnClick", yesButton.secureOnClick)
+    yesButton:SetAttribute("type", "spell")
+    yesButton:SetAttribute("spell", enchant)
+    yesButton:SetAttribute("target-bag", itemInfo.itemBag)
+    yesButton:SetAttribute("target-slot", itemInfo.itemSlot)
+    yesButton:SetAttribute("target-item", nil)
+    yesButton:SetAttribute("macrotext", nil)
+    DisenchanterPlus:Debug(string.format("Enchant button: spell=%s, bag=%s, slot=%s", tostring(enchant), tostring(itemInfo.itemBag), tostring(itemInfo.itemSlot)))
+  else
+    -- Respaldo por si la lista no guardo la posicion en bolsa: se usa el nombre del item.
+    -- (El nombre puede ser ambiguo, por eso el camino normal usa target-bag/target-slot.)
+    yesButton:RegisterForClicks("LeftButtonUp", "LeftButtonDown")
+    yesButton:SetScript("OnClick", yesButton.secureOnClick)
+    yesButton:SetAttribute("type", "macro")
+    yesButton:SetAttribute("macrotext", string.format("/cast %s\n/use %s\n", enchant, itemName))
+    yesButton:SetAttribute("target-bag", nil)
+    yesButton:SetAttribute("target-slot", nil)
+    yesButton:SetAttribute("target-item", nil)
+    DisenchanterPlus:Debug(string.format("Enchant button: sin bolsa/slot, macro /cast %s + /use %s", tostring(enchant), tostring(itemName)))
   end
-
-  EnchanterPlusBaseFrame.yesButton:SetAttribute("macrotext", macro)
 
   C_Timer.After(0.2, function()
     DP_EnchantWindow:EnableEnchantButton()
@@ -1003,17 +1099,49 @@ function DP_EnchantWindow:CheckReadyToEnchant()
   end)
 end
 
+---Does this client apply enchants through the profession API instead of casting a spell?
+---En los clientes modernos (UI de profesiones) la receta no se castea: se aplica con
+---C_TradeSkillUI.CraftEnchant, igual que el boton "Crear" de la ventana de profesion.
+---@param recipeID number|nil
+---@return boolean
+function DP_EnchantWindow:ShouldUseCraftEnchant(recipeID)
+  if not DisenchanterPlus.IsForever then return false end
+  if type(C_TradeSkillUI) ~= "table" or type(C_TradeSkillUI.CraftEnchant) ~= "function" then return false end
+  if type(recipeID) ~= "number" then return false end
+  return true
+end
+
+---Apply an enchant to an item in the bags through the profession API
+---@param recipeID number|nil
+---@param bag number|nil
+---@param slot number|nil
+function DP_EnchantWindow:CraftEnchantOnItem(recipeID, bag, slot)
+  if type(recipeID) ~= "number" or bag == nil or slot == nil then return end
+  if not (ItemLocation and ItemLocation.CreateFromBagAndSlot) then return end
+
+  local itemLocation = ItemLocation:CreateFromBagAndSlot(bag, slot)
+  if not itemLocation or not itemLocation:IsValid() then
+    DisenchanterPlus:Debug("CraftEnchant: posicion de item invalida")
+    return
+  end
+
+  local ok, err = pcall(C_TradeSkillUI.CraftEnchant, recipeID, 1, nil, itemLocation)
+  DisenchanterPlus:Debug(string.format("CraftEnchant(%s, 1, nil, bag=%s slot=%s) -> ok=%s err=%s",
+    tostring(recipeID), tostring(bag), tostring(slot), tostring(ok), tostring(err or "")))
+  if not ok then
+    DisenchanterPlus:Print("|cffff4040CraftEnchant: " .. tostring(err) .. "|r")
+  end
+end
+
 ---Enable enchant button
 function DP_EnchantWindow:EnableEnchantButton()
-  local enabledTexture = EnchanterPlusBaseFrame.yesButton:CreateTexture(nil, nil, "UIPanelButtonUpTexture")
-  EnchanterPlusBaseFrame.yesButton:SetNormalTexture(enabledTexture)
+  if not EnchanterPlusBaseFrame or not EnchanterPlusBaseFrame.yesButton then return end
   EnchanterPlusBaseFrame.yesButton:SetEnabled(true)
 end
 
 ---Disable enchant button
 function DP_EnchantWindow:DisableEnchantButton()
-  local disabledTexture = EnchanterPlusBaseFrame.yesButton:CreateTexture(nil, nil, "UIPanelButtonDisabledTexture")
-  EnchanterPlusBaseFrame.yesButton:SetDisabledTexture(disabledTexture)
+  if not EnchanterPlusBaseFrame or not EnchanterPlusBaseFrame.yesButton then return end
   EnchanterPlusBaseFrame.yesButton:SetEnabled(false)
 end
 

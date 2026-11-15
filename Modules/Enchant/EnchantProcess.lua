@@ -14,9 +14,150 @@ local IsTradeSkillKnown = false
 local IsCorrectTradeSkill = false
 local IsCraftingWindowOpen = false
 local TradeSkillInfo
+local popupsHooked = false
+
+---Static popups shown by the game when an enchant replaces an existing one,
+---with the API the popup's accept button calls.
+local replaceEnchantActions = {
+  REPLACE_ENCHANT = "ReplaceEnchant",
+  TRADE_REPLACE_ENCHANT = "ReplaceTradeEnchant",
+  REPLACE_TRADESKILL_ENCHANT = "ReplaceTradeskillEnchant",
+}
+
+---Set when a replacement was already confirmed, to avoid confirming twice
+---when both the event and the popup hook see the same replacement.
+local lastReplaceConfirm = 0
+
+---Is the addon enchant window open or was an enchant cast from it?
+---@return boolean
+local function IsEnchantFlowActive()
+  return DP_EnchantWindow:IsWindowOpened() or DP_EnchantWindow:IsEnchanting()
+end
+
+---Return the canonical token for a REPLACE_ENCHANT style dialog/event name.
+---@param which string
+---@return string|nil
+local function GetReplaceEnchantToken(which)
+  if type(which) ~= "string" then return nil end
+  if replaceEnchantActions[which] then return which end
+  for token in pairs(replaceEnchantActions) do
+    if string.find(which, token, 1, true) then
+      return token
+    end
+  end
+  return nil
+end
+
+---Find a visible static popup frame by dialog token
+---@param which string
+---@return Frame|nil
+local function GetVisibleStaticPopup(which)
+  if type(StaticPopup_Visible) == "function" then
+    local popupName, popupFrame = StaticPopup_Visible(which)
+    -- New clients return (name, frame); old ones returned only the frame.
+    local dialog = popupFrame or (type(popupName) == "table" and popupName) or nil
+    if dialog then return dialog end
+    if type(popupName) == "string" and _G[popupName] then return _G[popupName] end
+  end
+
+  for index = 1, 4 do
+    local dialog = _G["StaticPopup" .. index]
+    if dialog and dialog:IsShown() and dialog.which == which then
+      return dialog
+    end
+  end
+  return nil
+end
+
+---Confirm the "replace enchant" prompt for a dialog token.
+---If the popup already exists it is accepted through the same handler its button uses;
+---otherwise the API the popup's accept button calls is invoked directly.
+---@param which string
+---@return boolean handled
+local function ConfirmReplaceEnchant(which)
+  local token = GetReplaceEnchantToken(which)
+  if not token then return false end
+
+  DisenchanterPlus:Debug("Replace enchant detectado: " .. token)
+
+  if GetTime() - lastReplaceConfirm < 0.5 then
+    -- Ya confirmado por la otra via: solo cerrar el popup si llego a mostrarse.
+    if type(StaticPopup_Hide) == "function" then
+      StaticPopup_Hide(token)
+    end
+    return true
+  end
+
+  local dialog = GetVisibleStaticPopup(token)
+  if dialog and type(StaticPopup_OnClick) == "function" then
+    lastReplaceConfirm = GetTime()
+    if pcall(StaticPopup_OnClick, dialog, 1) then
+      return true
+    end
+    lastReplaceConfirm = 0
+  end
+
+  local api = replaceEnchantActions[token]
+  if type(C_Item) == "table" and api and type(C_Item[api]) == "function" then
+    lastReplaceConfirm = GetTime()
+    if not pcall(C_Item[api]) then
+      lastReplaceConfirm = 0
+      return false
+    end
+    C_Timer.After(0, function()
+      if type(StaticPopup_Hide) == "function" then
+        StaticPopup_Hide(token)
+      end
+    end)
+    return true
+  end
+  return false
+end
+
+---Create the frame that listens for the replace-enchant game events.
+function DP_EnchantProcess:InitializeAutoConfirmPopups()
+  if popupsHooked or type(hooksecurefunc) ~= "function" or type(StaticPopup_Show) ~= "function" then
+    return
+  end
+  popupsHooked = true
+
+  -- The game fires REPLACE_ENCHANT when the item is used; this is the most reliable
+  -- signal because it does not depend on the popup frame being visible.
+  local eventFrame = CreateFrame("Frame", "EnchantWindow_ReplaceEnchantEventFrame", UIParent)
+  DP_EnchantProcess.replaceEnchantEventFrame = eventFrame
+  for event in pairs(replaceEnchantActions) do
+    -- pcall: some client builds may not know every token.
+    pcall(eventFrame.RegisterEvent, eventFrame, event)
+  end
+  eventFrame:SetScript("OnEvent", function(_, event)
+    if IsEnchantFlowActive() then
+      ConfirmReplaceEnchant(event)
+    end
+  end)
+
+  -- The game can hide REPLACE_ENCHANT as soon as the spell cast state changes, so the
+  -- popup has to be accepted in the same frame it is shown; a delayed accept can arrive
+  -- after the dialog is already hidden and the enchant is never applied.
+  hooksecurefunc("StaticPopup_Show", function(which)
+    if not GetReplaceEnchantToken(which) then return end
+    -- Solo se responde por el flujo del addon: ventana de encantamiento abierta o
+    -- encantamiento lanzado desde ella. Nunca se toca un popup ajeno al addon.
+    if not IsEnchantFlowActive() then return end
+
+    if ConfirmReplaceEnchant(which) then return end
+
+    -- Reintento por si el popup se muestra en otro frame/slot.
+    C_Timer.After(0, function()
+      if IsEnchantFlowActive() then
+        ConfirmReplaceEnchant(which)
+      end
+    end)
+  end)
+end
 
 ---Initialize
 function DP_EnchantProcess:Initialize()
+  DP_EnchantProcess:InitializeAutoConfirmPopups()
   C_Timer.After(1, function()
     DP_EnchantProcess:CheckTradeskill()
   end)
@@ -106,11 +247,8 @@ function DP_EnchantProcess:CraftShow()
     --DisenchanterPlus:Dump(tradeSkillLines)
 
     DP_EnchantProcess:SetCraftingWindowOpen(true)
-    --DP_EnchantProcess:PopulateItemsInBags()
     C_Timer.After(0.1, function()
       DP_EnchantProcess:OpenEnchantWindow()
-      DP_EnchantWindow:PopulateEnchantList()
-      --DP_EnchantWindow:PopulateItemList()
     end)
   end
 end

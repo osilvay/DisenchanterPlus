@@ -1,3 +1,11 @@
+## **Version 3.0.0.3**
+
+- Fixed the "Enchant" button in the enchanting window not enchanting the selected item
+- The "replace existing enchantment" confirmation is now accepted automatically
+- Fixed the enchantment and item lists not scrolling when they are longer than the visible area
+- Fixed duplicate frame names of the craft filter buttons and the craft type colors
+- Fixed the enchanting window not reopening after closing it with Escape
+
 ## **Version 3.0.0.2**
 
 - Restored TBC Classic support (interface 20505 and 20506) on the same branch, using `DisenchanterPlus_TBC.toc`
