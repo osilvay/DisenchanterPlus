@@ -13,6 +13,9 @@ local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
 ---@type DP_DisenchantProcess
 local DP_DisenchantProcess = DP_ModuleLoader:ImportModule("DP_DisenchantProcess")
 
+---@type DP_WelcomeWindow
+local DP_WelcomeWindow = DP_ModuleLoader:ImportModule("DP_WelcomeWindow")
+
 ---Header
 ---@param order? number
 ---@return table
@@ -48,10 +51,26 @@ function DP_GeneralGroup:Config(order)
           DisenchanterPlus.db.char.general.disableAll = value
         end,
       },
+      hideWelcomeScreen = {
+        type = "toggle",
+        order = 2,
+        name = DisenchanterPlus:DP_i18n("Hide welcome screen"),
+        desc = DisenchanterPlus:DP_i18n("Hide the welcome screen shown when the enchant or disenchant window opens."),
+        width = "full",
+        get = function()
+          return DisenchanterPlus.db.char.general.hideWelcomeScreen
+        end,
+        set = function(info, value)
+          DisenchanterPlus.db.char.general.hideWelcomeScreen = value
+          if value then
+            DP_WelcomeWindow:CloseAll()
+          end
+        end,
+      },
       -- NEW: Hide Minimap Icon Toggle
       hideMinimap = {
         type = "toggle",
-        order = 2, -- Appears below "Disable all"
+        order = 3, -- Appears below the welcome screen toggle
         name = "Hide Minimap Icon", -- You can wrap this in DP_i18n if you have translations
         desc = "Hide the DisenchanterPlus button from the minimap.",
         width = "full",

@@ -31,6 +31,7 @@ function DP_SettingsDefaults:Load()
       },
       general = {
         disableAll = false,
+        hideWelcomeScreen = false,
         disenchanProcessEnabled = true,
         tooltipsEnabled = true,
         keybindingEnabled = false,

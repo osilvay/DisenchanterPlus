@@ -22,6 +22,9 @@ local DP_MinimapIcon             = DP_ModuleLoader:ImportModule("DP_MinimapIcon"
 ---@type DP_BagsCheck
 local DP_BagsCheck               = DP_ModuleLoader:ImportModule("DP_BagsCheck")
 
+---@type DP_WelcomeWindow
+local DP_WelcomeWindow           = DP_ModuleLoader:ImportModule("DP_WelcomeWindow")
+
 ---@type DP_EnchantProcess
 local DP_EnchantProcess          = DP_ModuleLoader:ImportModule("DP_EnchantProcess")
 
@@ -305,10 +308,10 @@ function DP_EnchantWindow:CreateEnchantWindow()
   yesButton.text = yesText
 
   -- craft buttons ******************************************************************************************
-  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftTrivialButton", "trivial", DisenchanterPlus:DP_i18n("Trivial"), "4", -80, -10)
-  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftEasyButton", "easy", DisenchanterPlus:DP_i18n("Easy"), "3", -105, -10)
-  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftMediumButton", "medium", DisenchanterPlus:DP_i18n("Medium"), "2", -130, -10)
-  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftOptimalButton", "optimal", DisenchanterPlus:DP_i18n("Optimal"), "1", -155, -10)
+  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftTrivialButton", "trivial", DisenchanterPlus:DP_i18n("Trivial"), "4", -80, -12)
+  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftEasyButton", "easy", DisenchanterPlus:DP_i18n("Easy"), "3", -105, -12)
+  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftMediumButton", "medium", DisenchanterPlus:DP_i18n("Medium"), "2", -130, -12)
+  DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftOptimalButton", "optimal", DisenchanterPlus:DP_i18n("Optimal"), "1", -155, -12)
 
   -- custom buttons
   DP_CustomFrames:DrawCustomCleanButton("5", "EnchantWindow_ShowWithMatsButton", EnchanterPlusBaseFrame, "eye", "eye_off",
@@ -423,6 +426,7 @@ function DP_EnchantWindow:OpenWindow()
         table.insert(UISpecialFrames, "EnchantWindow_BaseFrame")
       end
       windowOpened = true
+      DP_WelcomeWindow:ShowIfNeeded("enchant")
     end)
   end
 end
@@ -543,12 +547,24 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
   end
 
   --DisenchanterPlus:Dump(enchantExclusions)
+  local totalEnchants = 0
+  local enchantsByCraftType = 0
+  local enchantsByMaterials = 0
+
   for _, lineInfo in pairs(tradeSkillLines) do
+    totalEnchants = totalEnchants + 1
     local filterByCraftType = DP_CustomFunctions:TableHasValue(craftTypesList, lineInfo.CraftType)
     local filtarByExclusion = DP_CustomFunctions:TableHasValue(enchantExclusions, string.lower(lineInfo.CraftName))
     --DisenchanterPlus:Debug(string.format("%s = %s", lineInfo.CraftName, tostring(filtarByExclusion)))
     local filterByNumAvailable = (not DisenchanterPlus.db.char.general.filterWithoutMaterials or
       (DisenchanterPlus.db.char.general.filterWithoutMaterials and (lineInfo.NumAvailable and lineInfo.NumAvailable > 0))) and true or false
+
+    if filterByCraftType then
+      enchantsByCraftType = enchantsByCraftType + 1
+      if filterByNumAvailable then
+        enchantsByMaterials = enchantsByMaterials + 1
+      end
+    end
 
     if filterByCraftType and not filtarByExclusion and filterByNumAvailable then
       if enchantContainerLines[tostring(itemNum)] == nil then
@@ -786,7 +802,18 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
   end
 
   if numLinesInEnchantContainer == 0 then
-    EnchanterPlusBaseFrame.footText:SetText("|cffff0a30" .. DisenchanterPlus:DP_i18n("You need to open the enchanting tradeskill book and click refresh.") .. "|r")
+    -- Distinguish an empty profession list from a list emptied by the active filters.
+    if totalEnchants == 0 then
+      EnchanterPlusBaseFrame.footText:SetText("|cffff0a30" .. DisenchanterPlus:DP_i18n("You need to open the enchanting tradeskill book and click refresh.") .. "|r")
+    elseif #craftTypesList == 0 then
+      EnchanterPlusBaseFrame.footText:SetText("|cffff650a" .. DisenchanterPlus:DP_i18n("No enchantment difficulty is selected in the filters.") .. "|r")
+    elseif enchantsByCraftType == 0 then
+      EnchanterPlusBaseFrame.footText:SetText("|cffff650a" .. DisenchanterPlus:DP_i18n("No enchantments match the selected difficulty filters.") .. "|r")
+    elseif DisenchanterPlus.db.char.general.filterWithoutMaterials and enchantsByMaterials == 0 then
+      EnchanterPlusBaseFrame.footText:SetText("|cffff650a" .. DisenchanterPlus:DP_i18n("No enchantments can be crafted with the materials you have.") .. "|r")
+    else
+      EnchanterPlusBaseFrame.footText:SetText("|cffff650a" .. DisenchanterPlus:DP_i18n("No enchantments match the selected filters.") .. "|r")
+    end
   else
     EnchanterPlusBaseFrame.footText:SetText("|cffffc700" .. DisenchanterPlus:DP_i18n("Select an enchantment from the left list.") .. "|r")
   end

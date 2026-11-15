@@ -224,3 +224,34 @@ L["wizard oil"]                                                                 
 L["brilliant mana oil"]                                                            = true
 L["brilliant wizard oil"]                                                          = true
 L["You need to open the enchanting tradeskill book and click refresh."]            = true
+
+-- welcome screen
+L["How does it work?"]                                                             = "How does it work?"
+L["Hide welcome screen"]                                                           = "Hide welcome screen"
+L["Hide the welcome screen shown when the enchant or disenchant window opens."]    = "Hide the welcome screen shown when the enchant or disenchant window opens."
+L["Close"]                                                                         = "Close"
+L["Filters"]                                                                       = "Filters"
+L["Good to know"]                                                                  = "Good to know"
+L["Welcome screen"]                                                                = "Welcome screen"
+L["You can hide this screen with the checkbox below or in Settings > General."]    = "You can hide this screen with the checkbox below or in Settings > General."
+L["Open the Enchanting profession window; this window opens automatically."]       = "Open the Enchanting profession window; this window opens automatically."
+L["The Enchant list tab shows your recipes and the Items in bags tab shows the items you can enchant."] = "The Enchant list tab shows your recipes and the Items in bags tab shows the items you can enchant."
+L["Select a recipe and an item, then press Enchant to apply it."]                  = "Select a recipe and an item, then press Enchant to apply it."
+L["You can also use the keybind configured in the Keybindings tab."]               = "You can also use the keybind configured in the Keybindings tab."
+L["Optimal, Medium, Easy and Trivial filter the recipes by difficulty."]           = "Optimal, Medium, Easy and Trivial filter the recipes by difficulty."
+L["Filter without materials hides the recipes you cannot craft right now."]        = "Filter without materials hides the recipes you cannot craft right now."
+L["Use Refresh enchants after learning new recipes."]                              = "Use Refresh enchants after learning new recipes."
+L["Replacing an existing enchant is confirmed automatically."]                     = "Replacing an existing enchant is confirmed automatically."
+L["Enchanting vellums are supported too."]                                         = "Enchanting vellums are supported too."
+L["The addon scans your bags and lists the disenchantable items."]                 = "The addon scans your bags and lists the disenchantable items."
+L["Press Proceed to disenchant the selected items one by one."]                    = "Press Proceed to disenchant the selected items one by one."
+L["Press Cancel to skip the current item for this session."]                       = "Press Cancel to skip the current item for this session."
+L["Uncommon, Rare and Epic filter the items by quality."]                          = "Uncommon, Rare and Epic filter the items by quality."
+L["Use Pause and Play to stop or resume the process."]                             = "Use Pause and Play to stop or resume the process."
+L["Ignore adds the item to the permanent ignore list. The ignored list button shows the skipped items."] = "Ignore adds the item to the permanent ignore list. The ignored list button shows the skipped items."
+
+-- enchant list status
+L["No enchantment difficulty is selected in the filters."]                                              = "No enchantment difficulty is selected in the filters."
+L["No enchantments match the selected difficulty filters."]                                             = "No enchantments match the selected difficulty filters."
+L["No enchantments can be crafted with the materials you have."]                                        = "No enchantments can be crafted with the materials you have."
+L["No enchantments match the selected filters."]                                                        = "No enchantments match the selected filters."

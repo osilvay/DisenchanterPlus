@@ -65,6 +65,12 @@ function DP_EnchantingTooltip:ShowTooltip(itemInfo)
     isItem = true
   end
 
+  -- Only uncommon, rare and epic equipment can be disenchanted. Poor and common
+  -- items (and legendary/artifact ones) must not show the disenchant tooltip.
+  if isItem and (itemQuality == nil or itemQuality < 2 or itemQuality > 4) then
+    isItem = false
+  end
+
   showTooltip = (isItem or isEnchantingItem)
 
   if not showTooltip then return end

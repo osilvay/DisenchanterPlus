@@ -1,6 +1,12 @@
+## **Version 3.0.1.0**
+
+- Added welcome screens for the enchant and disenchant windows, with a "Hide welcome screen" toggle in General settings
+- Fixed the disenchant tooltip showing up for poor and common items (Thanks **theAnton81**)
+- The enchanting window status text now explains why the list is empty when the filters hide every enchant
+
 ## **Version 3.0.0.3**
 
-- Fixed the "Enchant" button in the enchanting window not enchanting the selected item
+- Fixed the "Enchant" button in the enchanting window not enchanting the selected item (Thanks **Subfocu5**)
 - The "replace existing enchantment" confirmation is now accepted automatically
 - Fixed the enchantment and item lists not scrolling when they are longer than the visible area
 - Fixed duplicate frame names of the craft filter buttons and the craft type colors

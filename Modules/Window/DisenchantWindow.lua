@@ -10,6 +10,9 @@ local DP_CustomSounds = DP_ModuleLoader:ImportModule("DP_CustomSounds")
 ---@type DP_Database
 local DP_Database = DP_ModuleLoader:ImportModule("DP_Database")
 
+---@type DP_WelcomeWindow
+local DP_WelcomeWindow = DP_ModuleLoader:ImportModule("DP_WelcomeWindow")
+
 ---@type DP_DisenchantProcess
 local DP_DisenchantProcess = DP_ModuleLoader:ImportModule("DP_DisenchantProcess")
 
@@ -147,9 +150,9 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
   DisenchanterPlusBaseFrame.footText = footText
 
   -- qualities
-  DP_DisenchantWindow:DrawQualityButton("DienchantWindow_UncommonButton", "uncommon", DisenchanterPlus:DP_i18n("Uncommon"), "2", -150, -10)
-  DP_DisenchantWindow:DrawQualityButton("DienchantWindow_RareButton", "rare", DisenchanterPlus:DP_i18n("Rare"), "3", -180, -10)
-  DP_DisenchantWindow:DrawQualityButton("DienchantWindow_EpicButton", "epic", DisenchanterPlus:DP_i18n("Epic"), "4", -210, -10)
+  DP_DisenchantWindow:DrawQualityButton("DienchantWindow_UncommonButton", "uncommon", DisenchanterPlus:DP_i18n("Uncommon"), "2", -150, -12)
+  DP_DisenchantWindow:DrawQualityButton("DienchantWindow_RareButton", "rare", DisenchanterPlus:DP_i18n("Rare"), "3", -180, -12)
+  DP_DisenchantWindow:DrawQualityButton("DienchantWindow_EpicButton", "epic", DisenchanterPlus:DP_i18n("Epic"), "4", -210, -12)
 
   -- item ******************************************************************************************
   local itemButton = CreateFrame("Button", "AutoDisenchant_ItemFrame", DisenchanterPlusBaseFrame)
@@ -580,6 +583,7 @@ function DP_DisenchantWindow:OpenWindow(bagItems, tradeskill)
         table.insert(UISpecialFrames, "DisenchanterPlus_AutoDisenchant")
       end
       windowOpened = true
+      DP_WelcomeWindow:ShowIfNeeded("disenchant")
       --DP_DisenchantWindow:RedrawQualities()
     end)
   end
