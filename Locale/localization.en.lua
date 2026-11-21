@@ -230,6 +230,8 @@ L["How does it work?"]                                                          
 L["Hide welcome screen"]                                                           = "Hide welcome screen"
 L["Hide the welcome screen shown when the enchant or disenchant window opens."]    = "Hide the welcome screen shown when the enchant or disenchant window opens."
 L["Close"]                                                                         = "Close"
+L["Mute sounds"]                                                                   = "Mute sounds"
+L["Mute the addon sound effects."]                                                 = "Mute the addon sound effects."
 L["Filters"]                                                                       = "Filters"
 L["Good to know"]                                                                  = "Good to know"
 L["Welcome screen"]                                                                = "Welcome screen"

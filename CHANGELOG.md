@@ -1,3 +1,17 @@
+## **Version 3.0.2.1**
+
+- Added the missing localization of the "Mute sounds" option for all languages
+
+## **Version 3.0.2.0**
+
+- Added a "Mute sounds" toggle in General settings to silence the addon sound effects
+- Addon sound effects now play on the SFX audio channel, so they follow the game's sound effects volume
+
+## **Version 3.0.1.1**
+
+- Fixed the `attempt to compare local 'spellID' (a secret number value...)` error on Forever when enchanting
+- Fixed the "You don't have the enchanting skill" warning for non-English clients by also detecting Enchanting by its skill line ID
+
 ## **Version 3.0.1.0**
 
 - Added welcome screens for the enchant and disenchant windows, with a "Hide welcome screen" toggle in General settings

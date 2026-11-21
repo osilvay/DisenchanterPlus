@@ -67,6 +67,19 @@ function DP_GeneralGroup:Config(order)
           end
         end,
       },
+      muteSounds = {
+        type = "toggle",
+        order = 3,
+        name = DisenchanterPlus:DP_i18n("Mute sounds"),
+        desc = DisenchanterPlus:DP_i18n("Mute the addon sound effects."),
+        width = "full",
+        get = function()
+          return DisenchanterPlus.db.char.general.muteSounds
+        end,
+        set = function(info, value)
+          DisenchanterPlus.db.char.general.muteSounds = value
+        end,
+      },
       -- NEW: Hide Minimap Icon Toggle
       hideMinimap = {
         type = "toggle",

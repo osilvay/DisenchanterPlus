@@ -32,6 +32,7 @@ function DP_SettingsDefaults:Load()
       general = {
         disableAll = false,
         hideWelcomeScreen = false,
+        muteSounds = false,
         disenchanProcessEnabled = true,
         tooltipsEnabled = true,
         keybindingEnabled = false,

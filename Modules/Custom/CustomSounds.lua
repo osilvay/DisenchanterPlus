@@ -6,8 +6,9 @@ local disenchanterPlusSoundTable
 ---Play critical hit sound
 ---@param name string
 function DP_CustomSounds:PlayCustomSound(name)
+  if DisenchanterPlus.db.char.general.muteSounds then return end
   C_Timer.After(0.01, function()
-    PlaySoundFile(DP_CustomSounds:GetSoundFile(name), "Master")
+    PlaySoundFile(DP_CustomSounds:GetSoundFile(name), "SFX")
   end)
 end
 

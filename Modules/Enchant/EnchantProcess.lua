@@ -214,7 +214,7 @@ function DP_EnchantProcess:IsEnchantingProfessionOpen()
   if professionInfo == nil then
     return false
   end
-  return professionInfo.professionName == DisenchanterPlus:DP_i18n("Enchanting")
+  return DP_TradeSkillCheck:IsEnchantingProfessionInfo(professionInfo)
 end
 
 ---Craft show event

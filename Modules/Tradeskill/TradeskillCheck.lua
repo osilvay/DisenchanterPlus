@@ -10,6 +10,19 @@ local tradeSkillList = {
   },
 }
 
+local ENCHANTING_SKILL_LINE_ID = 333
+
+---Is the profession info (C_TradeSkillUI.GetBaseProfessionInfo) Enchanting, matched by skill line ID or localized name
+---@param professionInfo table|nil
+---@return boolean
+function DP_TradeSkillCheck:IsEnchantingProfessionInfo(professionInfo)
+  if professionInfo == nil then
+    return false
+  end
+  return professionInfo.professionID == ENCHANTING_SKILL_LINE_ID
+    or professionInfo.professionName == DisenchanterPlus:DP_i18n("Enchanting")
+end
+
 ---Get tradeSkill
 ---@return table|nil
 function DP_TradeSkillCheck:GetTradeSkill()
@@ -20,8 +33,9 @@ function DP_TradeSkillCheck:GetTradeSkill()
     for i = 1, 7 do
       local tradeSkillIndex = select(i, GetProfessions())
       if tradeSkillIndex then
-        local tradeSkillName, tradeSkillIcon, tradeSkillLevel = GetProfessionInfo(tradeSkillIndex)
-        if tradeSkillName == enchantingName then
+        local tradeSkillName, tradeSkillIcon, tradeSkillLevel, _, _, _, skillLineID = GetProfessionInfo(tradeSkillIndex)
+        -- 333 is the Enchanting skill line ID; matching it avoids depending on the localized name.
+        if tradeSkillName == enchantingName or skillLineID == ENCHANTING_SKILL_LINE_ID then
           return {
             TradeSkillIndex = tradeSkillIndex,
             Name = tradeSkillName,
@@ -54,6 +68,10 @@ end
 ---@param spellID number
 ---@return string|nil tradeSkillName
 function DP_TradeSkillCheck:FindTradeSkillBySpellID(spellID)
+  -- Secret values cannot be compared while the addon is tainted.
+  if issecretvalue and issecretvalue(spellID) then
+    return nil
+  end
   for tradeSkillName, tradeSkillInfo in pairs(tradeSkillList) do
     for _, currentSpellID in pairs(tradeSkillInfo.SpellIDList) do
       if spellID == currentSpellID then
@@ -68,6 +86,9 @@ end
 ---@param spellID number
 ---@return boolean
 function DP_TradeSkillCheck:IsEnchantingTradeSkill(spellID)
+  if issecretvalue and issecretvalue(spellID) then
+    return false
+  end
   for tradeSkillName, tradeSkillInfo in pairs(tradeSkillList) do
     for _, currentSpellID in pairs(tradeSkillInfo.SpellIDList) do
       if spellID == currentSpellID then
@@ -119,7 +140,7 @@ function DP_TradeSkillCheck:GetTradeSkillLinesForForever()
 
   -- GetFilteredRecipeIDs() lists the recipes of whichever profession is open, so only read them when Enchanting is the open one.
   local baseInfo = C_TradeSkillUI.GetBaseProfessionInfo and C_TradeSkillUI.GetBaseProfessionInfo()
-  if not baseInfo or baseInfo.professionName ~= DisenchanterPlus:DP_i18n("Enchanting") then
+  if not DP_TradeSkillCheck:IsEnchantingProfessionInfo(baseInfo) then
     return lines
   end
 
