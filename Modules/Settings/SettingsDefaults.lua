@@ -44,6 +44,7 @@ function DP_SettingsDefaults:Load()
         itemsToShow = 5,
         showExpectedEssences = true,
         showRealEssences = true,
+        showDistribution = true,
         autoDisenchantEnabled = true,
         autoDisenchantDbTimeout = 10,
         itemQuality = {

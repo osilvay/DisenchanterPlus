@@ -1,3 +1,8 @@
+## **Version 3.0.3.0**
+
+- Added distribution stats to tooltips: how often each quantity of a material was obtained (x1, x2, x3...), with a "Show distribution" toggle
+- Renamed some tooltip options for clarity
+
 ## **Version 3.0.2.1**
 
 - Added the missing localization of the "Mute sounds" option for all languages

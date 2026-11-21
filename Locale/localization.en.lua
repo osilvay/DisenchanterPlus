@@ -77,10 +77,12 @@ L["Show zero values"]                                                           
 L["Toggle showing zero values."]                                                   = true
 L["Items to show"]                                                                 = true
 L["Items to show in tooltip."]                                                     = true
-L["Show expected essences"]                                                        = true
-L["Toggle showing of expected essences on items."]                                 = true
-L["Show real essences"]                                                            = true
-L["Toggle showing of real essences on items."]                                     = true
+L["Show expected materials"]                                                           = true
+L["Toggle showing of expected materials on items."]                                    = true
+L["Show real materials obtained"]                                                      = true
+L["Toggle showing of real materials obtained from items."]                             = true
+L["Show distribution"]                                                                 = true
+L["Toggle showing how often each quantity of a material was obtained (x1, x2, x3...)."] = true
 L["Database"]                                                                      = true
 L["Update"]                                                                        = true
 L["Update database manually."]                                                     = true
@@ -114,6 +116,7 @@ L["Main plugins"]                                                               
 L["items"]                                                                         = true
 L["Expected"]                                                                      = true
 L["Real"]                                                                          = true
+L["Distribution"]                                                                  = true
 L["No data"]                                                                       = true
 L["Items in session list cleared."]                                                = true
 L["Items in permanent ignore list cleared."]                                       = true

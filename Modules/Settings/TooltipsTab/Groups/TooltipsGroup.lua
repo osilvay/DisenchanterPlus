@@ -88,8 +88,8 @@ function DP_TooltipGroup:Config(order)
       showExpectedEssences = {
         type = "toggle",
         order = 6,
-        name = DisenchanterPlus:DP_i18n("Show expected essences"),
-        desc = DisenchanterPlus:DP_i18n("Toggle showing of expected essences on items."),
+        name = DisenchanterPlus:DP_i18n("Show expected materials"),
+        desc = DisenchanterPlus:DP_i18n("Toggle showing of expected materials on items."),
         width = "full",
         disabled = function() return (not DisenchanterPlus.db.char.general.tooltipsEnabled); end,
         get = function() return DisenchanterPlus.db.char.general.showExpectedEssences end,
@@ -100,8 +100,8 @@ function DP_TooltipGroup:Config(order)
       showRealEssences = {
         type = "toggle",
         order = 7,
-        name = DisenchanterPlus:DP_i18n("Show real essences"),
-        desc = DisenchanterPlus:DP_i18n("Toggle showing of real essences on items."),
+        name = DisenchanterPlus:DP_i18n("Show real materials obtained"),
+        desc = DisenchanterPlus:DP_i18n("Toggle showing of real materials obtained from items."),
         width = "full",
         disabled = function() return (not DisenchanterPlus.db.char.general.tooltipsEnabled); end,
         get = function() return DisenchanterPlus.db.char.general.showRealEssences end,
@@ -109,9 +109,21 @@ function DP_TooltipGroup:Config(order)
           DisenchanterPlus.db.char.general.showRealEssences = value
         end,
       },
+      showDistribution = {
+        type = "toggle",
+        order = 8,
+        name = DisenchanterPlus:DP_i18n("Show distribution"),
+        desc = DisenchanterPlus:DP_i18n("Toggle showing how often each quantity of a material was obtained (x1, x2, x3...)."),
+        width = "full",
+        disabled = function() return (not DisenchanterPlus.db.char.general.tooltipsEnabled); end,
+        get = function() return DisenchanterPlus.db.char.general.showDistribution end,
+        set = function(info, value)
+          DisenchanterPlus.db.char.general.showDistribution = value
+        end,
+      },
       itemsToShow = {
         type = "range",
-        order = 8,
+        order = 9,
         name = DisenchanterPlus:DP_i18n("Items to show"),
         desc = DisenchanterPlus:DP_i18n("Items to show in tooltip."),
         width = "full",

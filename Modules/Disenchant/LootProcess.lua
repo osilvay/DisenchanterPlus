@@ -175,6 +175,8 @@ function DP_LootProcess:SaveEnchantingItemDetails(lootInfo)
         savedSourceItemInfo.Items = currentItems + savedItems
         savedSourceItemInfo.Quantity = currentQuantity + savedQuantity
       end
+      savedSourceItemInfo.Distribution = savedSourceItemInfo.Distribution or {}
+      DP_LootProcess:AddQuantityToDistribution(savedSourceItemInfo.Distribution, sourceItemInfo.Quantity)
       savedSource[sourceItemID] = savedSourceItemInfo
       table.insert(sourceItemsToSave, sourceItemID)
     end
@@ -199,6 +201,15 @@ function DP_LootProcess:SaveEnchantingItemDetails(lootInfo)
   if not success then
     DisenchanterPlus:Error("Failed to save enchanting item details: " .. tostring(result))
   end
+end
+
+---Counts one more occurrence of a yielded quantity (e.g. 3 dust obtained once)
+---@param distribution table<number, number>
+---@param quantity number|string|nil
+function DP_LootProcess:AddQuantityToDistribution(distribution, quantity)
+  local amount = tonumber(quantity)
+  if amount == nil or amount <= 0 then return end
+  distribution[amount] = (distribution[amount] or 0) + 1
 end
 
 ---Save source item details with error protection
@@ -233,18 +244,12 @@ function DP_LootProcess:SaveSourceItemDetails(itemID, essenceInfo)
 
     local savedEnchantingItems = sourceItemInfo.EnchantingItems or {}
     local essenceItemID = essenceInfo.ItemID
-    local essenceItemInfo = savedEnchantingItems[essenceItemID]
+    local essenceItemInfo = savedEnchantingItems[essenceItemID] or { Items = 0, Quantity = 0 }
 
-    if essenceItemInfo == nil then
-      essenceItemInfo = essenceInfo
-    else
-      local savedItems = tonumber(essenceItemInfo.Items) or 0
-      local savedQuantity = tonumber(essenceItemInfo.Quantity) or 0
-      local currentItems = tonumber(essenceInfo.Items) or 0
-      local currentQuantity = tonumber(essenceInfo.Quantity) or 0
-      essenceItemInfo.Items = currentItems + savedItems
-      essenceItemInfo.Quantity = currentQuantity + savedQuantity
-    end
+    essenceItemInfo.Distribution = essenceItemInfo.Distribution or {}
+    essenceItemInfo.Items = (tonumber(essenceItemInfo.Items) or 0) + (tonumber(essenceInfo.Items) or 0)
+    essenceItemInfo.Quantity = (tonumber(essenceItemInfo.Quantity) or 0) + (tonumber(essenceInfo.Quantity) or 0)
+    DP_LootProcess:AddQuantityToDistribution(essenceItemInfo.Distribution, essenceInfo.Quantity)
     essenceItemInfo.ItemName = essenceInfo.ItemName
     essenceItemInfo.Quality = essenceInfo.Quality
 

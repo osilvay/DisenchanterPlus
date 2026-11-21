@@ -96,6 +96,34 @@ function DP_EnchantingTooltip:ShowTooltip(itemInfo)
   end
 end
 
+---Sorts a distribution table into rows, biggest quantity first
+---@param distribution table<number, number>|nil
+---@return table rows
+---@return number total
+local function GetSortedDistribution(distribution)
+  local rows = {}
+  local total = 0
+  for quantity, count in pairs(distribution or {}) do
+    table.insert(rows, { Quantity = quantity, Count = count })
+    total = total + count
+  end
+  table.sort(rows, function(a, b) return a.Quantity > b.Quantity end)
+  return rows, total
+end
+
+---Draws one line per obtained quantity: "x3 (2)  40 %"
+---@param rows table
+---@param total number
+local function AddDistributionLines(rows, total)
+  if not DisenchanterPlus.db.char.general.showDistribution or total <= 0 then return end
+  for _, row in ipairs(rows) do
+    local percentage = string.format("%.2f", (row.Count * 100) / total)
+    local leftTextLine = string.format("     |cff91c1f1x%d|r |cffc1c1c1(%d)|r", row.Quantity, row.Count)
+    local rightTextLine = string.format("|cfff1f1f1%s|r", percentage) .. " |cfff1b131%|r"
+    GameTooltip:AddDoubleLine(leftTextLine, rightTextLine)
+  end
+end
+
 ---Process item
 ---@param itemID number
 function DP_EnchantingTooltip:ProcessItem(itemID)
@@ -112,6 +140,7 @@ function DP_EnchantingTooltip:ProcessItem(itemID)
   -- reales
   if DisenchanterPlus.db.char.general.showRealEssences then
     local itemRealData = {}
+    local distributionByItem = {}
     local totalEnchantingItems = 0
     local totalQuantity = 0
 
@@ -125,6 +154,7 @@ function DP_EnchantingTooltip:ProcessItem(itemID)
         totalQuantity = totalQuantity + (enchantingItemInfo.Quantity or 0)
         --DisenchanterPlus:Dump(currentItemInfo)
         table.insert(itemRealData, currentItemInfo)
+        distributionByItem[currentItemInfo] = enchantingItemInfo.Distribution
       end
     end
     table.sort(itemRealData, function(a, b) return a.Quality ~= nil and b.Quality ~= nil and a.Quality < b.Quality end)
@@ -159,6 +189,7 @@ function DP_EnchantingTooltip:ProcessItem(itemID)
           local leftTextLine = string.format(" + |T%d:0|t %s |cff6191f1%d|r", itemIcon or 134400, itemLink or "NOT_CACHED", quantity)
           local rightTextLine = string.format("%s", percentageText) .. " |cfff1b131%|r"
           GameTooltip:AddDoubleLine(leftTextLine, rightTextLine)
+          AddDistributionLines(GetSortedDistribution(distributionByItem[currentRealItem]))
           realIndex = realIndex + 1
         end
       end
@@ -285,6 +316,7 @@ function DP_EnchantingTooltip:ProcessEnchantingItem(itemID)
     local differentItems = 0
     local totalItems = 0
     local totalQuantity = 0
+    local globalDistribution = {}
 
     for sourceItemID, sourceItemInfo in pairs(sourceItems) do
       local savedItemInfo = DP_Database:GetItemData(sourceItemID)
@@ -298,6 +330,9 @@ function DP_EnchantingTooltip:ProcessEnchantingItem(itemID)
         differentItems = differentItems + 1
         totalItems = totalItems + (sourceItemInfo.Items or 0)
         totalQuantity = totalQuantity + (sourceItemInfo.Quantity or 0)
+        for quantity, count in pairs(sourceItemInfo.Distribution or {}) do
+          globalDistribution[quantity] = (globalDistribution[quantity] or 0) + count
+        end
         --DisenchanterPlus:Dump(currentItemInfo)
         table.insert(essenceRealData, savedItemInfo)
       end
@@ -356,6 +391,12 @@ function DP_EnchantingTooltip:ProcessEnchantingItem(itemID)
         GameTooltip:AddDoubleLine(leftTextLine, rightTextLine)
         index = index + 1
       end
+    end
+
+    local distributionRows, distributionTotal = GetSortedDistribution(globalDistribution)
+    if DisenchanterPlus.db.char.general.showDistribution and distributionTotal > 0 then
+      GameTooltip:AddLine(string.format("|cff999999%s|r", DisenchanterPlus:DP_i18n("Distribution")))
+      AddDistributionLines(distributionRows, distributionTotal)
     end
   end
 end

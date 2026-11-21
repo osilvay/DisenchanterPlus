@@ -477,6 +477,7 @@ El sistema de configuración usa AceConfig-3.0 y AceGUI-3.0 para una interfaz mo
       itemsToShow = 5,
       showExpectedEssences = true,
       showRealEssences = true,
+      showDistribution = true,
       autoDisenchantEnabled = true,
       autoDisenchantDbTimeout = 10,
       itemQuality = { ["2"] = true, ["3"] = true, ["4"] = true },
