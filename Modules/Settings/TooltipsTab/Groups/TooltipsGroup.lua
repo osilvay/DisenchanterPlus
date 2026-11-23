@@ -119,7 +119,7 @@ function DP_TooltipGroup:Config(order)
       showExpectedValue = {
         type = "toggle",
         order = 6.2,
-        name = DisenchanterPlus:DP_i18n("Show expected value"),
+        name = DisenchanterPlus:DP_i18n("Show expected material value"),
         desc = DisenchanterPlus:DP_i18n("Show the average auction value of materials from one disenchant."),
         width = "full",
         disabled = auctionOptionsDisabled,

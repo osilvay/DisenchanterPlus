@@ -80,9 +80,9 @@ L["Items to show in tooltip."]                                                  
 L["Show expected materials"]                                                           = true
 L["Show auction price range"] = true
 L["Show the auction value for the minimum and maximum quantity of each material."] = true
-L["Show expected value"] = true
+L["Show expected material value"] = true
 L["Show the average auction value of materials from one disenchant."] = true
-L["Expected value"] = true
+L["Expected mat value"] = true
 L["Toggle showing of expected materials on items."]                                    = true
 L["Show real materials obtained"]                                                      = true
 L["Toggle showing of real materials obtained from items."]                             = true

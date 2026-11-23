@@ -265,7 +265,7 @@ function DP_EnchantingTooltip:GetExpectedItemData(itemID)
     if expectedValue then
       valueText = Auctionator.Utilities.CreatePaddedMoneyString(math.floor(expectedValue + 0.5))
     end
-    GameTooltip:AddDoubleLine("|cffa19171" .. DisenchanterPlus:DP_i18n("Expected value") .. "|r", "|cffaaaaaa" .. valueText .. "|r")
+    GameTooltip:AddDoubleLine("|cffa19171" .. DisenchanterPlus:DP_i18n("Expected mat value") .. "|r", "|cffaaaaaa" .. valueText .. "|r")
   end
 end
 
