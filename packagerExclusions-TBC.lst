@@ -6,6 +6,8 @@ Doc
 Release
 packager.bat
 packager.sh
+packager.py
+__pycache__
 pkgmeta.yaml
 *.zip
 *.lst

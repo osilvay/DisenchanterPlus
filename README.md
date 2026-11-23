@@ -81,6 +81,13 @@ World of Warcraft/Interface/AddOns/
 
 The addon should now appear in your AddOns list and be ready to use!
 
+## Build distribution ZIPs
+
+Install Python 3 and run `bash packager.sh` on macOS or Linux, or `packager.bat`
+on Windows. The build downloads the current AceGUI and AceConfig libraries from
+the Ace3 repository and includes them in the Forever and TBC ZIPs in `Release/`.
+AceDB stays at the bundled version to preserve existing Forever character settings.
+
 ## ⚙️ Configuration
 
 Access the settings window with `/dplus config` to customize:
