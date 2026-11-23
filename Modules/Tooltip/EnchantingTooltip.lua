@@ -85,7 +85,7 @@ function DP_EnchantingTooltip:ShowTooltip(itemInfo)
   itemIDText = itemIDText .. " " .. itemLevel
 
   if isShowTitle then
-    local titleText = string.format("%s", DisenchanterPlus:MessageWithAddonColor(DisenchanterPlus:DP_i18n("Enchanting")))
+    local titleText = string.format("%s", DisenchanterPlus:MessageWithAddonColor(DisenchanterPlus:DP_i18n("Disenchant")))
     GameTooltip:AddLine(" ")
     GameTooltip:AddDoubleLine(titleText, itemIDText)
   end
