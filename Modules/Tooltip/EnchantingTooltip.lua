@@ -221,6 +221,7 @@ function DP_EnchantingTooltip:GetExpectedItemData(itemID)
   local expectedValue
   if #itemExpectedData > 0 then
     expectedValue = 0
+    local expectedIndex = 1
     for _, material in ipairs(itemExpectedData) do
       local unitPrice = material.AuctionatorPrice
       local quantityText = material.QuantityText or ""
@@ -257,6 +258,7 @@ function DP_EnchantingTooltip:GetExpectedItemData(itemID)
           end
           GameTooltip:AddDoubleLine("       |cffa19171" .. DisenchanterPlus:DP_i18n("Auction") .. "|r", "|cffaaaaaa" .. auctionText .. "|r")
         end
+        expectedIndex = expectedIndex + 1
       end
     end
   end
