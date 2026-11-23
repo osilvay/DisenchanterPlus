@@ -1,47 +1,58 @@
 #!/bin/bash
 set -e
+
 cd "$(dirname "$0")"
-# ========================================
-# DisenchanterPlus Package Creator
-# Crea un archivo ZIP de distribución
-# ========================================
+SourceDir=$PWD
+AddonFolder=${SourceDir##*/}
+Version=$(cat .version)
+if [ -z "$Version" ]; then
+  echo "No se pudo leer la version de .version." >&2
+  exit 1
+fi
 
-# Lee la versión desde el archivo .version
-Build=$(cat .version)
+CamelotZip="DisenchanterPlus-v${Version}-camelot.zip"
+TbcZip="DisenchanterPlus-v${Version}-tbc.zip"
+Ace3Url="https://codeload.github.com/WoWUIDev/Ace3/zip/refs/heads/master"
 
-# Obtiene el directorio actual
-Directory=$(pwd)
+download_ace3() {
+  echo "Descargando AceGUI y AceConfig..."
+  curl -fsSL --max-time 60 -o "$StageDir/Ace3.zip" "$Ace3Url"
+  7z x "$StageDir/Ace3.zip" "-o$StageDir" \
+    'Ace3-master/AceGUI-3.0/*' 'Ace3-master/AceConfig-3.0/*'
 
-# Imprime información del build
-echo "Build: $Build"
-echo "Directory: $Directory"
+  test -f "$StageDir/Ace3-master/AceGUI-3.0/AceGUI-3.0.xml"
+  test -f "$StageDir/Ace3-master/AceConfig-3.0/AceConfig-3.0.xml"
 
-# Define el nombre de los archivos ZIP con la versión (uno por flavor)
-CamelotFilename="DisenchanterPlus-v${Build}-camelot.zip"
-TBCFilename="DisenchanterPlus-v${Build}-tbc.zip"
+  # Usa la misma ruta interna que embeds.xml.
+  mkdir "$StageDir/$AddonFolder"
+  mv "$StageDir/Ace3-master" "$StageDir/$AddonFolder/Libs"
+}
 
-# Descarga los módulos de interfaz de Ace3 en un directorio temporal.
-mkdir -p "${Directory}/Release"
-Staging=$(mktemp -d "${Directory}/Release/.ace3.XXXXXXXX")
-trap 'rm -rf "$Staging"' EXIT
-curl -fsSL --max-time 60 -o "$Staging/Ace3.zip" "https://codeload.github.com/WoWUIDev/Ace3/zip/refs/heads/master"
-7z x "$Staging/Ace3.zip" "-o$Staging" 'Ace3-master/AceGUI-3.0/*' 'Ace3-master/AceConfig-3.0/*'
-test -f "$Staging/Ace3-master/AceGUI-3.0/AceGUI-3.0.xml"
-test -f "$Staging/Ace3-master/AceConfig-3.0/AceConfig-3.0.xml"
-PackageRoot=${Directory##*/}
-mkdir "$Staging/$PackageRoot"
-mv "$Staging/Ace3-master" "$Staging/$PackageRoot/Libs"
+build_zip() {
+  local zip_name=$1
+  local exclusions="packagerExclusions-$2.lst"
+  echo "Empaquetando $zip_name..."
 
-# Empaqueta cada flavor sin las copias antiguas de AceGUI y AceConfig.
-7z a -x@packagerExclusions-Camelot.lst -xr@packagerExclusions-Camelot.lst '-xr!AceGUI-3.0' '-xr!AceConfig-3.0' -tzip "$Staging/$CamelotFilename" "$Directory"
-7z a -x@packagerExclusions-TBC.lst -xr@packagerExclusions-TBC.lst '-xr!AceGUI-3.0' '-xr!AceConfig-3.0' -tzip "$Staging/$TBCFilename" "$Directory"
+  # Excluye las dos copias del repositorio y agrega las descargadas.
+  7z a -tzip "-x@$exclusions" "-xr@$exclusions" \
+    '-xr!AceGUI-3.0' '-xr!AceConfig-3.0' \
+    "$StageDir/$zip_name" "$SourceDir"
 
-# Incluye las bibliotecas descargadas y publica los ZIP terminados.
-(
-  cd "$Staging"
-  7z a -tzip "$CamelotFilename" "$PackageRoot"
-  7z a -tzip "$TBCFilename" "$PackageRoot"
-)
-mv -f "$Staging/$CamelotFilename" "$Staging/$TBCFilename" "${Directory}/Release/"
-echo "Paquete creado: ${CamelotFilename}"
-echo "Paquete creado: ${TBCFilename}"
+  (
+    cd "$StageDir"
+    7z a -tzip "$zip_name" "$AddonFolder"
+  )
+}
+
+# Prepara ambos ZIP en una carpeta temporal antes de publicar.
+mkdir -p Release
+StageDir=$(mktemp -d "$SourceDir/Release/.ace3.XXXXXXXX")
+trap 'rm -rf "$StageDir"' EXIT
+
+download_ace3
+build_zip "$CamelotZip" Camelot
+build_zip "$TbcZip" TBC
+
+mv -f "$StageDir/$CamelotZip" "$StageDir/$TbcZip" Release/
+echo "Paquete creado: $CamelotZip"
+echo "Paquete creado: $TbcZip"

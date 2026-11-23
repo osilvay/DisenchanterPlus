@@ -1,59 +1,71 @@
 @echo off
-setlocal DisableDelayedExpansion
+setlocal EnableExtensions DisableDelayedExpansion
 pushd "%~dp0" || exit /b 1
-REM ========================================
-REM DisenchanterPlus Package Creator
-REM Crea un archivo ZIP de distribución
-REM ========================================
 
-REM Lee la versión desde el archivo .version
-for /f "delims=" %%x in (.version) do set Build=%%x
-:continue
+set "SourceDir=%CD%"
+for %%D in ("%SourceDir%") do set "AddonFolder=%%~nxD"
+set "Version="
+set /p "Version="<.version
+if not defined Version (
+    echo No se pudo leer la version de .version. >&2
+    popd
+    exit /b 1
+)
 
-REM Define variables para el build y directorio actual
-set "Build=%Build%"
-set "Directory=%cd%"
+set "CamelotZip=DisenchanterPlus-v%Version%-camelot.zip"
+set "TbcZip=DisenchanterPlus-v%Version%-tbc.zip"
+set "Ace3Url=https://codeload.github.com/WoWUIDev/Ace3/zip/refs/heads/master"
 
-REM Imprime información del build
-echo Build: %Build%
-echo Directory: %Directory%
+REM Prepara ambos ZIP en una carpeta temporal antes de publicar.
+set "StageDir=%SourceDir%\Release\.ace3.%RANDOM%.%RANDOM%"
+mkdir "%StageDir%" || (
+    popd
+    exit /b 1
+)
 
-REM Define el nombre de los archivos ZIP con la versión (uno por flavor)
-set "CamelotFilename=DisenchanterPlus-v%Build%-camelot.zip"
-set "TBCFilename=DisenchanterPlus-v%Build%-tbc.zip"
+set "Result=1"
+call :download_ace3 || goto :cleanup
+call :build_zip "%CamelotZip%" Camelot || goto :cleanup
+call :build_zip "%TbcZip%" TBC || goto :cleanup
 
-REM Descarga los módulos de interfaz de Ace3 en un directorio temporal.
-if not exist "Release" mkdir "Release"
-set "Staging=%Directory%\Release\.ace3.%RANDOM%.%RANDOM%"
-mkdir "%Staging%" || goto :fail
-curl.exe -fsSL --max-time 60 -o "%Staging%\Ace3.zip" "https://codeload.github.com/WoWUIDev/Ace3/zip/refs/heads/master" || goto :cleanup_error
-7z x "%Staging%\Ace3.zip" "-o%Staging%" "Ace3-master/AceGUI-3.0/*" "Ace3-master/AceConfig-3.0/*" || goto :cleanup_error
-if not exist "%Staging%\Ace3-master\AceGUI-3.0\AceGUI-3.0.xml" goto :cleanup_error
-if not exist "%Staging%\Ace3-master\AceConfig-3.0\AceConfig-3.0.xml" goto :cleanup_error
-for %%i in ("%Directory%") do set "PackageRoot=%%~nxi"
-mkdir "%Staging%\%PackageRoot%" || goto :cleanup_error
-move "%Staging%\Ace3-master" "%Staging%\%PackageRoot%\Libs" >nul || goto :cleanup_error
+move /y "%StageDir%\%CamelotZip%" "Release\" >nul || goto :cleanup
+move /y "%StageDir%\%TbcZip%" "Release\" >nul || goto :cleanup
+echo Paquete creado: %CamelotZip%
+echo Paquete creado: %TbcZip%
+set "Result=0"
 
-REM Empaqueta cada flavor sin las copias antiguas de AceGUI y AceConfig.
-7z a -x@packagerExclusions-Camelot.lst -xr@packagerExclusions-Camelot.lst "-xr!AceGUI-3.0" "-xr!AceConfig-3.0" -tzip "%Staging%\%CamelotFilename%" "%Directory%" || goto :cleanup_error
-7z a -x@packagerExclusions-TBC.lst -xr@packagerExclusions-TBC.lst "-xr!AceGUI-3.0" "-xr!AceConfig-3.0" -tzip "%Staging%\%TBCFilename%" "%Directory%" || goto :cleanup_error
-
-REM Incluye las bibliotecas descargadas y publica los ZIP terminados.
-pushd "%Staging%" || goto :cleanup_error
-7z a -tzip "%CamelotFilename%" "%PackageRoot%" && 7z a -tzip "%TBCFilename%" "%PackageRoot%"
-set "PackageStatus=%errorlevel%"
+:cleanup
+rd /s /q "%StageDir%"
+if "%Result%"=="1" echo No se pudo completar el empaquetado. >&2
 popd
-if not "%PackageStatus%"=="0" goto :cleanup_error
-move /y "%Staging%\%CamelotFilename%" "Release\" >nul || goto :cleanup_error
-move /y "%Staging%\%TBCFilename%" "Release\" >nul || goto :cleanup_error
-rd /s /q "%Staging%"
-echo Paquete creado: %CamelotFilename%
-echo Paquete creado: %TBCFilename%
-popd
+exit /b %Result%
+
+:download_ace3
+echo Descargando AceGUI y AceConfig...
+curl.exe -fsSL --max-time 60 -o "%StageDir%\Ace3.zip" "%Ace3Url%" || exit /b 1
+7z x "%StageDir%\Ace3.zip" "-o%StageDir%" ^
+    "Ace3-master/AceGUI-3.0/*" "Ace3-master/AceConfig-3.0/*" || exit /b 1
+
+if not exist "%StageDir%\Ace3-master\AceGUI-3.0\AceGUI-3.0.xml" exit /b 1
+if not exist "%StageDir%\Ace3-master\AceConfig-3.0\AceConfig-3.0.xml" exit /b 1
+
+REM Usa la misma ruta interna que embeds.xml.
+mkdir "%StageDir%\%AddonFolder%" || exit /b 1
+move "%StageDir%\Ace3-master" "%StageDir%\%AddonFolder%\Libs" >nul || exit /b 1
 exit /b 0
 
-:cleanup_error
-rd /s /q "%Staging%"
-:fail
+:build_zip
+set "ZipName=%~1"
+set "Exclusions=packagerExclusions-%~2.lst"
+echo Empaquetando %ZipName%...
+
+REM Excluye las dos copias del repositorio y agrega las descargadas.
+7z a -tzip "-x@%Exclusions%" "-xr@%Exclusions%" ^
+    "-xr!AceGUI-3.0" "-xr!AceConfig-3.0" ^
+    "%StageDir%\%ZipName%" "%SourceDir%" || exit /b 1
+
+pushd "%StageDir%" || exit /b 1
+7z a -tzip "%ZipName%" "%AddonFolder%"
+set "ZipResult=%errorlevel%"
 popd
-exit /b 1
+exit /b %ZipResult%
