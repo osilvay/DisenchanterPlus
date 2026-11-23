@@ -1,4 +1,9 @@
 #!/bin/bash
+# ========================================
+# DisenchanterPlus Package Creator
+# Crea un archivo ZIP de distribución
+# ========================================
+
 set -e
 
 cd "$(dirname "$0")"
