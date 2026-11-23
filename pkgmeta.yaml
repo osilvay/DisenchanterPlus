@@ -15,5 +15,4 @@ ignore:
   - .version
   - packager.bat
   - packager.sh
-  - packager.py
   - packagerExclusions-*.lst
