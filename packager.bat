@@ -1,4 +1,8 @@
 @echo off
+REM ========================================
+REM DisenchanterPlus Package Creator
+REM Crea un archivo ZIP de distribución
+REM ========================================
 setlocal EnableExtensions DisableDelayedExpansion
 pushd "%~dp0" || exit /b 1
 
