@@ -129,8 +129,10 @@ end
 function DP_EnchantingTooltip:ProcessItem(itemID)
   if itemID == nil then return end
 
-  -- esperados
-  if DisenchanterPlus.db.char.general.showExpectedEssences then
+  local settings = DisenchanterPlus.db.char.general
+  local showExpectedData = settings.showExpectedEssences
+      or (settings.auctionatorIntegration and settings.showExpectedValue)
+  if showExpectedData then
     DP_EnchantingTooltip:GetExpectedItemData(itemID)
   end
 
@@ -196,7 +198,7 @@ function DP_EnchantingTooltip:ProcessItem(itemID)
     end
   end
 
-  if DisenchanterPlus.db.char.general.showExpectedEssences or DisenchanterPlus.db.char.general.showRealEssences then
+  if showExpectedData or settings.showRealEssences then
     GameTooltip:AddLine(" ")
   end
 end
@@ -205,33 +207,65 @@ end
 ---@param itemID number
 function DP_EnchantingTooltip:GetExpectedItemData(itemID)
   local itemExpectedData = DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID) or {}
-  --DisenchanterPlus:Dump(itemExpectedData)
-  if DP_CustomFunctions:TableLength(itemExpectedData) > 0 then
+  local settings = DisenchanterPlus.db.char.general
+  local showExpectedValue = settings.auctionatorIntegration and settings.showExpectedValue
+  local noAuctionData = "|cffcc1100" .. DisenchanterPlus:DP_i18n("No data") .. "|r"
+  if settings.showExpectedEssences then
     table.sort(itemExpectedData, function(a, b) return a.ItemQuality ~= nil and b.ItemQuality ~= nil and a.ItemQuality < b.ItemQuality end)
+    GameTooltip:AddLine(string.format("|cff999999%s|r", DisenchanterPlus:DP_i18n("Expected")))
+    if #itemExpectedData == 0 then
+      GameTooltip:AddLine(string.format(" |cffff3300%s|r", DisenchanterPlus:DP_i18n("No data")))
+    end
   end
 
-  GameTooltip:AddLine(string.format("|cff999999%s|r", DisenchanterPlus:DP_i18n("Expected")))
-  if DP_CustomFunctions:TableLength(itemExpectedData) == 0 then
-    GameTooltip:AddLine(string.format(" |cffff3300%s|r", DisenchanterPlus:DP_i18n("No data")))
-  else
-    local expectedIndex = 1
-    for _, currentExpecteItem in pairs(itemExpectedData) do
-      local quantity = currentExpecteItem.QuantityText
-      local percentage = string.format("%.2f", currentExpecteItem.Percent)
-      local _, itemLink, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(currentExpecteItem.ItemID)
-
-      local itemIcon = C_Item.GetItemIconByID(currentExpecteItem.ItemID)
-      local percentageText = string.format("|cfff1f1f1%s|r", percentage or "0")
-      if itemIcon ~= nil and itemLink ~= nil then
-        local leftTextLine = string.format(" + |T%d:0|t %s |cff6191f1%s|r", itemIcon, itemLink, quantity or 0)
-        local rightTextLine = string.format("%s", percentageText) .. " |cfff1b131%|r"
-        GameTooltip:AddDoubleLine(leftTextLine, rightTextLine)
-        if DisenchanterPlus.db.char.general.auctionatorIntegration and currentExpecteItem.AuctionatorString ~= nil then
-          GameTooltip:AddDoubleLine("       |cffa19171" .. DisenchanterPlus:DP_i18n("Auction") .. "|r", "|cffaaaaaa" .. currentExpecteItem.AuctionatorString .. "|r")
+  local expectedValue
+  if #itemExpectedData > 0 then
+    expectedValue = 0
+    for _, material in ipairs(itemExpectedData) do
+      local unitPrice = material.AuctionatorPrice
+      local quantityText = material.QuantityText or ""
+      local minQuantity, maxQuantity = quantityText:match("^(%d+)%-(%d+)x$")
+      minQuantity = tonumber(minQuantity or quantityText:match("^(%d+)x$"))
+      maxQuantity = tonumber(maxQuantity) or minQuantity
+      if showExpectedValue and expectedValue then
+        if unitPrice and minQuantity then
+          local averageQuantity = (minQuantity + maxQuantity) / 2
+          expectedValue = expectedValue + unitPrice * averageQuantity * material.Percent / 100
+        else
+          expectedValue = nil
         end
-        expectedIndex = expectedIndex + 1
+      end
+
+      local itemLink = material.ItemLink
+      local itemIcon = settings.showExpectedEssences and C_Item.GetItemIconByID(material.ItemID)
+      if itemIcon and itemLink then
+        local leftTextLine = string.format(" + |T%d:0|t %s |cff6191f1%s|r", itemIcon, itemLink, material.QuantityText or 0)
+        local rightTextLine = string.format("|cfff1f1f1%.2f|r |cfff1b131%%|r", material.Percent)
+        GameTooltip:AddDoubleLine(leftTextLine, rightTextLine)
+        if settings.auctionatorIntegration then
+          local auctionText = noAuctionData
+          if unitPrice then
+            local formatMoney = Auctionator.Utilities.CreatePaddedMoneyString
+            if settings.showAuctionPriceRange and minQuantity then
+              auctionText = formatMoney(unitPrice * minQuantity)
+              if maxQuantity > minQuantity then
+                auctionText = auctionText .. " – " .. formatMoney(unitPrice * maxQuantity)
+              end
+            elseif not settings.showAuctionPriceRange then
+              auctionText = formatMoney(unitPrice)
+            end
+          end
+          GameTooltip:AddDoubleLine("       |cffa19171" .. DisenchanterPlus:DP_i18n("Auction") .. "|r", "|cffaaaaaa" .. auctionText .. "|r")
+        end
       end
     end
+  end
+  if showExpectedValue then
+    local valueText = noAuctionData
+    if expectedValue then
+      valueText = Auctionator.Utilities.CreatePaddedMoneyString(math.floor(expectedValue + 0.5))
+    end
+    GameTooltip:AddDoubleLine("|cffa19171" .. DisenchanterPlus:DP_i18n("Expected value") .. "|r", "|cffaaaaaa" .. valueText .. "|r")
   end
 end
 
@@ -273,14 +307,10 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
       for essenceItemID, currentEssenceData in pairs(currentData.ItemIDs) do
         local essenceItemName, essenceItemLink, essenceItemQuality, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(essenceItemID)
         local auctionatorPrice
-        local auctionatorString = "|cffcc1100" .. DisenchanterPlus:DP_i18n("No data") .. "|r"
         if DisenchanterPlus.db.char.general.auctionatorIntegration and Auctionator and essenceItemLink ~= nil then
           local dbKey = Auctionator.Utilities.BasicDBKeyFromLink(essenceItemLink)
           if dbKey ~= nil then
             auctionatorPrice = Auctionator.Database:GetFirstPrice({ dbKey })
-            if auctionatorPrice then
-              auctionatorString = Auctionator.Utilities.CreatePaddedMoneyString(auctionatorPrice)
-            end
           end
         end
 
@@ -293,8 +323,7 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
             ItemQuality = essenceItemQuality,
             Percent = currentEssenceData.Percent,
             QuantityText = currentEssenceData.QuantityText,
-            AuctionatorPrice = auctionatorPrice,
-            AuctionatorString = auctionatorString
+            AuctionatorPrice = auctionatorPrice
           }
           table.insert(result, essenceToAdd)
         end

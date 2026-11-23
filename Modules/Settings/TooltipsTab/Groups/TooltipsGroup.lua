@@ -15,6 +15,11 @@ end
 ---@param order? number
 ---@return table
 function DP_TooltipGroup:Config(order)
+  local function auctionOptionsDisabled()
+    local settings = DisenchanterPlus.db.char.general
+    return not (settings.tooltipsEnabled and settings.auctionatorIntegration)
+  end
+
   return {
     type = "group",
     order = order,
@@ -95,6 +100,32 @@ function DP_TooltipGroup:Config(order)
         get = function() return DisenchanterPlus.db.char.general.showExpectedEssences end,
         set = function(info, value)
           DisenchanterPlus.db.char.general.showExpectedEssences = value
+        end,
+      },
+      showAuctionPriceRange = {
+        type = "toggle",
+        order = 6.1,
+        name = DisenchanterPlus:DP_i18n("Show auction price range"),
+        desc = DisenchanterPlus:DP_i18n("Show the auction value for the minimum and maximum quantity of each material."),
+        width = "full",
+        disabled = function()
+          return auctionOptionsDisabled() or not DisenchanterPlus.db.char.general.showExpectedEssences
+        end,
+        get = function() return DisenchanterPlus.db.char.general.showAuctionPriceRange end,
+        set = function(info, value)
+          DisenchanterPlus.db.char.general.showAuctionPriceRange = value
+        end,
+      },
+      showExpectedValue = {
+        type = "toggle",
+        order = 6.2,
+        name = DisenchanterPlus:DP_i18n("Show expected value"),
+        desc = DisenchanterPlus:DP_i18n("Show the average auction value of materials from one disenchant."),
+        width = "full",
+        disabled = auctionOptionsDisabled,
+        get = function() return DisenchanterPlus.db.char.general.showExpectedValue end,
+        set = function(info, value)
+          DisenchanterPlus.db.char.general.showExpectedValue = value
         end,
       },
       showRealEssences = {

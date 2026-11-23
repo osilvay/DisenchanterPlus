@@ -43,6 +43,8 @@ function DP_SettingsDefaults:Load()
         zeroValues = true,
         itemsToShow = 5,
         showExpectedEssences = true,
+        showAuctionPriceRange = false,
+        showExpectedValue = false,
         showRealEssences = true,
         showDistribution = true,
         autoDisenchantEnabled = true,
