@@ -31,6 +31,9 @@ local DP_EnchantProcess          = DP_ModuleLoader:ImportModule("DP_EnchantProce
 ---@type DP_CustomFrames
 local DP_CustomFrames            = DP_ModuleLoader:ImportModule("DP_CustomFrames")
 
+---@type DP_TradeSkillCheck
+local DP_TradeSkillCheck         = DP_ModuleLoader:ImportModule("DP_TradeSkillCheck")
+
 ---@class EnchantLineText : FontString
 ---@field lineID number
 ---@field numAvailable number
@@ -87,15 +90,67 @@ local enchanting                 = false
 local hiddenByCombat             = false
 local showEquippedItems          = false
 
+local function GetSelectedItem()
+  local lines = EnchanterPlusBaseFrame.tabScrollContentFrame2.line
+  return itemSelected and lines and lines[itemSelected]
+end
+
+local function MatchesEnchant(item, equipLocations)
+  return equipLocations and (item.IsVellum or DP_CustomFunctions:TableHasValue(equipLocations, item.ItemEquipLoc))
+end
+
+local slotAliases = {
+  INVTYPE_CHEST = { "CHESTSLOT", "INVTYPE_ROBE" },
+  INVTYPE_ROBE = { "CHESTSLOT", "INVTYPE_CHEST" },
+  INVTYPE_CLOAK = { "BACKSLOT" },
+  INVTYPE_WRIST = { "WRISTSLOT" },
+  INVTYPE_HAND = { "HANDSSLOT" },
+  INVTYPE_FEET = { "FEETSLOT" },
+  INVTYPE_WEAPON = { "MAINHANDSLOT", "SECONDARYHANDSLOT", "WEAPONS" },
+  INVTYPE_2HWEAPON = { "MAINHANDSLOT", "INVTYPE_WEAPON", "WEAPONS" },
+  INVTYPE_WEAPONMAINHAND = { "MAINHANDSLOT", "INVTYPE_WEAPON", "WEAPONS" },
+  INVTYPE_WEAPONOFFHAND = { "SECONDARYHANDSLOT", "INVTYPE_WEAPON", "WEAPONS" },
+  INVTYPE_SHIELD = { "SECONDARYHANDSLOT" },
+  INVTYPE_HOLDABLE = { "SECONDARYHANDSLOT" },
+}
+
+local enchantSlotLabels = {
+  INVTYPE_WEAPON = { "ENCHSLOT_WEAPON", "Weapon" },
+  INVTYPE_2HWEAPON = { "ENCHSLOT_2HWEAPON", "2H Weapon" },
+  INVTYPE_SHIELD = { "SHIELDSLOT", "Shield" },
+}
+
+local function FindNativeSlot(equipLocation, slots, itemLink)
+  if not slots or not equipLocation then return end
+
+  -- The profession menu has weapon categories separate from the physical hand slots.
+  for _, label in ipairs(enchantSlotLabels[equipLocation] or {}) do
+    local slot = string.lower(_G[label] or label)
+    if slots[slot] ~= nil then return slot end
+  end
+
+  if itemLink and C_Item.GetItemInventoryTypeByID and C_Item.GetItemInventorySlotInfo then
+    local inventoryType = C_Item.GetItemInventoryTypeByID(itemLink)
+    local name = inventoryType and C_Item.GetItemInventorySlotInfo(inventoryType)
+    if name and slots[string.lower(name)] ~= nil then
+      return string.lower(name)
+    end
+  end
+  local exactSlot = string.lower(_G[equipLocation] or equipLocation)
+  if slots[exactSlot] ~= nil then return exactSlot end
+  for _, key in ipairs(slotAliases[equipLocation] or {}) do
+    local slot = string.lower(_G[key] or key)
+    if slots[slot] then return slot end
+  end
+end
+
 local function RefreshItemSource()
   itemSelected = nil
   lastItemCurrent = nil
   DP_EnchantWindow:DisableEnchantButton()
-  if lastEnchantCurrent and lastEnchantCurrent.numAvailable > 0 then
-    DP_EnchantWindow:PopulateItemList(lastEnchantCurrent.craftName)
-  else
-    DP_EnchantWindow:PopulateItemList()
-  end
+  DP_EnchantWindow:PopulateEnchantList()
+  DP_EnchantWindow:PopulateItemList()
+  DP_EnchantWindow:CheckReadyToEnchant()
 end
 
 function DP_EnchantWindow:CreateEnchantWindow()
@@ -300,13 +355,10 @@ function DP_EnchantWindow:CreateEnchantWindow()
         DP_EnchantWindow:DisableEnchantButton()
       end)
       C_Timer.After(5.5, function()
-        local lastSelectedEnchant
-        if lastEnchantCurrent and lastItemCurrent and EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID] then
-          lastSelectedEnchant = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[lastEnchantCurrent.lineID].enchant
-        end
-        DP_EnchantWindow:EnableEnchantButton()
-        DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
         enchanting = false
+        DP_EnchantWindow:PopulateItemList()
+        DP_EnchantWindow:PopulateEnchantList()
+        DP_EnchantWindow:CheckReadyToEnchant()
       end)
       enchanting = true
     end
@@ -327,34 +379,8 @@ function DP_EnchantWindow:CreateEnchantWindow()
   DP_EnchantWindow:DrawCraftButton("EnchantWindow_CraftOptimalButton", "optimal", DisenchanterPlus:DP_i18n("Optimal"), "1", -155, -12)
 
   -- custom buttons
-  DP_CustomFrames:DrawCustomCleanButton("5", "EnchantWindow_ShowWithMatsButton", EnchanterPlusBaseFrame, "eye", "eye_off",
-    DisenchanterPlus:DP_i18n("Filter without materials"), -180, -10,
-    function()
-      if DisenchanterPlus.db.char.general.filterWithoutMaterials == nil or DisenchanterPlus.db.char.general.filterWithoutMaterials == false then
-        return false
-      else
-        return true
-      end
-    end,
-    function(buttonIndex, name, parent, icon, iconDisabled, testFn)
-      if DisenchanterPlus.db.char.general.filterWithoutMaterials == nil or DisenchanterPlus.db.char.general.filterWithoutMaterials == false then
-        DisenchanterPlus.db.char.general.filterWithoutMaterials = true
-      else
-        DisenchanterPlus.db.char.general.filterWithoutMaterials = false
-      end
-      DP_CustomFrames:RedrawCustomCleanButton(buttonIndex, name, parent, icon, iconDisabled, testFn)
-      enchantSelected = nil
-      lastEnchantCurrent = nil
-      itemSelected = nil
-      lastItemCurrent = nil
-      DP_EnchantWindow:DisableEnchantButton()
-      DP_EnchantWindow:PopulateEnchantList()
-      DP_EnchantWindow:PopulateItemList()
-    end
-  )
-
   DP_CustomFrames:DrawCustomCleanButton("6", "EnchantWindow_RefreshButton", EnchanterPlusBaseFrame, "refresh", "refresh_a",
-    DisenchanterPlus:DP_i18n("Refresh enchants"), -205, -10,
+    DisenchanterPlus:DP_i18n("Refresh enchants"), -180, -10,
     function()
     end,
     function()
@@ -368,7 +394,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
     end
   )
   -- tab1 ******************************************************************************************
-  local tab1Button = DP_CustomFrames:CreateTab(EnchanterPlusBaseFrame, "EnchantWindow_Tab1", 1, DisenchanterPlus:DP_i18n("Enchant list"), true, 302, 24)
+  local tab1Button = DP_CustomFrames:CreateTab(EnchanterPlusBaseFrame, "EnchantWindow_Tab1", 1, "", true, 302, 24)
   tab1Button:SetPoint("TOPLEFT", EnchanterPlusBaseFrame, "TOPLEFT", 8, -38);
 
   EnchanterPlusBaseFrame.tab1Button = tab1Button
@@ -385,6 +411,88 @@ function DP_EnchantWindow:CreateEnchantWindow()
   tabScrollFrame1:SetScrollChild(tabScrollContentFrame1)
   EnchanterPlusBaseFrame.tabScrollContentFrame1 = tabScrollContentFrame1
   tabScrollFrame1:Show()
+
+  local recipeFilters = {
+    { key = "filterSkillUp", label = DisenchanterPlus:DP_i18n("Has Skill up") },
+    { key = "filterWithoutMaterials", label = DisenchanterPlus:DP_i18n("Have Materials") },
+  }
+  local recipeLabel = DisenchanterPlus:DP_i18n("Enchants list")
+  local updateFilterResetButton
+  local function filtersAreDefault()
+    return not (DP_TradeSkillCheck:GetRecipeFilter("filterSkillUp") or DP_TradeSkillCheck:GetRecipeFilter("filterWithoutMaterials"))
+  end
+  local function refreshRecipes(resetScroll)
+    DP_EnchantWindow:DisableEnchantButton()
+    DP_EnchantWindow:PopulateEnchantList()
+    DP_EnchantWindow:PopulateItemList()
+    DP_EnchantWindow:CheckReadyToEnchant()
+    updateFilterResetButton()
+    if resetScroll then tabScrollFrame1:SetVerticalScroll(0) end
+  end
+  local function toggleRecipeFilter(key)
+    if InCombatLockdown() then return end
+    DP_TradeSkillCheck:SetRecipeFilter(key, not DP_TradeSkillCheck:GetRecipeFilter(key))
+    refreshRecipes(true)
+  end
+  local function clearRecipeFilters()
+    if InCombatLockdown() then return end
+    DP_TradeSkillCheck:SetRecipeFilter("filterSkillUp", false)
+    DP_TradeSkillCheck:SetRecipeFilter("filterWithoutMaterials", false)
+    refreshRecipes(true)
+  end
+  if WowStyle1FilterDropdownMixin then
+    local dropdown = CreateFrame("DropdownButton", nil, tab1Button, "WowStyle1FilterDropdownTemplate")
+    dropdown:SetPoint("CENTER", tab1Button, "CENTER", 0, 1)
+    dropdown:SetText(recipeLabel)
+    dropdown:SetIsDefaultCallback(filtersAreDefault)
+    dropdown:SetDefaultCallback(clearRecipeFilters)
+    updateFilterResetButton = function() dropdown:ValidateResetState() end
+    dropdown:SetupMenu(function(_, root)
+      for _, filter in ipairs(recipeFilters) do
+        root:CreateCheckbox(filter.label, function(key)
+          return DP_TradeSkillCheck:GetRecipeFilter(key)
+        end, toggleRecipeFilter, filter.key)
+      end
+    end)
+  else
+    local dropdownButton = CreateFrame("Button", nil, tab1Button, "UIPanelButtonTemplate")
+    dropdownButton:SetSize(144, 20)
+    dropdownButton:SetPoint("CENTER", tab1Button)
+    dropdownButton:SetText(recipeLabel)
+    local arrow = dropdownButton:CreateTexture(nil, "OVERLAY")
+    arrow:SetTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up")
+    arrow:SetSize(14, 14)
+    arrow:SetPoint("RIGHT", dropdownButton, -5, 0)
+    local menu = CreateFrame("Frame", "EnchantWindow_RecipeFilterMenu", dropdownButton, "UIDropDownMenuTemplate")
+    local reset = CreateFrame("Button", nil, dropdownButton, "UIPanelCloseButton")
+    reset:SetSize(18, 18)
+    reset:SetPoint("CENTER", dropdownButton, "TOPRIGHT", -3, 0)
+    updateFilterResetButton = function() reset:SetShown(not filtersAreDefault()) end
+    updateFilterResetButton()
+    reset:SetScript("OnClick", clearRecipeFilters)
+    UIDropDownMenu_Initialize(menu, function()
+      for _, filter in ipairs(recipeFilters) do
+        local info = UIDropDownMenu_CreateInfo()
+        info.text = filter.label
+        info.checked = DP_TradeSkillCheck:GetRecipeFilter(filter.key)
+        info.arg1 = filter.key
+        info.func = function(_, key) toggleRecipeFilter(key) end
+        UIDropDownMenu_AddButton(info)
+      end
+    end, "MENU")
+    dropdownButton:SetScript("OnClick", function(button)
+      ToggleDropDownMenu(1, nil, menu, button, 0, 0)
+    end)
+  end
+  if DisenchanterPlus.IsForever then
+    tab1Button:RegisterEvent("TRADE_SKILL_LIST_UPDATE")
+    tab1Button:RegisterEvent("PLAYER_REGEN_ENABLED")
+    tab1Button:SetScript("OnEvent", function(button)
+      if button:IsVisible() and not InCombatLockdown() and DP_EnchantProcess:IsEnchantingProfessionOpen() then
+        refreshRecipes()
+      end
+    end)
+  end
 
   -- tab2 ******************************************************************************************
   local tab2Button = DP_CustomFrames:CreateTab(EnchanterPlusBaseFrame, "EnchantWindow_Tab2", 1, "", true, 302, 24)
@@ -450,15 +558,24 @@ function DP_EnchantWindow:CreateEnchantWindow()
     dropdown.frame:Show()
   end
 
-  local equipmentChanged = false
+  local itemsChanged = false
+  tab2Button:RegisterEvent("BAG_UPDATE_DELAYED")
   tab2Button:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
   tab2Button:RegisterEvent("PLAYER_REGEN_ENABLED")
   tab2Button:SetScript("OnEvent", function(button, event)
-    if not button:IsVisible() or not showEquippedItems then return end
-    if event == "PLAYER_EQUIPMENT_CHANGED" then equipmentChanged = true end
-    if equipmentChanged and not InCombatLockdown() then
-      equipmentChanged = false
-      RefreshItemSource()
+    if not button:IsVisible() then return end
+    if (showEquippedItems and event == "PLAYER_EQUIPMENT_CHANGED")
+        or (not showEquippedItems and event == "BAG_UPDATE_DELAYED") then
+      itemsChanged = true
+    end
+    if itemsChanged and not InCombatLockdown() then
+      itemsChanged = false
+      if showEquippedItems then
+        RefreshItemSource()
+      else
+        DP_EnchantWindow:PopulateItemList()
+        DP_EnchantWindow:CheckReadyToEnchant()
+      end
     end
   end)
 
@@ -484,6 +601,7 @@ function DP_EnchantWindow:OpenWindow()
       EnchanterPlusBaseFrame:SetBackdropColor(0, 0, 0, textFrameBgColorAlpha)
       EnchanterPlusBaseFrame:Show()
       EnchanterPlusBaseFrame.settingsButton:Show()
+      DP_EnchantWindow:PopulateItemList()
       -- Agregar a UISpecialFrames solo si no está ya
       local isInUISpecialFrames = false
       for _, frameName in ipairs(UISpecialFrames) do
@@ -602,14 +720,19 @@ function DP_EnchantWindow:RunKeybindConfirmEnchant()
 end
 
 ---Populate enchant list
----@param lastSelectedEnchant? string
-function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
-  local lastSelectedEnchantFound = nil
-  if lastSelectedEnchant ~= nil then lastSelectedEnchantFound = false end
-
+function DP_EnchantWindow:PopulateEnchantList()
+  DP_TradeSkillCheck:ApplyPendingRecipeFilters()
+  local existingLines = EnchanterPlusBaseFrame.tabScrollContentFrame1.line
+  local selectedRecipe = enchantSelected and existingLines and existingLines[enchantSelected]
+  local selectedRecipeID = selectedRecipe and selectedRecipe.index
+  local selectedItem = GetSelectedItem()
+  enchantSelected = nil
+  lastEnchantCurrent = nil
   local itemNum = 1
   local offsetV = 24
-  local tradeSkillLines = DP_EnchantProcess:GetTradeSkillLines()
+  local tradeSkillLines, nativeFiltersApplied = DP_EnchantProcess:GetTradeSkillLines()
+  local filterWithoutMaterials = not nativeFiltersApplied and DP_TradeSkillCheck:GetRecipeFilter("filterWithoutMaterials")
+  local filterSkillUp = not nativeFiltersApplied and DP_TradeSkillCheck:GetRecipeFilter("filterSkillUp")
   EnchanterPlusBaseFrame.tabScrollContentFrame1.line = {}
 
   -- filter craft types
@@ -645,13 +768,15 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
   local enchantsByCraftType = 0
   local enchantsByMaterials = 0
 
-  for _, lineInfo in pairs(tradeSkillLines) do
+  for _, lineInfo in ipairs(tradeSkillLines) do
     totalEnchants = totalEnchants + 1
     local filterByCraftType = DP_CustomFunctions:TableHasValue(craftTypesList, lineInfo.CraftType)
     local filtarByExclusion = DP_CustomFunctions:TableHasValue(enchantExclusions, string.lower(lineInfo.CraftName))
     --DisenchanterPlus:Debug(string.format("%s = %s", lineInfo.CraftName, tostring(filtarByExclusion)))
-    local filterByNumAvailable = (not DisenchanterPlus.db.char.general.filterWithoutMaterials or
-      (DisenchanterPlus.db.char.general.filterWithoutMaterials and (lineInfo.NumAvailable and lineInfo.NumAvailable > 0))) and true or false
+    local filterByNumAvailable = not filterWithoutMaterials or (lineInfo.NumAvailable or 0) > 0
+    local matchesItem = nativeFiltersApplied or not selectedItem or MatchesEnchant(selectedItem.itemData,
+      DP_EnchantWindow:GetEquipLocationFromEnchant(lineInfo.CraftName))
+    local matchesSkillUp = not filterSkillUp or lineInfo.CanSkillUp
 
     if filterByCraftType then
       enchantsByCraftType = enchantsByCraftType + 1
@@ -660,7 +785,7 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
       end
     end
 
-    if filterByCraftType and not filtarByExclusion and filterByNumAvailable then
+    if filterByCraftType and not filtarByExclusion and filterByNumAvailable and matchesItem and matchesSkillUp then
       if enchantContainerLines[tostring(itemNum)] == nil then
         local enchantLineFrame = CreateFrame("Frame", "EnchantWindow_EnchantLine" .. itemNum, EnchanterPlusBaseFrame.tabScrollContentFrame1, BackdropTemplateMixin and "BackdropTemplate")
         enchantLineFrame.enchantCorrect = false
@@ -720,6 +845,7 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
           end
         end)
         acceptEnchantButton:SetScript("OnClick", function(current)
+          if showEquippedItems and InCombatLockdown() then return end
           if enchantSelected ~= current.lineID then
             if lastEnchantCurrent then
               lastEnchantCurrent.text:SetTextColor(1, 1, 1, 0.1)
@@ -739,15 +865,8 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
             DP_EnchantWindow:DisableEnchantButton()
             if current.numAvailable and current.numAvailable > 0 then
               current.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept_c:24:24|t")
-              itemSelected    = nil
-              lastItemCurrent = nil
-              if EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID] then
-                DP_EnchantWindow:PopulateItemList(EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID].enchant)
-              end
             else
               current.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\close_c:24:24|t")
-              EnchanterPlusBaseFrame.footText:SetText("|cffff0a30" .. DisenchanterPlus:DP_i18n("You don't have any materials for that enchantment.") .. "|r")
-              DP_EnchantWindow:PopulateItemList()
             end
           else
             current.text:SetTextColor(1, 1, 1, 0.1)
@@ -755,14 +874,12 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
             if EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID] then
               EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]:SetBackdropColor(1, 1, 1, 0)
             end
-            EnchanterPlusBaseFrame.footText:SetText("|cffffc700" .. DisenchanterPlus:DP_i18n("Select an enchantment from the left list.") .. "|r")
             enchantSelected = nil
             lastEnchantCurrent = nil
-            itemSelected = nil
-            lastItemCurrent = nil
-            DP_EnchantWindow:PopulateItemList()
             DP_EnchantWindow:DisableEnchantButton()
           end
+          DP_EnchantWindow:PopulateItemList()
+          DP_EnchantWindow:CheckReadyToEnchant()
         end)
         acceptEnchantButton:SetBackdrop({
           bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
@@ -777,11 +894,6 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
         local acceptEnchantString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept_a:24:24|t"
         acceptEnchantText:SetPoint("CENTER", acceptEnchantButton, "CENTER")
         acceptEnchantText:SetTextColor(1, 1, 1, 0.1)
-        if lastSelectedEnchant == lineInfo.CraftName then
-          acceptEnchantString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept_c:24:24|t"
-          acceptEnchantText:SetTextColor(1, 1, 1, 1)
-          lastSelectedEnchantFound = true
-        end
         acceptEnchantText:SetText(acceptEnchantString)
         acceptEnchantButton.text = acceptEnchantText
 
@@ -855,12 +967,7 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
         local enchantTextButton = enchantLineFrame.enchantTextButton
         enchantTextButton.lineID = itemNum
 
-        if lastSelectedEnchant == lineInfo.CraftName then
-          local acceptEnchantString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept_c:24:24|t"
-          acceptEnchantButton.text:SetTextColor(1, 1, 1, 1)
-          acceptEnchantButton.text:SetText(acceptEnchantString)
-          lastSelectedEnchantFound = true
-        end
+        enchantLineFrame:SetBackdropColor(1, 1, 1, 0)
 
         local enchantLineText = enchantLineFrame.enchantLineText
         enchantLineText.lineID = itemNum
@@ -875,6 +982,15 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
         enchantContainerLines[tostring(itemNum)] = enchantLineFrame
         enchantLineFrame:Show()
       end
+      if selectedRecipeID and selectedRecipeID == lineInfo.Index then
+        local line = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[itemNum]
+        lastEnchantCurrent = line.acceptEnchantButton
+        enchantSelected = itemNum
+        local icon = lastEnchantCurrent.numAvailable > 0 and "accept_c" or "close_c"
+        lastEnchantCurrent.text:SetTextColor(1, 1, 1, 1)
+        lastEnchantCurrent.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\" .. icon .. ":24:24|t")
+        line:SetBackdropColor(1, 1, 1, 0.6)
+      end
       itemNum = itemNum + 1
     end
   end
@@ -885,29 +1001,26 @@ function DP_EnchantWindow:PopulateEnchantList(lastSelectedEnchant)
   local enchantListHeight = offsetV * math.max(numLinesInEnchantContainer - 1, 0) + 32 + 8
   EnchanterPlusBaseFrame.tabScrollContentFrame1:SetHeight(math.max(205, enchantListHeight))
 
-  if lastSelectedEnchant ~= nil and not lastSelectedEnchantFound then
-    enchantSelected = nil
-    lastEnchantCurrent = nil
-    itemSelected = nil
-    lastItemCurrent = nil
+  if selectedRecipeID and not enchantSelected then
     DP_EnchantWindow:DisableEnchantButton()
-    DP_EnchantWindow:PopulateEnchantList()
     DP_EnchantWindow:PopulateItemList()
   end
 
   if numLinesInEnchantContainer == 0 then
     -- Distinguish an empty profession list from a list emptied by the active filters.
-    if totalEnchants == 0 then
+    if totalEnchants == 0 and not nativeFiltersApplied then
       EnchanterPlusBaseFrame.footText:SetText("|cffff0a30" .. DisenchanterPlus:DP_i18n("You need to open the enchanting tradeskill book and click refresh.") .. "|r")
     elseif #craftTypesList == 0 then
       EnchanterPlusBaseFrame.footText:SetText("|cffff650a" .. DisenchanterPlus:DP_i18n("No enchantment difficulty is selected in the filters.") .. "|r")
-    elseif enchantsByCraftType == 0 then
+    elseif totalEnchants > 0 and enchantsByCraftType == 0 then
       EnchanterPlusBaseFrame.footText:SetText("|cffff650a" .. DisenchanterPlus:DP_i18n("No enchantments match the selected difficulty filters.") .. "|r")
-    elseif DisenchanterPlus.db.char.general.filterWithoutMaterials and enchantsByMaterials == 0 then
+    elseif filterWithoutMaterials and enchantsByMaterials == 0 then
       EnchanterPlusBaseFrame.footText:SetText("|cffff650a" .. DisenchanterPlus:DP_i18n("No enchantments can be crafted with the materials you have.") .. "|r")
     else
       EnchanterPlusBaseFrame.footText:SetText("|cffff650a" .. DisenchanterPlus:DP_i18n("No enchantments match the selected filters.") .. "|r")
     end
+  elseif lastEnchantCurrent and not itemSelected then
+    EnchanterPlusBaseFrame.footText:SetText("|cffffc700" .. DisenchanterPlus:DP_i18n("Select an item from the right list.") .. "|r")
   else
     EnchanterPlusBaseFrame.footText:SetText("|cffffc700" .. DisenchanterPlus:DP_i18n("Select an enchantment from the left list.") .. "|r")
   end
@@ -946,20 +1059,22 @@ function DP_EnchantWindow:GetEquipLocationFromEnchant(enchant)
   return nil
 end
 
-local function GetEquippedEnchantItems(equipLocations)
+local function GetEquippedEnchantItems()
   local items = {}
   local qualities = DisenchanterPlus.db.char.general.enchantItemQuality or {}
   for slot = INVSLOT_FIRST_EQUIPPED or 1, INVSLOT_LAST_EQUIPPED or 19 do
     local link = GetInventoryItemLink("player", slot)
     if link then
-      local name, _, quality, _, _, _, _, _, equipLocation = C_Item.GetItemInfo(link)
-      if qualities[tostring(quality)] and DP_CustomFunctions:TableHasValue(equipLocations, equipLocation) then
-        items[slot] = {
+      local name, _, quality, _, _, itemType, _, _, equipLocation = C_Item.GetItemInfo(link)
+      if qualities[tostring(quality)]
+          and (itemType == DisenchanterPlus:DP_i18n("Armor") or itemType == DisenchanterPlus:DP_i18n("Weapon")) then
+        table.insert(items, {
           ItemID = GetInventoryItemID("player", slot),
           ItemName = name,
           ItemLink = link,
+          ItemEquipLoc = equipLocation,
           EquippedSlot = slot,
-        }
+        })
       end
     end
   end
@@ -967,11 +1082,14 @@ local function GetEquippedEnchantItems(equipLocations)
 end
 
 ---Populate item list
----@param enchant? string
-function DP_EnchantWindow:PopulateItemList(enchant)
+function DP_EnchantWindow:PopulateItemList()
+  local selectedItem = GetSelectedItem()
+  local previousItem = selectedItem and selectedItem.itemData
+  itemSelected = nil
+  lastItemCurrent = nil
   local itemNum = 1
   local offsetV = 24
-  local items = {}
+  local items = showEquippedItems and GetEquippedEnchantItems() or DP_BagsCheck:GetItemsInBags()
   EnchanterPlusBaseFrame.tabScrollContentFrame2.line = {}
 
   if numLinesInItemContainer > 0 then
@@ -979,30 +1097,36 @@ function DP_EnchantWindow:PopulateItemList(enchant)
       itemContainerLines[tostring(i)]:Hide()
     end
   end
-  if not enchant then
-    EnchanterPlusBaseFrame.tabScrollContentFrame2:SetHeight(205)
-    return
-  end
-
-  local equipLocations = DP_EnchantWindow:GetEquipLocationFromEnchant(enchant)
-  if equipLocations then
-    if showEquippedItems then
-      items = GetEquippedEnchantItems(equipLocations)
-    else
-      for _, equipLocation in pairs(equipLocations) do
-        local itemsInBags = DP_BagsCheck:GetItemsInBags(equipLocation)
-        for k, v in pairs(itemsInBags) do items[k] = v end
+  local equipLocations
+  if lastEnchantCurrent then
+    equipLocations = DP_EnchantWindow:GetEquipLocationFromEnchant(lastEnchantCurrent.craftName)
+  else
+    equipLocations = {}
+    for _, locations in pairs(DP_EnchantPatterns:GetEquipLocationsForEnchantTypes()) do
+      for _, equipLocation in ipairs(locations) do
+        table.insert(equipLocations, equipLocation)
       end
+    end
+  end
+  local nativeSlots = DP_TradeSkillCheck:GetEnchantSlotFilters()
+  for i = #items, 1, -1 do
+    local item = items[i]
+    local matchesSlot = not nativeSlots or nativeSlots[FindNativeSlot(item.ItemEquipLoc, nativeSlots, item.ItemLink)]
+    if not MatchesEnchant(item, equipLocations) or not matchesSlot then
+      table.remove(items, i)
     end
   end
 
   if DP_CustomFunctions:TableIsEmpty(items) then
     EnchanterPlusBaseFrame.tabScrollContentFrame2:SetHeight(205)
-    EnchanterPlusBaseFrame.footText:SetText("|cffff650a" .. DisenchanterPlus:DP_i18n("There are no items for this enchantment.") .. "|r")
+    if previousItem then DP_EnchantWindow:PopulateEnchantList() end
+    if lastEnchantCurrent then
+      EnchanterPlusBaseFrame.footText:SetText("|cffff650a" .. DisenchanterPlus:DP_i18n("There are no items for this enchantment.") .. "|r")
+    end
     return
   end
 
-  for _, lineInfo in pairs(items) do
+  for _, lineInfo in ipairs(items) do
     if itemContainerLines[tostring(itemNum)] == nil then
       local itemLineFrame = CreateFrame("Frame", "EnchantWindow_ItemLine" .. itemNum, EnchanterPlusBaseFrame.tabScrollContentFrame2, BackdropTemplateMixin and "BackdropTemplate")
       itemLineFrame.itemCorrect = false
@@ -1043,6 +1167,10 @@ function DP_EnchantWindow:PopulateItemList(enchant)
       end)
       acceptItemButton:SetScript("OnClick", function(current)
         if showEquippedItems and InCombatLockdown() then return end
+        local item = EnchanterPlusBaseFrame.tabScrollContentFrame2.line[current.lineID].itemData
+        local slots, indices = DP_TradeSkillCheck:GetEnchantSlotFilters(true)
+        local slot = FindNativeSlot(item.ItemEquipLoc, slots, item.ItemLink)
+        local slotIndex = slot and indices[slot]
         if itemSelected ~= current.lineID then
           if lastItemCurrent then
             lastItemCurrent.text:SetTextColor(1, 1, 1, 0.1)
@@ -1054,16 +1182,22 @@ function DP_EnchantWindow:PopulateItemList(enchant)
           EnchanterPlusBaseFrame.tabScrollContentFrame2.line[current.lineID]:SetBackdropColor(1, 1, 1, 0.6)
           itemSelected = current.lineID
           lastItemCurrent = current
-          DP_EnchantWindow:CheckReadyToEnchant()
+          if DP_TradeSkillCheck:SelectEnchantSlot(slotIndex) then
+            DP_EnchantWindow:PopulateItemList()
+          end
         else
           current.text:SetTextColor(1, 1, 1, 0.1)
           current.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:24:24|t")
           EnchanterPlusBaseFrame.tabScrollContentFrame2.line[current.lineID]:SetBackdropColor(1, 1, 1, 0)
-          EnchanterPlusBaseFrame.footText:SetText("|cffffc700" .. DisenchanterPlus:DP_i18n("Select an item from the right list.") .. "|r")
           itemSelected = nil
           lastItemCurrent = nil
           DP_EnchantWindow:DisableEnchantButton()
+          if DP_TradeSkillCheck:ClearEnchantSlot(slotIndex) then
+            DP_EnchantWindow:PopulateItemList()
+          end
         end
+        DP_EnchantWindow:PopulateEnchantList()
+        DP_EnchantWindow:CheckReadyToEnchant()
       end)
       acceptItemButton:SetBackdrop({
         bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
@@ -1155,6 +1289,17 @@ function DP_EnchantWindow:PopulateItemList(enchant)
 
       itemLineFrame:Show()
     end
+    local line = EnchanterPlusBaseFrame.tabScrollContentFrame2.line[itemNum]
+    line.itemData = lineInfo
+    if previousItem and previousItem.ItemLink == lineInfo.ItemLink
+        and previousItem.BagIndex == lineInfo.BagIndex and previousItem.Slot == lineInfo.Slot
+        and previousItem.EquippedSlot == lineInfo.EquippedSlot then
+      itemSelected = itemNum
+      lastItemCurrent = line.acceptItemButton
+      lastItemCurrent.text:SetTextColor(1, 1, 1, 1)
+      lastItemCurrent.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept_c:24:24|t")
+      line:SetBackdropColor(1, 1, 1, 0.6)
+    end
     itemNum = itemNum + 1
   end
 
@@ -1165,7 +1310,10 @@ function DP_EnchantWindow:PopulateItemList(enchant)
   local itemListHeight = offsetV * math.max(numLinesInItemContainer - 1, 0) + 32 + 8
   EnchanterPlusBaseFrame.tabScrollContentFrame2:SetHeight(math.max(205, itemListHeight))
 
-  EnchanterPlusBaseFrame.footText:SetText("|cffffc700" .. DisenchanterPlus:DP_i18n("Select an item from the right list.") .. "|r")
+  if previousItem and not itemSelected then DP_EnchantWindow:PopulateEnchantList() end
+  if lastEnchantCurrent and not itemSelected then
+    EnchanterPlusBaseFrame.footText:SetText("|cffffc700" .. DisenchanterPlus:DP_i18n("Select an item from the right list.") .. "|r")
+  end
 end
 
 ---Get enchant and item selected
@@ -1173,6 +1321,12 @@ end
 ---@return string|nil
 function DP_EnchantWindow:CheckReadyToEnchant()
   if showEquippedItems and InCombatLockdown() then return end
+  if enchanting then return end
+  if lastEnchantCurrent and lastEnchantCurrent.numAvailable <= 0 then
+    DP_EnchantWindow:DisableEnchantButton()
+    EnchanterPlusBaseFrame.footText:SetText("|cffff0a30" .. DisenchanterPlus:DP_i18n("You don't have any materials for that enchantment.") .. "|r")
+    return
+  end
   if not lastEnchantCurrent or not lastItemCurrent then
     DP_EnchantWindow:DisableEnchantButton()
     return
@@ -1188,6 +1342,10 @@ function DP_EnchantWindow:CheckReadyToEnchant()
   local enchant = enchantLine.enchant
   local recipeID = enchantLine.index
   local itemInfo = EnchanterPlusBaseFrame.tabScrollContentFrame2.line[lastItemCurrent.lineID]
+  if not MatchesEnchant(itemInfo.itemData, DP_EnchantWindow:GetEquipLocationFromEnchant(enchant)) then
+    DP_EnchantWindow:DisableEnchantButton()
+    return
+  end
   local itemName = itemInfo.itemName
 
   local yesButton = EnchanterPlusBaseFrame.yesButton
@@ -1252,7 +1410,7 @@ function DP_EnchantWindow:CheckReadyToEnchant()
 
   local selectedItem = lastItemCurrent
   C_Timer.After(0.2, function()
-    if lastItemCurrent ~= selectedItem or not lastEnchantCurrent then return end
+    if enchanting or lastItemCurrent ~= selectedItem or not lastEnchantCurrent or lastEnchantCurrent.numAvailable <= 0 then return end
     DP_EnchantWindow:EnableEnchantButton()
     local footText = "|cff1cee1c" .. DisenchanterPlus:DP_i18n("You can start to enchant.") .. "|r"
     EnchanterPlusBaseFrame.footText:SetText(footText)
@@ -1421,6 +1579,7 @@ function DP_EnchantWindow:RedrawCraftButton(craftIndex, icon)
       lastItemCurrent = nil
       DP_EnchantWindow:DisableEnchantButton()
       DP_EnchantWindow:PopulateEnchantList()
+      DP_EnchantWindow:PopulateItemList()
     end)
   end
 end

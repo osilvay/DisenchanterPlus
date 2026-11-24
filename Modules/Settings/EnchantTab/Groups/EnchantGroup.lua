@@ -7,6 +7,9 @@ local DP_CustomConfig = DP_ModuleLoader:ImportModule("DP_CustomConfig")
 ---@type DP_CustomColors
 local DP_CustomColors = DP_ModuleLoader:ImportModule("DP_CustomColors")
 
+---@type DP_TradeSkillCheck
+local DP_TradeSkillCheck = DP_ModuleLoader:ImportModule("DP_TradeSkillCheck")
+
 ---Header
 ---@param order? number
 ---@return table
@@ -53,9 +56,9 @@ function DP_EnchantGroup:Config(order)
         desc = DisenchanterPlus:DP_i18n("Filter enchants without materials."),
         width = "full",
         disabled = function() return (not DisenchanterPlus.db.char.general.enchantEnabled); end,
-        get = function() return DisenchanterPlus.db.char.general.filterWithoutMaterials end,
+        get = function() return DP_TradeSkillCheck:GetRecipeFilter("filterWithoutMaterials") end,
         set = function(info, value)
-          DisenchanterPlus.db.char.general.filterWithoutMaterials = value
+          DP_TradeSkillCheck:SetRecipeFilter("filterWithoutMaterials", value)
         end,
       },
       enchantCraftType = {

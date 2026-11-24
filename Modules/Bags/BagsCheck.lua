@@ -132,7 +132,7 @@ function DP_BagsCheck:GetItemsInBags(equipLocation)
     for slot = 1, numSlots do
       local containerInfo = C_Container.GetContainerItemInfo(bagIndex, slot)
 
-      if containerInfo ~= nil and containerInfo.itemID ~= nil then
+      if containerInfo ~= nil and containerInfo.itemID ~= nil and containerInfo.hyperlink ~= nil then
         local _, _, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, _, itemEquipLoc, itemTexture, _, _, _, _, _, _, _ = C_Item.GetItemInfo(containerInfo.itemID)
 
         if (itemType == DisenchanterPlus:DP_i18n("Armor") or itemType == DisenchanterPlus:DP_i18n("Weapon")) and
@@ -142,7 +142,7 @@ function DP_BagsCheck:GetItemsInBags(equipLocation)
           local itemString, realItemName = containerInfo.hyperlink:match("|H(.*)|h%[(.*)%]|h")
           if not equipLocation or equipLocation == itemEquipLoc or containerInfo.itemID == enchantingVellum then
             numItemsInBag = numItemsInBag + 1
-            itemsInBags[tostring(containerInfo.itemID)] = {
+            table.insert(itemsInBags, {
               ItemID = tostring(containerInfo.itemID),
               ItemName = realItemName,
               ItemIcon = itemTexture,
@@ -155,8 +155,9 @@ function DP_BagsCheck:GetItemsInBags(equipLocation)
               ItemEquipLoc = itemEquipLoc,
               Slot = slot,
               BagIndex = bagIndex,
+              IsVellum = containerInfo.itemID == enchantingVellum,
               SpellID = disenchantSpellID
-            }
+            })
           end
         end
       end

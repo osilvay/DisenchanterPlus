@@ -179,7 +179,9 @@ L["Trivial"]                                                                    
 L["Enchant"]                                                                       = true
 L["Common"]                                                                        = true
 L["Item enchanter"]                                                                = true
-L["Enchant list"]                                                                  = true
+L["Enchants list"] = true
+L["Has Skill up"] = true
+L["Have Materials"] = true
 L["Items in bags"]                                                                 = true
 L["Items on me"] = true
 L["Select"]                                                                        = true
@@ -251,7 +253,7 @@ L["The Enchant list tab shows your recipes and the Items in bags tab shows the i
 L["Select a recipe and an item, then press Enchant to apply it."]                  = "Select a recipe and an item, then press Enchant to apply it."
 L["You can also use the keybind configured in the Keybindings tab."]               = "You can also use the keybind configured in the Keybindings tab."
 L["Optimal, Medium, Easy and Trivial filter the recipes by difficulty."]           = "Optimal, Medium, Easy and Trivial filter the recipes by difficulty."
-L["Filter without materials hides the recipes you cannot craft right now."]        = "Filter without materials hides the recipes you cannot craft right now."
+L["Use the Enchants list menu to filter recipes by skill gain or available materials."] = true
 L["Use Refresh enchants after learning new recipes."]                              = "Use Refresh enchants after learning new recipes."
 L["Replacing an existing enchant is confirmed automatically."]                     = "Replacing an existing enchant is confirmed automatically."
 L["Enchanting vellums are supported too."]                                         = "Enchanting vellums are supported too."
