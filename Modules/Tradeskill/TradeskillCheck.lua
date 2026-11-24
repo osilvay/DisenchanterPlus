@@ -35,6 +35,7 @@ local recipeFilterAPI = {
   filterWithoutMaterials = { "GetOnlyShowMakeableRecipes", "SetOnlyShowMakeableRecipes" },
 }
 local pendingRecipeFilters = {}
+local addonEnchantSlot
 
 local function GetNativeRecipeFilter(key)
   if not DisenchanterPlus.IsForever or not DP_TradeSkillCheck:IsOwnEnchantingOpen() then return end
@@ -88,8 +89,11 @@ function DP_TradeSkillCheck:GetEnchantSlotFilters(includeUnfiltered)
   local anyFiltered = false
   for index = 1, C_TradeSkillUI.GetAllFilterableInventorySlotsCount() do
     local name = C_TradeSkillUI.GetFilterableInventorySlotName(index)
+    local filtered = C_TradeSkillUI.IsInventorySlotFiltered(index)
+    if addonEnchantSlot and filtered ~= (index ~= addonEnchantSlot) then
+      addonEnchantSlot = nil
+    end
     if type(name) == "string" and name ~= "" then
-      local filtered = C_TradeSkillUI.IsInventorySlotFiltered(index)
       local key = string.lower(name)
       if not indices[key] or not filtered then indices[key] = index end
       slots[key] = slots[key] or not filtered
@@ -99,23 +103,30 @@ function DP_TradeSkillCheck:GetEnchantSlotFilters(includeUnfiltered)
   if anyFiltered or includeUnfiltered then return slots, indices end
 end
 
+local function IsOnlyEnchantSlotSelected(index)
+  for slot = 1, C_TradeSkillUI.GetAllFilterableInventorySlotsCount() do
+    if C_TradeSkillUI.IsInventorySlotFiltered(slot) ~= (slot ~= index) then return false end
+  end
+  return true
+end
+
 function DP_TradeSkillCheck:SelectEnchantSlot(index)
   if not index or InCombatLockdown() or not DisenchanterPlus.IsForever or not self:IsOwnEnchantingOpen()
-      or not C_TradeSkillUI.SetInventorySlotFilter then return false end
+      or not C_TradeSkillUI.SetInventorySlotFilter or IsOnlyEnchantSlotSelected(index) then return false end
 
   C_TradeSkillUI.SetInventorySlotFilter(index, true, true)
+  addonEnchantSlot = index
   UpdateNativeFilterButton()
   return true
 end
 
-function DP_TradeSkillCheck:ClearEnchantSlot(index)
-  if not index or InCombatLockdown() or not DisenchanterPlus.IsForever or not self:IsOwnEnchantingOpen()
+function DP_TradeSkillCheck:ClearEnchantSlot()
+  if not addonEnchantSlot or InCombatLockdown() or not DisenchanterPlus.IsForever or not self:IsOwnEnchantingOpen()
       or not C_TradeSkillUI.ClearInventorySlotFilter then return false end
 
-  for slot = 1, C_TradeSkillUI.GetAllFilterableInventorySlotsCount() do
-    if C_TradeSkillUI.IsInventorySlotFiltered(slot) ~= (slot ~= index) then return false end
-  end
-
+  local index = addonEnchantSlot
+  addonEnchantSlot = nil
+  if not IsOnlyEnchantSlotSelected(index) then return false end
   C_TradeSkillUI.ClearInventorySlotFilter()
   UpdateNativeFilterButton()
   return true

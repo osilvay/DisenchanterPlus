@@ -525,6 +525,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
     if InCombatLockdown() then return end
     local equipped = value == "equipped"
     if showEquippedItems == equipped then return end
+    DP_TradeSkillCheck:ClearEnchantSlot()
     showEquippedItems = equipped
     RefreshItemSource()
     tabScrollFrame2:SetVerticalScroll(0)
@@ -1111,7 +1112,8 @@ function DP_EnchantWindow:PopulateItemList()
   local nativeSlots = DP_TradeSkillCheck:GetEnchantSlotFilters()
   for i = #items, 1, -1 do
     local item = items[i]
-    local matchesSlot = not nativeSlots or nativeSlots[FindNativeSlot(item.ItemEquipLoc, nativeSlots, item.ItemLink)]
+    local matchesSlot = item.IsVellum or not nativeSlots
+        or nativeSlots[FindNativeSlot(item.ItemEquipLoc, nativeSlots, item.ItemLink)]
     if not MatchesEnchant(item, equipLocations) or not matchesSlot then
       table.remove(items, i)
     end
@@ -1192,7 +1194,7 @@ function DP_EnchantWindow:PopulateItemList()
           itemSelected = nil
           lastItemCurrent = nil
           DP_EnchantWindow:DisableEnchantButton()
-          if DP_TradeSkillCheck:ClearEnchantSlot(slotIndex) then
+          if DP_TradeSkillCheck:ClearEnchantSlot() then
             DP_EnchantWindow:PopulateItemList()
           end
         end
