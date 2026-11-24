@@ -147,6 +147,7 @@ end
 local function RefreshItemSource()
   itemSelected = nil
   lastItemCurrent = nil
+  DP_TradeSkillCheck:ClearEnchantSlot()
   DP_EnchantWindow:DisableEnchantButton()
   DP_EnchantWindow:PopulateEnchantList()
   DP_EnchantWindow:PopulateItemList()
@@ -386,11 +387,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
     function()
       enchantSelected = nil
       lastEnchantCurrent = nil
-      itemSelected = nil
-      lastItemCurrent = nil
-      DP_EnchantWindow:DisableEnchantButton()
-      DP_EnchantWindow:PopulateEnchantList()
-      DP_EnchantWindow:PopulateItemList()
+      RefreshItemSource()
     end
   )
   -- tab1 ******************************************************************************************
@@ -525,7 +522,6 @@ function DP_EnchantWindow:CreateEnchantWindow()
     if InCombatLockdown() then return end
     local equipped = value == "equipped"
     if showEquippedItems == equipped then return end
-    DP_TradeSkillCheck:ClearEnchantSlot()
     showEquippedItems = equipped
     RefreshItemSource()
     tabScrollFrame2:SetVerticalScroll(0)
@@ -560,6 +556,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
   end
 
   local itemsChanged = false
+  local recipesChanged = false
   tab2Button:RegisterEvent("BAG_UPDATE_DELAYED")
   tab2Button:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
   tab2Button:RegisterEvent("PLAYER_REGEN_ENABLED")
@@ -569,14 +566,19 @@ function DP_EnchantWindow:CreateEnchantWindow()
         or (not showEquippedItems and event == "BAG_UPDATE_DELAYED") then
       itemsChanged = true
     end
-    if itemsChanged and not InCombatLockdown() then
-      itemsChanged = false
-      if showEquippedItems then
-        RefreshItemSource()
-      else
-        DP_EnchantWindow:PopulateItemList()
-        DP_EnchantWindow:CheckReadyToEnchant()
-      end
+    if not DisenchanterPlus.IsForever and event == "BAG_UPDATE_DELAYED" then
+      recipesChanged = true
+    end
+    if InCombatLockdown() or not (itemsChanged or recipesChanged) then return end
+
+    local rebuildItems, rebuildRecipes = itemsChanged, recipesChanged
+    itemsChanged, recipesChanged = false, false
+    if rebuildItems and showEquippedItems then
+      RefreshItemSource()
+    else
+      if rebuildRecipes then DP_EnchantWindow:PopulateEnchantList() end
+      if rebuildItems then DP_EnchantWindow:PopulateItemList() end
+      DP_EnchantWindow:CheckReadyToEnchant()
     end
   end)
 
@@ -1577,11 +1579,7 @@ function DP_EnchantWindow:RedrawCraftButton(craftIndex, icon)
     C_Timer.After(0.1, function()
       enchantSelected = nil
       lastEnchantCurrent = nil
-      itemSelected = nil
-      lastItemCurrent = nil
-      DP_EnchantWindow:DisableEnchantButton()
-      DP_EnchantWindow:PopulateEnchantList()
-      DP_EnchantWindow:PopulateItemList()
+      RefreshItemSource()
     end)
   end
 end

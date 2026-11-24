@@ -34,7 +34,6 @@ local recipeFilterAPI = {
   filterSkillUp = { "GetOnlyShowSkillUpRecipes", "SetOnlyShowSkillUpRecipes" },
   filterWithoutMaterials = { "GetOnlyShowMakeableRecipes", "SetOnlyShowMakeableRecipes" },
 }
-local pendingRecipeFilters = {}
 local addonEnchantSlot
 
 local function GetNativeRecipeFilter(key)
@@ -45,9 +44,12 @@ local function GetNativeRecipeFilter(key)
 end
 
 function DP_TradeSkillCheck:GetRecipeFilter(key)
+  local settings = DisenchanterPlus.db.char.general
+  local pending = settings.pendingEnchantRecipeFilters[key]
+  if pending ~= nil then return pending end
   local getter = GetNativeRecipeFilter(key)
   if getter then return getter() == true end
-  return DisenchanterPlus.db.char.general[key] == true
+  return settings[key] == true
 end
 
 local function UpdateNativeFilterButton()
@@ -58,22 +60,26 @@ local function UpdateNativeFilterButton()
 end
 
 function DP_TradeSkillCheck:SetRecipeFilter(key, enabled)
-  DisenchanterPlus.db.char.general[key] = enabled
+  local settings = DisenchanterPlus.db.char.general
+  settings[key] = enabled
+  local pending = settings.pendingEnchantRecipeFilters
   local getter, setter = GetNativeRecipeFilter(key)
   if not setter or InCombatLockdown() then
-    if DisenchanterPlus.IsForever then pendingRecipeFilters[key] = enabled end
+    if DisenchanterPlus.IsForever then pending[key] = enabled end
     return
   end
 
-  pendingRecipeFilters[key] = nil
-  if getter() == enabled then return end
-  setter(enabled)
-  UpdateNativeFilterButton()
+  if getter() ~= enabled then
+    setter(enabled)
+    UpdateNativeFilterButton()
+  end
+  pending[key] = nil
 end
 
 function DP_TradeSkillCheck:ApplyPendingRecipeFilters()
-  if not next(pendingRecipeFilters) or not self:IsOwnEnchantingOpen() or InCombatLockdown() then return end
-  for key, enabled in pairs(pendingRecipeFilters) do
+  local pending = DisenchanterPlus.db.char.general.pendingEnchantRecipeFilters
+  if not next(pending) or not self:IsOwnEnchantingOpen() or InCombatLockdown() then return end
+  for key, enabled in pairs(pending) do
     self:SetRecipeFilter(key, enabled)
   end
 end
