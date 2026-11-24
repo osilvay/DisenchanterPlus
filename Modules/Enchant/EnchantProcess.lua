@@ -15,6 +15,34 @@ local IsCorrectTradeSkill = false
 local IsCraftingWindowOpen = false
 local TradeSkillInfo
 local popupsHooked = false
+local wandProfessionView
+
+local function ConcealWandProfession()
+  local view = wandProfessionView
+  local frame = ProfessionsFrame
+  if not view or view.frame or not frame or not frame:IsShown()
+      or not DP_TradeSkillCheck:IsOwnEnchantingOpen() then return end
+
+  view.frame = frame
+  view.alpha = frame:GetAlpha()
+  view.scale = frame:GetScale()
+  -- Keep the frame shown so WoW keeps the profession open. Reduce its mouse hit area.
+  frame:SetAlpha(0)
+  frame:SetScale(0.01)
+end
+
+local function RestoreWandProfession(closeSession)
+  local view = wandProfessionView
+  wandProfessionView = nil
+  if not view or not view.frame then return end
+
+  local frame = view.frame
+  frame:SetScale(view.scale)
+  frame:SetAlpha(view.alpha)
+  if closeSession and view.closeOnExit and frame:IsShown() and DP_TradeSkillCheck:IsOwnEnchantingOpen() then
+    HideUIPanel(frame)
+  end
+end
 
 ---Static popups shown by the game when an enchant replaces an existing one,
 ---with the API the popup's accept button calls.
@@ -202,6 +230,7 @@ end
 ---@param status boolean
 function DP_EnchantProcess:SetCraftingWindowOpen(status)
   IsCraftingWindowOpen = status
+  if not status then RestoreWandProfession(true) end
 end
 
 ---Is the currently open profession Enchanting (Forever / modern clients)
@@ -219,7 +248,10 @@ end
 
 ---Craft show event
 function DP_EnchantProcess:CraftShow()
-  if not DisenchanterPlus.db.char.general.enchantEnabled then return end
+  if not DisenchanterPlus.db.char.general.enchantEnabled then
+    RestoreWandProfession(true)
+    return
+  end
 
   local isCorrectTradeSkill = IsCorrectTradeSkill
   if DisenchanterPlus.IsForever then
@@ -231,6 +263,8 @@ function DP_EnchantProcess:CraftShow()
   if not isCorrectTradeSkill then
     if DP_EnchantProcess:IsCraftingWindowOpen() then
       DP_EnchantProcess:CraftClose()
+    else
+      RestoreWandProfession()
     end
     return
   end
@@ -255,6 +289,7 @@ end
 
 ---Craft close event
 function DP_EnchantProcess:CraftClose()
+  RestoreWandProfession()
   if not DisenchanterPlus.db.char.general.enchantEnabled then return end
   if IsTradeSkillKnown and TradeSkillInfo and IsCraftingWindowOpen then
     --DisenchanterPlus:Info("Closing |cffffcc00" .. TradeSkillInfo.Name .. "|r")
@@ -265,9 +300,42 @@ function DP_EnchantProcess:CraftClose()
   end
 end
 
+---Open Enchanting from the wand button.
+function DP_EnchantProcess:RequestEnchantWindow()
+  if InCombatLockdown() or UnitAffectingCombat("player") then return false end
+  if not DisenchanterPlus.db.char.general.enchantEnabled then return false end
+
+  if DisenchanterPlus.IsForever then
+    local nativeWindowWasShown = ProfessionsFrame and ProfessionsFrame:IsShown()
+    wandProfessionView = wandProfessionView or { closeOnExit = not nativeWindowWasShown }
+    IsCraftingWindowOpen = DP_TradeSkillCheck:IsOwnEnchantingOpen()
+        and (not ProfessionsFrame or nativeWindowWasShown)
+    if not IsCraftingWindowOpen and DP_TradeSkillCheck:OpenEnchantingProfession() then
+      -- TRADE_SKILL_SHOW opens the addon window once the profession is ready.
+      ConcealWandProfession()
+      return true
+    end
+  elseif GetCraftDisplaySkillLine then
+    IsCraftingWindowOpen = GetCraftDisplaySkillLine() == DisenchanterPlus:DP_i18n("Enchanting")
+  end
+
+  if IsCraftingWindowOpen then
+    self:OpenEnchantWindow()
+    return true
+  end
+
+  RestoreWandProfession()
+  DisenchanterPlus:Print(DisenchanterPlus:DP_i18n("You need to open the enchanting tradeskill book and click refresh."))
+  return false
+end
+
 ---Open enchant window
 function DP_EnchantProcess:OpenEnchantWindow()
-  if InCombatLockdown() or UnitAffectingCombat("player") then return end
+  if InCombatLockdown() or UnitAffectingCombat("player") then
+    if wandProfessionView then self:SetCraftingWindowOpen(false) end
+    return
+  end
+  ConcealWandProfession()
   if not DP_EnchantWindow:IsWindowOpened() then
     DP_EnchantWindow:OpenWindow()
   end
