@@ -1,3 +1,12 @@
+## **Unreleased**
+
+- Fixed the disenchant tooltip predicting the wrong materials for items without a "Requires Level" line on Forever and TBC, which now use item level for the disenchant ranges
+
+## **Version 3.0.3.1**
+
+- The enchanting window tooltip title now reads "Disenchant" instead of "Enchanting"
+- Removed unused embedded libraries (HereBeDragons-2.0, LibCandyBar-3.0, LibSharedMedia-3.0)
+
 ## **Version 3.0.3.0**
 
 - Added distribution stats to tooltips: how often each quantity of a material was obtained (x1, x2, x3...), with a "Show distribution" toggle

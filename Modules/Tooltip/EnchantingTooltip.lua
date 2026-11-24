@@ -260,9 +260,11 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
   --DisenchanterPlus:Debug(string.format("itemLevel = %s", tostring(itemLevel)))
   for _, currentData in pairs(essencesData) do
     local levelToCheck
-    if DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra
-        or DisenchanterPlus.IsEraSeasonal or DisenchanterPlus.IsTBC then
-      -- classic_era / tbc
+    if DisenchanterPlus.IsForever or DisenchanterPlus.IsTBC then
+      levelToCheck = itemLevel
+    elseif DisenchanterPlus.IsClassic or DisenchanterPlus.IsHardcore or DisenchanterPlus.IsEra
+        or DisenchanterPlus.IsEraSeasonal then
+      -- classic_era
       levelToCheck = (itemMinLevel > 0) and itemMinLevel or itemLevel
     end
 
