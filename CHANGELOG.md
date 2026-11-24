@@ -1,6 +1,7 @@
 ## **Version 3.0.3.2**
 
-- Added "Hide window in combat" option (on by default) that hides the disenchant window during combat and shows it again afterwards (Thanks **rherzfeld**)
+- Added "Hide windows" option (on by default) that hides the disenchant, ignored items and enchant windows during combat and shows them again afterwards (Thanks **rherzfeld**)
+- Fixed an error when trying to move the enchant window during combat
 
 ## **Version 3.0.3.1**
 
