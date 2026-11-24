@@ -1,11 +1,14 @@
-## **Unreleased**
+## **Version 3.0.3.2**
 
-- Fixed the disenchant tooltip predicting the wrong materials for items without a "Requires Level" line on Forever and TBC, which now use item level for the disenchant ranges
+- Added "Hide window in combat" option (on by default) that hides the disenchant window during combat and shows it again afterwards (Thanks **rherzfeld**)
 
 ## **Version 3.0.3.1**
 
-- The enchanting window tooltip title now reads "Disenchant" instead of "Enchanting"
+- The enchanting window tooltip title now reads "Disenchant" instead of "Enchanting" (Thanks **flep82**)
 - Removed unused embedded libraries (HereBeDragons-2.0, LibCandyBar-3.0, LibSharedMedia-3.0)
+- Fixed disenchant tooltip predictions on Forever and TBC by using item level (Thanks **donlam**)
+- Replaced the Auctionator toggle with an "Auction house price source" option: None, Auctionator or auxForever
+- Added auxForever prices to the disenchant tooltip, with their age next to "Auction"
 
 ## **Version 3.0.3.0**
 

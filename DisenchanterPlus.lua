@@ -37,6 +37,13 @@ function DisenchanterPlus:OnInitialize()
   DisenchanterPlus.key = UnitName("player") .. " - " .. GetRealmName()
   DisenchanterPlus.started = false
 
+  -- Migrar el antiguo toggle de Auctionator al selector de fuente de precios
+  local general = DisenchanterPlus.db.char.general
+  if general.priceSource == nil then
+    general.priceSource = general.auctionatorIntegration and "auctionator" or "none"
+  end
+  general.auctionatorIntegration = nil
+
   -- Asegurar que la tabla minimap existe en el perfil
   if not DisenchanterPlus.db.profile.minimap then
     DisenchanterPlus.db.profile.minimap = {}

@@ -278,12 +278,21 @@ function DP_DisenchantProcess:PermanentIgnoredItemsHasElements()
   return false
 end
 
+local hiddenByCombat = false
+
 function DP_DisenchantProcess:PlayerRegenDisabled()
   DP_DisenchantWindow:DisableButtons()
+  if DisenchanterPlus.db.char.general.hideInCombat then
+    hiddenByCombat = DP_DisenchantWindow:HideForCombat()
+  end
 end
 
 function DP_DisenchantProcess:PlayerRegenEnabled()
   DP_DisenchantWindow:EnableButtons()
+  if hiddenByCombat then
+    hiddenByCombat = false
+    DP_DisenchantProcess:OpenDisenchantWindow()
+  end
 end
 
 ---Open disenchant window

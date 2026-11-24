@@ -487,7 +487,7 @@ El sistema de configuración usa AceConfig-3.0 y AceGUI-3.0 para una interfaz mo
       sessionIgnoredItems = {},
       onlySoulbound = false,
       showItemQuality = true,
-      auctionatorIntegration = false,
+      priceSource = "none",
       enchantEnabled = true,
       filterWithoutMaterials = false,
       enchantItemQuality = { ["2"] = true, ["3"] = true, ["4"] = true },

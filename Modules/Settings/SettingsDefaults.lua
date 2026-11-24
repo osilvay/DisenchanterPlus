@@ -33,6 +33,7 @@ function DP_SettingsDefaults:Load()
         disableAll = false,
         hideWelcomeScreen = false,
         muteSounds = false,
+        hideInCombat = true,
         disenchanProcessEnabled = true,
         tooltipsEnabled = true,
         keybindingEnabled = false,
@@ -66,7 +67,6 @@ function DP_SettingsDefaults:Load()
         },
         onlySoulbound = false,
         showItemQuality = true,
-        auctionatorIntegration = false,
         enchantEnabled = true,
         filterWithoutMaterials = false,
         enchantItemQuality = {

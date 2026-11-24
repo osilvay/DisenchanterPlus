@@ -226,13 +226,53 @@ function DP_EnchantingTooltip:GetExpectedItemData(itemID)
         local leftTextLine = string.format(" + |T%d:0|t %s |cff6191f1%s|r", itemIcon, itemLink, quantity or 0)
         local rightTextLine = string.format("%s", percentageText) .. " |cfff1b131%|r"
         GameTooltip:AddDoubleLine(leftTextLine, rightTextLine)
-        if DisenchanterPlus.db.char.general.auctionatorIntegration and currentExpecteItem.AuctionatorString ~= nil then
-          GameTooltip:AddDoubleLine("       |cffa19171" .. DisenchanterPlus:DP_i18n("Auction") .. "|r", "|cffaaaaaa" .. currentExpecteItem.AuctionatorString .. "|r")
+        if currentExpecteItem.PriceString ~= nil then
+          local auctionLabel = "       |cffa19171" .. DisenchanterPlus:DP_i18n("Auction") .. "|r"
+          if currentExpecteItem.PriceAge ~= nil then
+            auctionLabel = auctionLabel .. " |cff8a8a8a(" .. currentExpecteItem.PriceAge .. ")|r"
+          end
+          GameTooltip:AddDoubleLine(auctionLabel, "|cffaaaaaa" .. currentExpecteItem.PriceString .. "|r")
         end
         expectedIndex = expectedIndex + 1
       end
     end
   end
+end
+
+---Format copper as gold, silver and copper using the game's coin icons
+---@param copper number
+---@return string
+local function FormatMoney(copper)
+  local gold = math.floor(copper / 10000)
+  local silver = math.floor(copper / 100) % 100
+  local bronze = copper % 100
+  local text = ""
+  if gold > 0 then text = text .. string.format("%d|TInterface\\MoneyFrame\\UI-GoldIcon:0|t ", gold) end
+  if gold > 0 or silver > 0 then text = text .. string.format("%d|TInterface\\MoneyFrame\\UI-SilverIcon:0|t ", silver) end
+  return text .. string.format("%d|TInterface\\MoneyFrame\\UI-CopperIcon:0|t", bronze)
+end
+
+---Market price of an item from the price source chosen in settings
+---@param itemLink string
+---@return number|nil copper per item
+---@return string|nil formatted price
+---@return string|nil formatted age of the price data (auxForever only)
+local function GetMarketPrice(itemLink)
+  local source = DisenchanterPlus.db.char.general.priceSource
+  if itemLink == nil then return nil, nil, nil end
+  if source == "auctionator" and Auctionator then
+    local dbKey = Auctionator.Utilities.BasicDBKeyFromLink(itemLink)
+    if dbKey == nil then return nil, nil, nil end
+    local price = Auctionator.Database:GetFirstPrice({ dbKey })
+    if price == nil then return nil, nil, nil end
+    return price, Auctionator.Utilities.CreatePaddedMoneyString(price), nil
+  elseif source == "auxforever" and AuxForeverAPI and AuxForeverAPI.GetLatestPrice then
+    local price, age = AuxForeverAPI.GetLatestPrice(itemLink)
+    if price == nil then return nil, nil, nil end
+    local ageText = age == 0 and DisenchanterPlus:DP_i18n("Today") or string.format(DisenchanterPlus:DP_i18n("%d days ago"), age)
+    return price, FormatMoney(price), ageText
+  end
+  return nil, nil, nil
 end
 
 ---Process is item expected data
@@ -274,16 +314,9 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
 
       for essenceItemID, currentEssenceData in pairs(currentData.ItemIDs) do
         local essenceItemName, essenceItemLink, essenceItemQuality, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(essenceItemID)
-        local auctionatorPrice
-        local auctionatorString = "|cffcc1100" .. DisenchanterPlus:DP_i18n("No data") .. "|r"
-        if DisenchanterPlus.db.char.general.auctionatorIntegration and Auctionator and essenceItemLink ~= nil then
-          local dbKey = Auctionator.Utilities.BasicDBKeyFromLink(essenceItemLink)
-          if dbKey ~= nil then
-            auctionatorPrice = Auctionator.Database:GetFirstPrice({ dbKey })
-            if auctionatorPrice then
-              auctionatorString = Auctionator.Utilities.CreatePaddedMoneyString(auctionatorPrice)
-            end
-          end
+        local marketPrice, priceString, priceAge = GetMarketPrice(essenceItemLink)
+        if priceString == nil and DisenchanterPlus.db.char.general.priceSource ~= "none" then
+          priceString = "|cffcc1100" .. DisenchanterPlus:DP_i18n("No data") .. "|r"
         end
 
         --DisenchanterPlus:Debug("Percent : " .. tostring(currentEssenceData.Percent))
@@ -295,8 +328,9 @@ function DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID)
             ItemQuality = essenceItemQuality,
             Percent = currentEssenceData.Percent,
             QuantityText = currentEssenceData.QuantityText,
-            AuctionatorPrice = auctionatorPrice,
-            AuctionatorString = auctionatorString
+            MarketPrice = marketPrice,
+            PriceString = priceString,
+            PriceAge = priceAge
           }
           table.insert(result, essenceToAdd)
         end

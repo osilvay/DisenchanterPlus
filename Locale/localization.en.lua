@@ -157,6 +157,10 @@ L["Qualities"]                                                                  
 L["Integration"]                                                                   = true
 L["Auctionator integration"]                                                       = true
 L["Enable integration with Auctionator addon."]                                    = true
+L["Auction house price source"]                                                    = true
+L["Addon used to show auction house prices of disenchant results."]               = true
+L["Today"]                                                                         = true
+L["%d days ago"]                                                                   = true
 L["Auction"]                                                                       = true
 L["Stopped"]                                                                       = true
 L["Running"]                                                                       = true
@@ -235,6 +239,8 @@ L["Hide the welcome screen shown when the enchant or disenchant window opens."] 
 L["Close"]                                                                         = "Close"
 L["Mute sounds"]                                                                   = "Mute sounds"
 L["Mute the addon sound effects."]                                                 = "Mute the addon sound effects."
+L["Hide window in combat"] = "Hide window in combat"
+L["Hide the disenchant window while in combat and show it again after combat."] = "Hide the disenchant window while in combat and show it again after combat."
 L["Filters"]                                                                       = "Filters"
 L["Good to know"]                                                                  = "Good to know"
 L["Welcome screen"]                                                                = "Welcome screen"
