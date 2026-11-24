@@ -193,6 +193,7 @@ L["Middle Click"]                                                               
 L["Open enchant window"]                                                           = true
 L["Open enchant window."]                                                          = true
 L["Reagents"]                                                                      = true
+L["Total cost"] = true
 L["Refresh enchants"]                                                              = true
 
 -- suffixes for enchantments
