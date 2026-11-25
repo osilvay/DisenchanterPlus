@@ -44,6 +44,7 @@ local emptySlot = "Interface/AddOns/DisenchanterPlus/Images/Inventory/INVTYPE_SL
 local IgnoredWindowBaseFrame
 local textFrameBgColorAlpha = 0.80
 local windowOpened = false
+local hiddenByCombat = false
 local linesInScrollContainer = {}
 local numLinesInScrollContainer = 0
 local ignoreListType = {
@@ -225,6 +226,22 @@ function DP_IgnoredWindow:CloseWindow()
   IgnoredWindowBaseFrame:Hide()
   windowOpened = false
   DP_DisenchantWindow:CloseIgnoreWindow()
+end
+
+---Hide the window during combat, returns true if it was visible
+---@return boolean
+function DP_IgnoredWindow:HideForCombat()
+  if not IgnoredWindowBaseFrame or not IgnoredWindowBaseFrame:IsVisible() then return false end
+  hiddenByCombat = true
+  IgnoredWindowBaseFrame:Hide()
+  return true
+end
+
+---Show the window again after combat
+function DP_IgnoredWindow:ShowAfterCombat()
+  if not hiddenByCombat then return end
+  hiddenByCombat = false
+  if windowOpened then IgnoredWindowBaseFrame:Show() end
 end
 
 ---Drag start

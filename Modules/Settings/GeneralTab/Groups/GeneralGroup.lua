@@ -83,8 +83,8 @@ function DP_GeneralGroup:Config(order)
       hideInCombat = {
         type = "toggle",
         order = 4,
-        name = DisenchanterPlus:DP_i18n("Hide window in combat"),
-        desc = DisenchanterPlus:DP_i18n("Hide the disenchant window while in combat and show it again after combat."),
+        name = DisenchanterPlus:DP_i18n("Hide windows"),
+        desc = DisenchanterPlus:DP_i18n("Hide the windows while in combat and show them again after combat."),
         width = "full",
         get = function()
           return DisenchanterPlus.db.char.general.hideInCombat
