@@ -25,6 +25,17 @@ function DP_ClassicDisenchantTable:Initialize()
     { 51, 55, "1-2x", DisenchanterPlus.EnchantingItems.illusion_dust, "1-2x", DisenchanterPlus.EnchantingItems.greater_eternal_essence, "1x", DisenchanterPlus.EnchantingItems.large_brilliant_shard,  "1x", DisenchanterPlus.EnchantingItems.nexus_crystal },
     { 56, 60, "2-5x", DisenchanterPlus.EnchantingItems.illusion_dust, "1-3x", DisenchanterPlus.EnchantingItems.greater_eternal_essence, "1x", DisenchanterPlus.EnchantingItems.large_brilliant_shard,  "1x", DisenchanterPlus.EnchantingItems.nexus_crystal }
   }
+  -- Forever sorts disenchants by item level; these ranges replace the required level ones above, row by row
+  if DisenchanterPlus.IsForever then
+    local foreverItemLevelRanges = {
+      { 5, 15 }, { 16, 20 }, { 21, 25 }, { 26, 30 }, { 31, 35 }, { 36, 40 },
+      { 41, 45 }, { 46, 50 }, { 51, 55 }, { 56, 60 }, { 61, 999 },
+    }
+    for i, row in ipairs(classicDisenchantData) do
+      row[1] = foreverItemLevelRanges[i][1]
+      row[2] = foreverItemLevelRanges[i][2]
+    end
+  end
   expectedPercents = {
     UNCOMMON = {
       Dust = {

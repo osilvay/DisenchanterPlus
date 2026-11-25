@@ -17,7 +17,7 @@ end
 function DP_TooltipGroup:Config(order)
   local function auctionOptionsDisabled()
     local settings = DisenchanterPlus.db.char.general
-    return not (settings.tooltipsEnabled and settings.auctionatorIntegration)
+    return not settings.tooltipsEnabled or settings.priceSource == nil or settings.priceSource == "none"
   end
 
   return {

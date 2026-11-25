@@ -84,6 +84,7 @@ local lastEnchantCurrent         = nil
 local itemSelected               = nil
 local lastItemCurrent            = nil
 local enchanting                 = false
+local hiddenByCombat             = false
 
 function DP_EnchantWindow:CreateEnchantWindow()
   local xOffset = DisenchanterPlus.db.char.general.enchantFrameOffset.xOffset
@@ -107,7 +108,7 @@ function DP_EnchantWindow:CreateEnchantWindow()
     -- La ventana tambien se puede ocultar con Escape (UISpecialFrames), no solo con CloseWindow.
     -- Si no se sincroniza el proceso, IsCraftingWindowOpen queda en true y la ventana no
     -- vuelve a abrirse hasta cerrar y reabrir la profesion.
-    if windowOpened then
+    if windowOpened and not hiddenByCombat then
       windowOpened = false
       enchantSelected = nil
       lastEnchantCurrent = nil
@@ -472,11 +473,35 @@ end
 
 ---Drag start
 function DP_EnchantWindow.OnDragStart()
+  if InCombatLockdown() or UnitAffectingCombat("player") then return end
   EnchanterPlusBaseFrame:StartMoving()
+end
+
+---Hide the window during combat, returns true if it was visible
+---@return boolean
+function DP_EnchantWindow:HideForCombat()
+  if not EnchanterPlusBaseFrame or not EnchanterPlusBaseFrame:IsVisible() then return false end
+  hiddenByCombat = true
+  EnchanterPlusBaseFrame:Hide()
+  return true
+end
+
+---Show the window again after combat, or close it if the profession was closed meanwhile
+function DP_EnchantWindow:ShowAfterCombat()
+  if not hiddenByCombat then return end
+  hiddenByCombat = false
+  if not DP_EnchantProcess:IsCraftingWindowOpen() then
+    DP_EnchantWindow:CloseWindow()
+    return
+  end
+  EnchanterPlusBaseFrame:Show()
+  EnchanterPlusBaseFrame.settingsButton:Show()
+  table.insert(UISpecialFrames, "EnchantWindow_BaseFrame")
 end
 
 ---Drag stop
 function DP_EnchantWindow.OnDragStop()
+  if InCombatLockdown() or UnitAffectingCombat("player") then return end
   local frameX = EnchanterPlusBaseFrame:GetCenter()
   local xLeft, yTop, xRight, yBottom = EnchanterPlusBaseFrame:GetLeft(), EnchanterPlusBaseFrame:GetTop(), EnchanterPlusBaseFrame:GetRight(), EnchanterPlusBaseFrame:GetBottom()
   local xSize, ySize = EnchanterPlusBaseFrame:GetSize()

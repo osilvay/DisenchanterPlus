@@ -26,7 +26,7 @@ DisenchanterPlus.DEBUG_SPAM = "|cffff8484[SPAM]|r"
 local AddonColor = "FFED6BFF"
 local AddonColorDark = "FF75277F"
 local AddonWindowBackgroundColor = "FF212121"
-local AddonVersion = "3.0.3.0"
+local AddonVersion = "3.0.3.2"
 
 BINDING_NAME_DISENCHANTER_PLUS_ACCEPT_DISENCHANT = L["Accept disenchant"]
 BINDING_NAME_DISENCHANTER_PLUS_CANCEL_DISENCHANT = L["Cancel disenchant"]
@@ -36,6 +36,13 @@ function DisenchanterPlus:OnInitialize()
   DisenchanterPlus.db = LibStub("AceDB-3.0"):New("DisenchanterPlusDB", DP_SettingsDefaults:Load(), true)
   DisenchanterPlus.key = UnitName("player") .. " - " .. GetRealmName()
   DisenchanterPlus.started = false
+
+  -- Migrar el antiguo toggle de Auctionator al selector de fuente de precios
+  local general = DisenchanterPlus.db.char.general
+  if general.priceSource == nil then
+    general.priceSource = general.auctionatorIntegration and "auctionator" or "none"
+  end
+  general.auctionatorIntegration = nil
 
   -- Asegurar que la tabla minimap existe en el perfil
   if not DisenchanterPlus.db.profile.minimap then

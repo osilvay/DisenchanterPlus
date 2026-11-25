@@ -21,18 +21,23 @@ function DP_IntegrationGroup:Config(order)
     inline = true,
     name = "",
     args = {
-      auctionatorIntegration = {
-        type = "toggle",
+      priceSource = {
+        type = "select",
         order = 9,
-        name = DisenchanterPlus:DP_i18n("Auctionator integration"),
-        desc = DisenchanterPlus:DP_i18n("Enable integration with Auctionator addon."),
         width = "full",
-        disabled = function() return DisenchanterPlus.db.char.general.disableAll or not (Auctionator) end,
+        name = DisenchanterPlus:DP_i18n("Auction house price source"),
+        desc = DisenchanterPlus:DP_i18n("Addon used to show auction house prices of disenchant results."),
+        values = {
+          none = DisenchanterPlus:DP_i18n("None"),
+          auctionator = "Auctionator",
+          auxforever = "auxForever",
+        },
+        disabled = function() return DisenchanterPlus.db.char.general.disableAll end,
         get = function()
-          return DisenchanterPlus.db.char.general.auctionatorIntegration
+          return DisenchanterPlus.db.char.general.priceSource
         end,
         set = function(info, value)
-          DisenchanterPlus.db.char.general.auctionatorIntegration = value
+          DisenchanterPlus.db.char.general.priceSource = value
         end,
       },
     }

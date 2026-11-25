@@ -713,6 +713,14 @@ function DP_DisenchantWindow:RemoveItemFromWindow()
   DisenchanterPlusBaseFrame.ignoreButton:SetEnabled(false)
 end
 
+---Hide the window during combat, returns true if it was visible
+---@return boolean
+function DP_DisenchantWindow:HideForCombat()
+  if not DisenchanterPlusBaseFrame or not DisenchanterPlusBaseFrame:IsVisible() then return false end
+  DisenchanterPlusBaseFrame:Hide()
+  return true
+end
+
 function DP_DisenchantWindow:DisableButtons()
   if not DisenchanterPlusBaseFrame then return end
   DisenchanterPlusBaseFrame.yesButton:SetEnabled(false)

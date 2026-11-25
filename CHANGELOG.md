@@ -1,3 +1,16 @@
+## **Version 3.0.3.2**
+
+- Added "Hide windows" option (on by default) that hides the disenchant, ignored items and enchant windows during combat and shows them again afterwards (Thanks **rherzfeld**)
+- Fixed an error when trying to move the enchant window during combat
+
+## **Version 3.0.3.1**
+
+- The enchanting window tooltip title now reads "Disenchant" instead of "Enchanting" (Thanks **flep82**)
+- Removed unused embedded libraries (HereBeDragons-2.0, LibCandyBar-3.0, LibSharedMedia-3.0)
+- Fixed disenchant tooltip predictions on Forever and TBC by using item level (Thanks **donlam**)
+- Replaced the Auctionator toggle with an "Auction house price source" option: None, Auctionator or auxForever
+- Added auxForever prices to the disenchant tooltip, with their age next to "Auction"
+
 ## **Version 3.0.3.0**
 
 - Added distribution stats to tooltips: how often each quantity of a material was obtained (x1, x2, x3...), with a "Show distribution" toggle

@@ -80,6 +80,19 @@ function DP_GeneralGroup:Config(order)
           DisenchanterPlus.db.char.general.muteSounds = value
         end,
       },
+      hideInCombat = {
+        type = "toggle",
+        order = 4,
+        name = DisenchanterPlus:DP_i18n("Hide windows"),
+        desc = DisenchanterPlus:DP_i18n("Hide the windows while in combat and show them again after combat."),
+        width = "full",
+        get = function()
+          return DisenchanterPlus.db.char.general.hideInCombat
+        end,
+        set = function(info, value)
+          DisenchanterPlus.db.char.general.hideInCombat = value
+        end,
+      },
       -- NEW: Hide Minimap Icon Toggle
       hideMinimap = {
         type = "toggle",
