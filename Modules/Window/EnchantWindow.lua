@@ -89,6 +89,7 @@ local lastItemCurrent            = nil
 local enchanting                 = false
 local hiddenByCombat             = false
 local showEquippedItems          = false
+local updatingNativeSlots        = false
 
 local function GetSelectedItem()
   local lines = EnchanterPlusBaseFrame.tabScrollContentFrame2.line
@@ -115,19 +116,30 @@ local slotAliases = {
 }
 
 local enchantSlotLabels = {
-  INVTYPE_WEAPON = { "ENCHSLOT_WEAPON", "Weapon" },
+  INVTYPE_WEAPON = { "ENCHSLOT_WEAPON", "Weapon", "WEAPONS", "Weapons" },
   INVTYPE_2HWEAPON = { "ENCHSLOT_2HWEAPON", "2H Weapon" },
   INVTYPE_SHIELD = { "SHIELDSLOT", "Shield" },
 }
+
+local function FindSlotByLabel(labels, slots)
+  for _, label in ipairs(labels or {}) do
+    local slot = string.lower(_G[label] or label)
+    if slots[slot] ~= nil then return slot end
+  end
+end
+
+local function FindWeaponSlot(item, slots)
+  if slots and item.ItemType == DisenchanterPlus:DP_i18n("Weapon") then
+    return FindSlotByLabel(enchantSlotLabels.INVTYPE_WEAPON, slots)
+  end
+end
 
 local function FindNativeSlot(equipLocation, slots, itemLink)
   if not slots or not equipLocation then return end
 
   -- The profession menu has weapon categories separate from the physical hand slots.
-  for _, label in ipairs(enchantSlotLabels[equipLocation] or {}) do
-    local slot = string.lower(_G[label] or label)
-    if slots[slot] ~= nil then return slot end
-  end
+  local enchantSlot = FindSlotByLabel(enchantSlotLabels[equipLocation], slots)
+  if enchantSlot then return enchantSlot end
 
   if itemLink and C_Item.GetItemInventoryTypeByID and C_Item.GetItemInventorySlotInfo then
     local inventoryType = C_Item.GetItemInventoryTypeByID(itemLink)
@@ -485,7 +497,8 @@ function DP_EnchantWindow:CreateEnchantWindow()
     tab1Button:RegisterEvent("TRADE_SKILL_LIST_UPDATE")
     tab1Button:RegisterEvent("PLAYER_REGEN_ENABLED")
     tab1Button:SetScript("OnEvent", function(button)
-      if button:IsVisible() and not InCombatLockdown() and DP_EnchantProcess:IsEnchantingProfessionOpen() then
+      if not updatingNativeSlots and button:IsVisible() and not InCombatLockdown()
+          and DP_EnchantProcess:IsEnchantingProfessionOpen() then
         refreshRecipes()
       end
     end)
@@ -1075,6 +1088,7 @@ local function GetEquippedEnchantItems()
           ItemID = GetInventoryItemID("player", slot),
           ItemName = name,
           ItemLink = link,
+          ItemType = itemType,
           ItemEquipLoc = equipLocation,
           EquippedSlot = slot,
         })
@@ -1116,6 +1130,7 @@ function DP_EnchantWindow:PopulateItemList()
     local item = items[i]
     local matchesSlot = item.IsVellum or not nativeSlots
         or nativeSlots[FindNativeSlot(item.ItemEquipLoc, nativeSlots, item.ItemLink)]
+        or nativeSlots[FindWeaponSlot(item, nativeSlots)]
     if not MatchesEnchant(item, equipLocations) or not matchesSlot then
       table.remove(items, i)
     end
@@ -1171,11 +1186,11 @@ function DP_EnchantWindow:PopulateItemList()
       end)
       acceptItemButton:SetScript("OnClick", function(current)
         if showEquippedItems and InCombatLockdown() then return end
-        local item = EnchanterPlusBaseFrame.tabScrollContentFrame2.line[current.lineID].itemData
-        local slots, indices = DP_TradeSkillCheck:GetEnchantSlotFilters(true)
-        local slot = FindNativeSlot(item.ItemEquipLoc, slots, item.ItemLink)
-        local slotIndex = slot and indices[slot]
         if itemSelected ~= current.lineID then
+          local item = EnchanterPlusBaseFrame.tabScrollContentFrame2.line[current.lineID].itemData
+          local slots, indices = DP_TradeSkillCheck:GetEnchantSlotFilters(true)
+          local slot = FindNativeSlot(item.ItemEquipLoc, slots, item.ItemLink)
+          local weaponSlot = FindWeaponSlot(item, slots)
           if lastItemCurrent then
             lastItemCurrent.text:SetTextColor(1, 1, 1, 0.1)
             lastItemCurrent.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:24:24|t")
@@ -1186,7 +1201,10 @@ function DP_EnchantWindow:PopulateItemList()
           EnchanterPlusBaseFrame.tabScrollContentFrame2.line[current.lineID]:SetBackdropColor(1, 1, 1, 0.6)
           itemSelected = current.lineID
           lastItemCurrent = current
-          if DP_TradeSkillCheck:SelectEnchantSlot(slotIndex) then
+          updatingNativeSlots = true
+          local changed = DP_TradeSkillCheck:SelectEnchantSlots(slot and indices[slot], weaponSlot and indices[weaponSlot])
+          updatingNativeSlots = false
+          if changed then
             DP_EnchantWindow:PopulateItemList()
           end
         else

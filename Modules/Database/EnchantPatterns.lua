@@ -14,7 +14,7 @@ function DP_EnchantPatterns:Initialize()
     "INVTYPE_CLOAK"
   }
   EquipLocationsForEnchantTypes[DisenchanterPlus:DP_i18n("enchant weapon")] = {
-    "INVTYPE_WEAPON", "INVTYPE_WEAPONMAINHAND", "INVTYPE_WEAPONOFFHAND", "INVTYPE_HOLDABLE"
+    "INVTYPE_WEAPON", "INVTYPE_WEAPONMAINHAND", "INVTYPE_WEAPONOFFHAND", "INVTYPE_2HWEAPON", "INVTYPE_HOLDABLE"
   }
   EquipLocationsForEnchantTypes[DisenchanterPlus:DP_i18n("enchant 2h weapon")] = {
     "INVTYPE_2HWEAPON"
