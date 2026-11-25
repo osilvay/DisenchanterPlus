@@ -10,6 +10,12 @@ local DP_DisenchantGroup = DP_ModuleLoader:ImportModule("DP_DisenchantGroup")
 ---@type DP_DisenchantWindow
 local DP_DisenchantWindow = DP_ModuleLoader:ImportModule("DP_DisenchantWindow")
 
+---@type DP_EnchantWindow
+local DP_EnchantWindow = DP_ModuleLoader:ImportModule("DP_EnchantWindow")
+
+---@type DP_IgnoredWindow
+local DP_IgnoredWindow = DP_ModuleLoader:ImportModule("DP_IgnoredWindow")
+
 ---@type DP_TradeSkillCheck
 local DP_TradeSkillCheck = DP_ModuleLoader:ImportModule("DP_TradeSkillCheck")
 
@@ -284,11 +290,15 @@ function DP_DisenchantProcess:PlayerRegenDisabled()
   DP_DisenchantWindow:DisableButtons()
   if DisenchanterPlus.db.char.general.hideInCombat then
     hiddenByCombat = DP_DisenchantWindow:HideForCombat()
+    DP_IgnoredWindow:HideForCombat()
+    DP_EnchantWindow:HideForCombat()
   end
 end
 
 function DP_DisenchantProcess:PlayerRegenEnabled()
   DP_DisenchantWindow:EnableButtons()
+  DP_IgnoredWindow:ShowAfterCombat()
+  DP_EnchantWindow:ShowAfterCombat()
   if hiddenByCombat then
     hiddenByCombat = false
     DP_DisenchantProcess:OpenDisenchantWindow()
