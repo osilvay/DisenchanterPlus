@@ -23,6 +23,18 @@ function DP_TradeSkillCheck:IsEnchantingProfessionInfo(professionInfo)
     or professionInfo.professionName == DisenchanterPlus:DP_i18n("Enchanting")
 end
 
+function DP_TradeSkillCheck:IsOwnEnchantingOpen()
+  if not (C_TradeSkillUI and C_TradeSkillUI.GetBaseProfessionInfo) then return false end
+  return self:IsEnchantingProfessionInfo(C_TradeSkillUI.GetBaseProfessionInfo())
+      and not (C_TradeSkillUI.IsTradeSkillLinked and C_TradeSkillUI.IsTradeSkillLinked())
+      and not (C_TradeSkillUI.IsTradeSkillGuild and C_TradeSkillUI.IsTradeSkillGuild())
+end
+
+function DP_TradeSkillCheck:OpenEnchantingProfession()
+  return C_TradeSkillUI and C_TradeSkillUI.OpenTradeSkill
+      and C_TradeSkillUI.OpenTradeSkill(ENCHANTING_SKILL_LINE_ID) == true
+end
+
 ---Get tradeSkill
 ---@return table|nil
 function DP_TradeSkillCheck:GetTradeSkill()
