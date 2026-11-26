@@ -119,18 +119,18 @@ function DP_CustomFrames:DrawCustomCleanButton(buttonIndex, name, parent, icon, 
   customButton:SetScript("OnEnter", function(current)
     GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
     GameTooltip:SetText(tooltipText, nil, nil, nil, nil, true)
-    local textString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\" .. iconDisabled .. ":16:16|t "
+    local textString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Interface\\" .. iconDisabled .. ":16:16|t "
     if testFn() then
-      textString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\" .. icon .. ":16:16|t "
+      textString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Interface\\" .. icon .. ":16:16|t "
     end
     current.text:SetText(textString)
     current:SetAlpha(0.8)
   end)
   customButton:SetScript("OnLeave", function(current)
     GameTooltip:Hide()
-    local textString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\" .. iconDisabled .. ":16:16|t "
+    local textString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Interface\\" .. iconDisabled .. ":16:16|t "
     if testFn() then
-      textString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\" .. icon .. ":16:16|t "
+      textString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Interface\\" .. icon .. ":16:16|t "
     end
     current.text:SetText(textString)
     current:SetAlpha(0.6)
@@ -148,9 +148,9 @@ function DP_CustomFrames:DrawCustomCleanButton(buttonIndex, name, parent, icon, 
   customButton:SetAlpha(0.6)
 
   local buttonText = customButton:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-  local buttonString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\" .. iconDisabled .. ":16:16|t "
+  local buttonString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Interface\\" .. iconDisabled .. ":16:16|t "
   if testFn() then
-    buttonString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\" .. icon .. ":16:16|t "
+    buttonString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Interface\\" .. icon .. ":16:16|t "
   end
 
   buttonText:SetPoint("CENTER", customButton, 2, 0)
@@ -173,9 +173,9 @@ function DP_CustomFrames:RedrawCustomCleanButton(buttonIndex, name, parent, icon
   if not parent then return end
   local customButton = parent.customButtons[name]
   if customButton then
-    local buttonString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\" .. iconDisabled .. ":16:16|t "
+    local buttonString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Interface\\" .. iconDisabled .. ":16:16|t "
     if testFn() then
-      buttonString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\" .. icon .. ":16:16|t "
+      buttonString = "|TInterface\\AddOns\\DisenchanterPlus\\Images\\Interface\\" .. icon .. ":16:16|t "
     end
     customButton.text:SetText(buttonString)
     C_Timer.After(0.1, function()
