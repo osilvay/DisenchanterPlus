@@ -78,6 +78,11 @@ L["Toggle showing zero values."]                                                
 L["Items to show"]                                                                 = "Items to show"
 L["Items to show in tooltip."]                                                     = "Items to show in tooltip."
 L["Show expected materials"]                                                           = "Show expected materials"
+L["Show auction price range"] = "Afficher la fourchette de prix à l’hôtel des ventes"
+L["Show the auction value for the minimum and maximum quantity of each material."] = "Affiche la valeur à l’hôtel des ventes des quantités minimale et maximale de chaque matériau."
+L["Show expected material value"] = "Afficher la valeur attendue des matériaux"
+L["Show the average auction value of materials from one disenchant."] = "Affiche la valeur moyenne à l’hôtel des ventes des matériaux obtenus par désenchantement."
+L["Expected mat value"] = "Valeur attendue des matériaux"
 L["Toggle showing of expected materials on items."]                                    = "Toggle showing of expected materials on items."
 L["Show real materials obtained"]                                                      = "Show real materials obtained"
 L["Toggle showing of real materials obtained from items."]                             = "Toggle showing of real materials obtained from items."
@@ -196,6 +201,7 @@ L["Middle Click"]                                                               
 L["Open enchant window"]                                                           = "Open enchant window"
 L["Open enchant window."]                                                          = "Open enchant window."
 L["Reagents"]                                                                      = "Reagents"
+L["Total cost"] = "Coût total"
 L["Refresh enchants"]                                                              = "Refresh enchants"
 
 -- suffixes for enchantments

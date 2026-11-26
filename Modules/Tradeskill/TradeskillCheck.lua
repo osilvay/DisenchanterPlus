@@ -25,9 +25,14 @@ end
 
 function DP_TradeSkillCheck:IsOwnEnchantingOpen()
   if not (C_TradeSkillUI and C_TradeSkillUI.GetBaseProfessionInfo) then return false end
-  return DP_TradeSkillCheck:IsEnchantingProfessionInfo(C_TradeSkillUI.GetBaseProfessionInfo())
+  return self:IsEnchantingProfessionInfo(C_TradeSkillUI.GetBaseProfessionInfo())
       and not (C_TradeSkillUI.IsTradeSkillLinked and C_TradeSkillUI.IsTradeSkillLinked())
       and not (C_TradeSkillUI.IsTradeSkillGuild and C_TradeSkillUI.IsTradeSkillGuild())
+end
+
+function DP_TradeSkillCheck:OpenEnchantingProfession()
+  return C_TradeSkillUI and C_TradeSkillUI.OpenTradeSkill
+      and C_TradeSkillUI.OpenTradeSkill(ENCHANTING_SKILL_LINE_ID) == true
 end
 
 local recipeFilterAPI = {
@@ -292,6 +297,7 @@ function DP_TradeSkillCheck:GetTradeSkillLinesForForever()
             end
             table.insert(reagents, {
               Index = slotIndex,
+              ItemID = reagent.itemID,
               Name = reagentName or ("item:" .. tostring(reagent.itemID)),
               Texture = reagentTexture,
               Count = reagentSlotSchematic.quantityRequired or 1,
@@ -358,9 +364,11 @@ function DP_TradeSkillCheck:GetTradeSkillLinesForClassic()
     local totalReagents = 0;
     for i = 1, numReagents, 1 do
       local name, texturePath, numRequired, numHave = DP_TradeSkillCheck.TradeSkillReagentInfo(index, i)
+      local itemLink = GetCraftReagentItemLink and GetCraftReagentItemLink(index, i)
       totalReagents = totalReagents + numRequired;
       table.insert(reagents, {
         Index = i,
+        ItemID = itemLink and C_Item.GetItemInfoInstant(itemLink),
         Name = name,
         Texture = texturePath,
         Count = numRequired,

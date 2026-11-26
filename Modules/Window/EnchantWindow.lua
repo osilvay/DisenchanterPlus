@@ -735,6 +735,44 @@ function DP_EnchantWindow:RunKeybindConfirmEnchant()
   end
 end
 
+local function ShowEnchantTooltip(recipe)
+  GameTooltip:SetOwner(recipe, "ANCHOR_RIGHT")
+  GameTooltip:SetWidth(140)
+
+  local name = string.format("|c%s%s|r", DP_EnchantWindow:GetColorByCraftType(recipe.craftType), recipe.craftName)
+  GameTooltip:AddLine(name, 1, 1, 1, true)
+  GameTooltip:AddLine(recipe.craftDescription, 0.8, 0.8, 0.8, true)
+  GameTooltip:AddLine("\n")
+  GameTooltip:AddLine(DisenchanterPlus:DP_i18n("Reagents") .. ":", 1, 0.8, 0, true)
+
+  local reagents = recipe.reagents or {}
+  local settings = DisenchanterPlus.db.char.general
+  local useAuctionator = settings.priceSource == "auctionator"
+      or (settings.priceSource == nil and settings.auctionatorIntegration)
+  local auctionAPI = Auctionator and Auctionator.API and Auctionator.API.v1
+  local formatMoney = Auctionator and Auctionator.Utilities and Auctionator.Utilities.CreatePaddedMoneyString
+  local showCosts = useAuctionator and auctionAPI and auctionAPI.GetAuctionPriceByItemID and formatMoney
+  local totalCost = 0
+  for _, reagent in ipairs(reagents) do
+    local label = string.format(" + |T%d:0|t |cffe1e1e1%s|r |cff91c1f1x|r |cff6191f1%d|r",
+      reagent.Texture or 134400, reagent.Name, reagent.Count)
+    if showCosts then
+      local unitPrice = reagent.ItemID and auctionAPI.GetAuctionPriceByItemID("DisenchanterPlus", reagent.ItemID)
+      local cost = unitPrice and unitPrice * reagent.Count
+      totalCost = totalCost and cost and (totalCost + cost)
+      local priceText = cost and formatMoney(cost) or DisenchanterPlus:DP_i18n("No data")
+      GameTooltip:AddDoubleLine(label, priceText)
+    else
+      GameTooltip:AddLine(label)
+    end
+  end
+  if showCosts and #reagents > 0 then
+    local totalText = totalCost and formatMoney(totalCost) or DisenchanterPlus:DP_i18n("No data")
+    GameTooltip:AddDoubleLine(DisenchanterPlus:DP_i18n("Total cost"), totalText)
+  end
+  GameTooltip:Show()
+end
+
 ---Populate enchant list
 function DP_EnchantWindow:PopulateEnchantList()
   DP_TradeSkillCheck:ApplyPendingRecipeFilters()
@@ -825,23 +863,9 @@ function DP_EnchantWindow:PopulateEnchantList()
 
         acceptEnchantButton:SetSize(32, 32)
         acceptEnchantButton:SetPoint("RIGHT", enchantLineFrame, -40, 0)
-        acceptEnchantButton:SetScript("OnEnter", function(current)
-          GameTooltip:SetOwner(current, "ANCHOR_RIGHT")
-          GameTooltip:SetWidth(140)
-
-          local name = string.format("|c%s%s|r", DP_EnchantWindow:GetColorByCraftType(current.craftType), current.craftName)
-          GameTooltip:AddLine(name, 1, 1, 1, true)
-          GameTooltip:AddLine(current.craftDescription, 0.8, 0.8, 0.8, true)
-          GameTooltip:AddLine("\n")
-          GameTooltip:AddLine(DisenchanterPlus:DP_i18n("Reagents") .. ":", 1, 0.8, 0, true)
-
-          local reagents = current.reagents or {}
-          for _, reagent in pairs(reagents) do
-            local reagentLeftLine = string.format(" + |T%d:0|t |cffe1e1e1%s|r", reagent.Texture or 134400, reagent.Name)
-            local reagentRightLine = string.format("|cff91c1f1x|r |cff6191f1%d|r", reagent.Count)
-            GameTooltip:AddLine(reagentLeftLine .. " " .. reagentRightLine)
-          end
-          GameTooltip:Show()
+        local function onEnchantEnter()
+          local current = acceptEnchantButton
+          ShowEnchantTooltip(current)
           if enchantSelected ~= current.lineID then
             current.text:SetTextColor(1, 1, 1, 0.6)
             current.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:24:24|t")
@@ -849,8 +873,9 @@ function DP_EnchantWindow:PopulateEnchantList()
               EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]:SetBackdropColor(1, 1, 1, 0.3)
             end
           end
-        end)
-        acceptEnchantButton:SetScript("OnLeave", function(current)
+        end
+        local function onEnchantLeave()
+          local current = acceptEnchantButton
           GameTooltip:Hide()
           if enchantSelected ~= current.lineID then
             current.text:SetTextColor(1, 1, 1, 0.1)
@@ -859,7 +884,9 @@ function DP_EnchantWindow:PopulateEnchantList()
               EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]:SetBackdropColor(1, 1, 1, 0)
             end
           end
-        end)
+        end
+        acceptEnchantButton:SetScript("OnEnter", onEnchantEnter)
+        acceptEnchantButton:SetScript("OnLeave", onEnchantLeave)
         acceptEnchantButton:SetScript("OnClick", function(current)
           if showEquippedItems and InCombatLockdown() then return end
           if enchantSelected ~= current.lineID then
@@ -918,6 +945,8 @@ function DP_EnchantWindow:PopulateEnchantList()
         enchantTextButton.lineID = itemNum
         enchantTextButton:SetSize(240, 32)
         enchantTextButton:SetPoint("LEFT", enchantLineFrame, 10, 0)
+        enchantTextButton:SetScript("OnEnter", onEnchantEnter)
+        enchantTextButton:SetScript("OnLeave", onEnchantLeave)
         enchantTextButton:SetScript("OnClick", function(current)
           if EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID] then
             EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID].acceptEnchantButton:Click()
@@ -943,26 +972,6 @@ function DP_EnchantWindow:PopulateEnchantList()
           lineInfo.CraftName))
         enchantLineText:SetJustifyH("LEFT")
         enchantLineText:SetMaxLines(1)
-        enchantLineText:SetScript("OnEnter", function(current)
-          if enchantSelected ~= current.lineID then
-            if EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID] then
-              local tabFrame = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]
-              tabFrame.acceptEnchantButton.text:SetTextColor(1, 1, 1, 0.6)
-              tabFrame.acceptEnchantButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:24:24|t")
-              tabFrame:SetBackdropColor(1, 1, 1, 0.3)
-            end
-          end
-        end)
-        enchantLineText:SetScript("OnLeave", function(current)
-          if enchantSelected ~= current.lineID then
-            if EnchanterPlusBaseFrame.tabScrollContentFrame1.line and EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID] then
-              local tabFrame = EnchanterPlusBaseFrame.tabScrollContentFrame1.line[current.lineID]
-              tabFrame.acceptEnchantButton.text:SetTextColor(1, 1, 1, 0.1)
-              tabFrame.acceptEnchantButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\accept:24:24|t")
-              tabFrame:SetBackdropColor(1, 1, 1, 0.0)
-            end
-          end
-        end)
         enchantLineFrame.enchantLineText = enchantLineText
         EnchanterPlusBaseFrame.tabScrollContentFrame1.line[itemNum] = enchantLineFrame
         enchantContainerLines[tostring(itemNum)] = enchantLineFrame

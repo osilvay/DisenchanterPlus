@@ -78,6 +78,11 @@ L["Toggle showing zero values."]                                                
 L["Items to show"]                                                                 = "Elementos para mostrar"
 L["Items to show in tooltip."]                                                     = "Elementos a mostrar en el mensaje emergente."
 L["Show expected materials"]                                                           = "Mostrar materiales esperados"
+L["Show auction price range"] = "Mostrar rango de precios de subasta"
+L["Show the auction value for the minimum and maximum quantity of each material."] = "Muestra el valor en subasta de la cantidad mínima y máxima de cada material."
+L["Show expected material value"] = "Mostrar valor esperado de los materiales"
+L["Show the average auction value of materials from one disenchant."] = "Muestra el valor medio en subasta de los materiales obtenidos al desencantar un objeto."
+L["Expected mat value"] = "Valor esperado de los materiales"
 L["Toggle showing of expected materials on items."]                                    = "Habilita mostrar materiales esperados en objetos."
 L["Show real materials obtained"]                                                      = "Mostrar materiales reales obtenidos"
 L["Toggle showing of real materials obtained from items."]                             = "Habilita mostrar materiales reales obtenidos de objetos."
@@ -196,6 +201,7 @@ L["Middle Click"]                                                               
 L["Open enchant window"]                                                           = "Abrir la ventana de encantamiento"
 L["Open enchant window."]                                                          = "Abrir la ventana de encantamiento."
 L["Reagents"]                                                                      = "Reactivos"
+L["Total cost"] = "Coste total"
 L["Refresh enchants"]                                                              = "Recargar encantamientos"
 
 -- suffixes for enchantments

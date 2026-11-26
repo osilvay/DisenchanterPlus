@@ -346,9 +346,8 @@ function DP_DisenchantWindow:CreateAutoDisenchantWindow()
     enchantButton.text:SetText("|TInterface\\AddOns\\DisenchanterPlus\\Images\\Icons\\wand_a:14:14|t ")
   end)
   enchantButton:SetScript("OnClick", function(current)
-    DP_CustomSounds:PlayCustomSound("WindowOpen")
-    if DisenchanterPlus.db.char.general.enchantEnabled then
-      DP_EnchantProcess:OpenEnchantWindow()
+    if DP_EnchantProcess:RequestEnchantWindow() then
+      DP_CustomSounds:PlayCustomSound("WindowOpen")
       DP_DisenchantWindow:CloseWindow()
     end
   end)

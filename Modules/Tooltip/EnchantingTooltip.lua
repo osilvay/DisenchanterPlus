@@ -129,8 +129,10 @@ end
 function DP_EnchantingTooltip:ProcessItem(itemID)
   if itemID == nil then return end
 
-  -- esperados
-  if DisenchanterPlus.db.char.general.showExpectedEssences then
+  local settings = DisenchanterPlus.db.char.general
+  local showExpectedData = settings.showExpectedEssences
+      or (settings.priceSource and settings.priceSource ~= "none" and settings.showExpectedValue)
+  if showExpectedData then
     DP_EnchantingTooltip:GetExpectedItemData(itemID)
   end
 
@@ -196,46 +198,8 @@ function DP_EnchantingTooltip:ProcessItem(itemID)
     end
   end
 
-  if DisenchanterPlus.db.char.general.showExpectedEssences or DisenchanterPlus.db.char.general.showRealEssences then
+  if showExpectedData or settings.showRealEssences then
     GameTooltip:AddLine(" ")
-  end
-end
-
----Get expected item data
----@param itemID number
-function DP_EnchantingTooltip:GetExpectedItemData(itemID)
-  local itemExpectedData = DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID) or {}
-  --DisenchanterPlus:Dump(itemExpectedData)
-  if DP_CustomFunctions:TableLength(itemExpectedData) > 0 then
-    table.sort(itemExpectedData, function(a, b) return a.ItemQuality ~= nil and b.ItemQuality ~= nil and a.ItemQuality < b.ItemQuality end)
-  end
-
-  GameTooltip:AddLine(string.format("|cff999999%s|r", DisenchanterPlus:DP_i18n("Expected")))
-  if DP_CustomFunctions:TableLength(itemExpectedData) == 0 then
-    GameTooltip:AddLine(string.format(" |cffff3300%s|r", DisenchanterPlus:DP_i18n("No data")))
-  else
-    local expectedIndex = 1
-    for _, currentExpecteItem in pairs(itemExpectedData) do
-      local quantity = currentExpecteItem.QuantityText
-      local percentage = string.format("%.2f", currentExpecteItem.Percent)
-      local _, itemLink, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _ = C_Item.GetItemInfo(currentExpecteItem.ItemID)
-
-      local itemIcon = C_Item.GetItemIconByID(currentExpecteItem.ItemID)
-      local percentageText = string.format("|cfff1f1f1%s|r", percentage or "0")
-      if itemIcon ~= nil and itemLink ~= nil then
-        local leftTextLine = string.format(" + |T%d:0|t %s |cff6191f1%s|r", itemIcon, itemLink, quantity or 0)
-        local rightTextLine = string.format("%s", percentageText) .. " |cfff1b131%|r"
-        GameTooltip:AddDoubleLine(leftTextLine, rightTextLine)
-        if currentExpecteItem.PriceString ~= nil then
-          local auctionLabel = "       |cffa19171" .. DisenchanterPlus:DP_i18n("Auction") .. "|r"
-          if currentExpecteItem.PriceAge ~= nil then
-            auctionLabel = auctionLabel .. " |cff8a8a8a(" .. currentExpecteItem.PriceAge .. ")|r"
-          end
-          GameTooltip:AddDoubleLine(auctionLabel, "|cffaaaaaa" .. currentExpecteItem.PriceString .. "|r")
-        end
-        expectedIndex = expectedIndex + 1
-      end
-    end
   end
 end
 
@@ -250,6 +214,81 @@ local function FormatMoney(copper)
   if gold > 0 then text = text .. string.format("%d|TInterface\\MoneyFrame\\UI-GoldIcon:0|t ", gold) end
   if gold > 0 or silver > 0 then text = text .. string.format("%d|TInterface\\MoneyFrame\\UI-SilverIcon:0|t ", silver) end
   return text .. string.format("%d|TInterface\\MoneyFrame\\UI-CopperIcon:0|t", bronze)
+end
+
+---Get expected item data
+---@param itemID number
+function DP_EnchantingTooltip:GetExpectedItemData(itemID)
+  local itemExpectedData = DP_EnchantingTooltip.ProcessIsItemExpectedData(itemID) or {}
+  local settings = DisenchanterPlus.db.char.general
+  local showExpectedValue = settings.priceSource and settings.priceSource ~= "none" and settings.showExpectedValue
+  local formatMoney = FormatMoney
+  if settings.priceSource == "auctionator" and Auctionator then
+    formatMoney = Auctionator.Utilities.CreatePaddedMoneyString
+  end
+  local noAuctionData = "|cffcc1100" .. DisenchanterPlus:DP_i18n("No data") .. "|r"
+  if settings.showExpectedEssences then
+    table.sort(itemExpectedData, function(a, b) return a.ItemQuality ~= nil and b.ItemQuality ~= nil and a.ItemQuality < b.ItemQuality end)
+    GameTooltip:AddLine(string.format("|cff999999%s|r", DisenchanterPlus:DP_i18n("Expected")))
+    if #itemExpectedData == 0 then
+      GameTooltip:AddLine(string.format(" |cffff3300%s|r", DisenchanterPlus:DP_i18n("No data")))
+    end
+  end
+
+  local expectedValue
+  if #itemExpectedData > 0 then
+    expectedValue = 0
+    local expectedIndex = 1
+    for _, material in ipairs(itemExpectedData) do
+      local unitPrice = material.MarketPrice
+      local quantityText = material.QuantityText or ""
+      local minQuantity, maxQuantity = quantityText:match("^(%d+)%-(%d+)x$")
+      minQuantity = tonumber(minQuantity or quantityText:match("^(%d+)x$"))
+      maxQuantity = tonumber(maxQuantity) or minQuantity
+      if showExpectedValue and expectedValue then
+        if unitPrice and minQuantity then
+          local averageQuantity = (minQuantity + maxQuantity) / 2
+          expectedValue = expectedValue + unitPrice * averageQuantity * material.Percent / 100
+        else
+          expectedValue = nil
+        end
+      end
+
+      local itemLink = material.ItemLink
+      local itemIcon = settings.showExpectedEssences and C_Item.GetItemIconByID(material.ItemID)
+      if itemIcon and itemLink then
+        local leftTextLine = string.format(" + |T%d:0|t %s |cff6191f1%s|r", itemIcon, itemLink, material.QuantityText or 0)
+        local rightTextLine = string.format("|cfff1f1f1%.2f|r |cfff1b131%%|r", material.Percent)
+        GameTooltip:AddDoubleLine(leftTextLine, rightTextLine)
+        if material.PriceString ~= nil then
+          local auctionText = material.PriceString
+          if settings.showAuctionPriceRange then
+            if unitPrice and minQuantity then
+              auctionText = formatMoney(unitPrice * minQuantity)
+              if maxQuantity > minQuantity then
+                auctionText = auctionText .. " – " .. formatMoney(unitPrice * maxQuantity)
+              end
+            else
+              auctionText = noAuctionData
+            end
+          end
+          local auctionLabel = "       |cffa19171" .. DisenchanterPlus:DP_i18n("Auction") .. "|r"
+          if material.PriceAge ~= nil then
+            auctionLabel = auctionLabel .. " |cff8a8a8a(" .. material.PriceAge .. ")|r"
+          end
+          GameTooltip:AddDoubleLine(auctionLabel, "|cffaaaaaa" .. auctionText .. "|r")
+        end
+        expectedIndex = expectedIndex + 1
+      end
+    end
+  end
+  if showExpectedValue then
+    local valueText = noAuctionData
+    if expectedValue then
+      valueText = formatMoney(math.floor(expectedValue + 0.5))
+    end
+    GameTooltip:AddDoubleLine("|cffa19171" .. DisenchanterPlus:DP_i18n("Expected mat value") .. "|r", "|cffaaaaaa" .. valueText .. "|r")
+  end
 end
 
 ---Market price of an item from the price source chosen in settings
