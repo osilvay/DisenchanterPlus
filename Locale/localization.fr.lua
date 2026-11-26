@@ -186,6 +186,7 @@ L["Common"]                                                                     
 L["Item enchanter"]                                                                = "Item enchanter"
 L["Enchant list"]                                                                  = "Enchant list"
 L["Items in bags"]                                                                 = "Items in bags"
+L["Items on me"] = "Objets équipés"
 L["Select"]                                                                        = "Select"
 L["You can start to enchant."]                                                     = "You can start to enchant."
 L["You don't have any materials for that enchantment."]                            = "You don't have any materials for that enchantment."
