@@ -135,14 +135,12 @@ The Bulk Enchanting window works differently from Auto-Disenchant. Here's the pr
 3. **Click the enchant window button** (wand icon) in the disenchant window OR access it via minimap icon
 4. **Click "Refresh"** in the enchant window to load available enchantments
 5. **Select an enchantment** from the LEFT list (e.g., "Enchant Bracer - +5 Health")
-6. **Select an item** from the RIGHT list (items in your bags that can be enchanted with that spell appear here)
+6. **Select an item** from the RIGHT list. Use the dropdown to switch between **Items in bags** and **Items on me**.
 7. **Click the green checkmark** to enchant the item
 
 **Important Notes:**
 
 - Items only appear on the right when you select an enchantment on the left
-- **The addon only shows items in your bags/inventory - NOT items you currently have equipped**
-- If you want to enchant an equipped item, you must first unequip it and put it in your bags
 - The addon automatically filters items based on enchantment type (bracers with bracer enchants, weapons with weapon enchants, etc.)
 - You must have the materials/reagents required for the enchantment
 - Keep your Enchanting tradeskill window open while enchanting

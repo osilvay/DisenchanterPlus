@@ -78,6 +78,11 @@ L["Toggle showing zero values."]                                                
 L["Items to show"]                                                                 = "Items to show"
 L["Items to show in tooltip."]                                                     = "Items to show in tooltip."
 L["Show expected materials"]                                                           = "Show expected materials"
+L["Show auction price range"] = "Auktionspreisbereich anzeigen"
+L["Show the auction value for the minimum and maximum quantity of each material."] = "Zeigt den Auktionswert für die kleinste und größte Menge jedes Materials an."
+L["Show expected material value"] = "Erwarteten Materialwert anzeigen"
+L["Show the average auction value of materials from one disenchant."] = "Zeigt den durchschnittlichen Auktionswert der Materialien pro Entzauberung an."
+L["Expected mat value"] = "Erwarteter Materialwert"
 L["Toggle showing of expected materials on items."]                                    = "Toggle showing of expected materials on items."
 L["Show real materials obtained"]                                                      = "Show real materials obtained"
 L["Toggle showing of real materials obtained from items."]                             = "Toggle showing of real materials obtained from items."
@@ -181,6 +186,7 @@ L["Common"]                                                                     
 L["Item enchanter"]                                                                = "Item enchanter"
 L["Enchant list"]                                                                  = "Enchant list"
 L["Items in bags"]                                                                 = "Items in bags"
+L["Items on me"] = "Angelegte Gegenstände"
 L["Select"]                                                                        = "Select"
 L["You can start to enchant."]                                                     = "You can start to enchant."
 L["You don't have any materials for that enchantment."]                            = "You don't have any materials for that enchantment."
@@ -193,6 +199,7 @@ L["Middle Click"]                                                               
 L["Open enchant window"]                                                           = "Open enchant window"
 L["Open enchant window."]                                                          = "Open enchant window."
 L["Reagents"]                                                                      = "Reagents"
+L["Total cost"] = "Gesamtkosten"
 L["Refresh enchants"]                                                              = "Refresh enchants"
 
 -- suffixes for enchantments
