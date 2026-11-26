@@ -1,3 +1,11 @@
+## **Version 3.0.4.0**
+
+- **Enchanting:** Choose an item before or after a recipe; switch between bag and equipped items; enchant eligible equipped items. The selection clears when changing item sources or equipment. (Thanks [**zagushka**](https://github.com/zagushka))
+- **Recipe filters:** Added skill-up and material-availability filters with a reset option. Improved slot and weapon filtering, kept Enchanting Vellum visible, saved filter changes while the profession window is closed, and updated recipe availability when bags change. (Thanks [**zagushka**](https://github.com/zagushka))
+- **Item handling:** Preserve the selected bag slot when enchanting duplicate items, and skip bag items when the game hasn’t provided an item link. (Thanks [**zagushka**](https://github.com/zagushka))
+- **Auto Disenchant:** Fixed the wand button to open the addon’s Enchant window, including when the profession window is closed on WoW Forever; restore the Blizzard window appropriately. Added support for the TBC opening flow. (Thanks [**zagushka**](https://github.com/zagushka))
+- **Pricing tooltips:** Show reagent costs for the required quantities and the total cost per enchant; show “No data” when prices are missing. Also show auction price ranges and expected disenchant value, using the configured price source. (Thanks [**zagushka**](https://github.com/zagushka))
+- Updated help text and translations across all five supported languages. (Thanks [**zagushka**](https://github.com/zagushka))
 ## **Version 3.0.3.2**
 
 - Added "Hide windows" option (on by default) that hides the disenchant, ignored items and enchant windows during combat and shows them again afterwards (Thanks **rherzfeld**)

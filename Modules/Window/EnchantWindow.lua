@@ -559,13 +559,16 @@ function DP_EnchantWindow:CreateEnchantWindow()
     dropdown:SetList(sourceLabels, sourceOrder)
     dropdown:SetValue(selectedSource())
     dropdown:SetWidth(160)
-    dropdown.frame:SetParent(tab2Button)
-    dropdown.frame:SetPoint("CENTER", tab2Button, "CENTER")
+    -- AceGUI doesn't expose its frame publicly, but it must be reparented onto the tab button
+    ---@diagnostic disable-next-line: invisible
+    local dropdownFrame = dropdown.frame
+    dropdownFrame:SetParent(tab2Button)
+    dropdownFrame:SetPoint("CENTER", tab2Button, "CENTER")
     dropdown:SetCallback("OnValueChanged", function(widget, _, value)
       selectSource(value)
       widget:SetValue(selectedSource())
     end)
-    dropdown.frame:Show()
+    dropdownFrame:Show()
   end
 
   local itemsChanged = false
