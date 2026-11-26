@@ -198,6 +198,7 @@ L["Middle Click"]                                                               
 L["Open enchant window"]                                                           = "Open enchant window"
 L["Open enchant window."]                                                          = "Open enchant window."
 L["Reagents"]                                                                      = "Reagents"
+L["Total cost"] = "Costo totale"
 L["Refresh enchants"]                                                              = "Refresh enchants"
 
 -- suffixes for enchantments

@@ -165,6 +165,7 @@ function DP_TradeSkillCheck:GetTradeSkillLinesForForever()
             end
             table.insert(reagents, {
               Index = slotIndex,
+              ItemID = reagent.itemID,
               Name = reagentName or ("item:" .. tostring(reagent.itemID)),
               Texture = reagentTexture,
               Count = reagentSlotSchematic.quantityRequired or 1,
@@ -227,9 +228,11 @@ function DP_TradeSkillCheck:GetTradeSkillLinesForClassic()
     local totalReagents = 0;
     for i = 1, numReagents, 1 do
       local name, texturePath, numRequired, numHave = DP_TradeSkillCheck.TradeSkillReagentInfo(index, i)
+      local itemLink = GetCraftReagentItemLink and GetCraftReagentItemLink(index, i)
       totalReagents = totalReagents + numRequired;
       table.insert(reagents, {
         Index = i,
+        ItemID = itemLink and C_Item.GetItemInfoInstant(itemLink),
         Name = name,
         Texture = texturePath,
         Count = numRequired,
