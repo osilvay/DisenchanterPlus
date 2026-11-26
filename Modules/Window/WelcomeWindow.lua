@@ -81,7 +81,7 @@ local function BuildContent(kind)
 
     lines[#lines + 1] = header(t("Filters"))
     lines[#lines + 1] = bullet(t("Optimal, Medium, Easy and Trivial filter the recipes by difficulty."))
-    lines[#lines + 1] = bullet(t("Filter without materials hides the recipes you cannot craft right now."))
+    lines[#lines + 1] = bullet(t("Use the Enchants list menu to filter recipes by skill gain or available materials."))
     lines[#lines + 1] = ""
 
     lines[#lines + 1] = header(t("Good to know"))

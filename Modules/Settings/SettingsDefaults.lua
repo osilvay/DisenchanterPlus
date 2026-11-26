@@ -71,6 +71,8 @@ function DP_SettingsDefaults:Load()
         showItemQuality = true,
         enchantEnabled = true,
         filterWithoutMaterials = false,
+        filterSkillUp = false,
+        pendingEnchantRecipeFilters = {},
         enchantItemQuality = {
           ["2"] = true,
           ["3"] = true,
